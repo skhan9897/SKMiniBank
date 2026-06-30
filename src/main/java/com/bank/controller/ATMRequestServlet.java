@@ -86,12 +86,9 @@ public class ATMRequestServlet extends HttpServlet {
                     + "&msg=ATM Request Submitted Successfully");
 
         } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/customer/atm-request.jsp?msg=Server Error");
-        }
+    e.printStackTrace();
+    response.setContentType("text/plain");
+    e.printStackTrace(response.getWriter());
+}
     }
 }

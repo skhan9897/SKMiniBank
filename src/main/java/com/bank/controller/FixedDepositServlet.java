@@ -68,11 +68,10 @@ public class FixedDepositServlet extends HttpServlet {
             }
 
         } catch (Exception e) {
-
-            e.printStackTrace();
-            response.sendRedirect("admin/fixed-deposit.jsp?msg=Error");
-
-        }
+    e.printStackTrace();
+    response.setContentType("text/plain");
+    e.printStackTrace(response.getWriter());
+}
 
     }
 }
