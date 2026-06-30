@@ -1,0 +1,281 @@
+/* ===========================
+   SK Mini Bank Style
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f5f7fb;
+    color:#333;
+}
+
+/* Top Header */
+
+.bg-primary{
+    background:#0d6efd !important;
+}
+
+/* Navbar */
+
+.navbar{
+    box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+
+.navbar-brand{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.nav-link{
+    font-size:17px;
+    margin-right:10px;
+    transition:0.3s;
+}
+
+.nav-link:hover{
+    color:#ffc107 !important;
+}
+
+/* Hero Section */
+
+.hero{
+    background:url("../images/banner.jpg") center center/cover no-repeat;
+    min-height:550px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:white;
+}
+
+.hero h1{
+    font-size:55px;
+    font-weight:bold;
+}
+
+.hero p{
+    font-size:22px;
+    margin:20px 0;
+}
+
+.hero .btn{
+    padding:12px 35px;
+    font-size:20px;
+    border-radius:30px;
+}
+
+/* Cards */
+
+.card{
+    border:none;
+    border-radius:15px;
+    transition:.4s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.card-body i{
+    margin-bottom:15px;
+}
+
+/* Section */
+
+section{
+    padding:60px 0;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.section-title h2{
+    font-size:38px;
+    font-weight:bold;
+    color:#0d6efd;
+}
+
+/* Buttons */
+
+.btn-warning{
+    border-radius:30px;
+    padding:10px 25px;
+    font-weight:bold;
+}
+
+.btn-primary{
+    border-radius:30px;
+}
+
+/* Footer */
+
+footer{
+    background:#212529;
+    color:#fff;
+    padding:40px 0;
+    margin-top:60px;
+}
+
+footer h4{
+    margin-bottom:15px;
+}
+
+footer a{
+    color:#fff;
+    text-decoration:none;
+}
+
+footer a:hover{
+    color:#ffc107;
+}
+
+footer ul{
+    list-style:none;
+    padding:0;
+}
+
+footer li{
+    margin-bottom:10px;
+}
+
+/* Responsive */
+
+@media(max-width:991px){
+
+.hero h1{
+    font-size:40px;
+}
+
+.hero p{
+    font-size:18px;
+}
+
+}
+
+@media(max-width:768px){
+
+.navbar-brand{
+    font-size:22px;
+}
+
+.hero{
+    min-height:400px;
+}
+
+.hero h1{
+    font-size:30px;
+}
+
+.hero p{
+    font-size:16px;
+}
+
+.card{
+    margin-bottom:25px;
+}
+
+}
+
+@media(max-width:576px){
+
+.hero h1{
+    font-size:24px;
+}
+
+.hero p{
+    font-size:15px;
+}
+
+.btn{
+    width:100%;
+}
+
+.summary-card{
+    border-radius:15px;
+    color:#fff;
+    padding:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.bg-balance{
+    background:linear-gradient(135deg,#0d6efd,#003d99);
+}
+
+.bg-fd{
+    background:linear-gradient(135deg,#198754,#0f5132);
+}
+
+.bg-status{
+    background:linear-gradient(135deg,#fd7e14,#b45309);
+}
+
+.info-label{
+    color:#6c757d;
+    font-size:14px;
+}
+
+.info-value{
+    font-size:18px;
+    font-weight:bold;
+}
+
+/* Customer Information Table */
+
+.customer-card{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.customer-card .card-header{
+    font-size:22px;
+    font-weight:700;
+    padding:15px 20px;
+}
+
+.customer-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.customer-table th{
+    width:220px;
+    background:#0d6efd;
+    color:#fff;
+    padding:12px;
+    border:1px solid #dee2e6;
+    font-size:15px;
+}
+
+.customer-table td{
+    padding:12px;
+    border:1px solid #dee2e6;
+    background:#fff;
+    font-size:15px;
+    font-weight:500;
+}
+
+.customer-table tr:nth-child(even){
+    background:#f8fbff;
+}
+
+.customer-table tr:hover td{
+    background:#eef5ff;
+}
+
+.balance-text{
+    color:#198754;
+    font-size:18px;
+    font-weight:bold;
+}
+
+
+
+}
