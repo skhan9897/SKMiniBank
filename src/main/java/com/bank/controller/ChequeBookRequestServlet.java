@@ -36,10 +36,12 @@ public class ChequeBookRequestServlet extends HttpServlet {
 
         boolean status = dao.saveRequest(cheque);
 
-        if (status) {
-            response.sendRedirect("admin/cheque-book-request.jsp?msg=success");
-        } else {
-            response.sendRedirect("admin/cheque-book-request.jsp?msg=failed");
-        }
+System.out.println("Status = " + status);
+
+if (status) {
+    response.sendRedirect("admin/cheque-book-request.jsp?msg=success");
+} else {
+    response.sendRedirect("admin/cheque-book-request.jsp?msg=failed");
+}
     }
 }
