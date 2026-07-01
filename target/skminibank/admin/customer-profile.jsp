@@ -466,11 +466,16 @@ Welcome,
     </div>
 
     <div class="card-body">
-        <p><b>FD No :</b> ${fd.fdNumber}</p>
-        <p><b>Amount :</b> ?${fd.amount}</p>
-        <p><b>Interest :</b> ${fd.interestRate}%</p>
-        <p><b>Tenure :</b> ${fd.tenure}</p>
-        <p><b>Status :</b> ${fd.status}</p>
+        <p><b>FD ID :</b> ${fd.fdId}</p>
+<p><b>Account Number :</b> ${fd.accountNumber}</p>
+<p><b>Customer Name :</b> ${fd.customerName}</p>
+<p><b>FD Amount :</b> ?${fd.fdAmount}</p>
+<p><b>Interest Rate :</b> ${fd.interestRate}%</p>
+<p><b>Duration :</b> ${fd.durationYear} Year</p>
+<p><b>Maturity Amount :</b> ?${fd.maturityAmount}</p>
+<p><b>Open Date :</b> ${fd.openDate}</p>
+<p><b>Maturity Date :</b> ${fd.maturityDate}</p>
+<p><b>Status :</b> ${fd.status}</p>
     </div>
 </div>
 </c:if>
