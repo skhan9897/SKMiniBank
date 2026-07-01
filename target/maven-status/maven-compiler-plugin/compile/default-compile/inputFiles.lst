@@ -3,6 +3,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\RegisterServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\WithdrawServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\TransactionDAO.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\SendEmailOTPServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\FixedDepositDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\DashboardServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\DeleteCustomerServlet.java
@@ -16,7 +17,9 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\UnblockAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\BlockAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\CustomerDAO.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\OTP.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\KYCDAO.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\OTPDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\ATMRequestServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\User.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\ATMRequestDAO.java
@@ -29,6 +32,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\KYC.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\AccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\TransactionServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\VerifyEmailOTPServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\util\DBConnection.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\UnfreezeAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\Transaction.java

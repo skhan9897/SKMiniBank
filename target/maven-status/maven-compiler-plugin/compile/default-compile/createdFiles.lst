@@ -4,11 +4,14 @@ com\bank\model\DebitCard.class
 com\bank\util\DBConnection.class
 com\bank\dao\KYCDAO.class
 com\bank\controller\LoginServlet.class
+com\bank\controller\VerifyEmailOTPServlet.class
+com\bank\model\OTP.class
 com\bank\controller\BlockAccountServlet.class
 com\bank\controller\RegisterServlet.class
 com\bank\controller\DepositServlet.class
 com\bank\dao\DashboardDAO.class
 com\bank\model\ATMRequest.class
+com\bank\controller\SendEmailOTPServlet.class
 com\bank\dao\DebitCardDAO.class
 com\bank\model\Customer.class
 com\bank\model\Transaction.class
@@ -18,6 +21,7 @@ com\bank\controller\AccountServlet.class
 com\bank\controller\KYCServlet.class
 com\bank\dao\TransactionDAO.class
 com\bank\model\FixedDeposit.class
+com\bank\controller\SendEmailOTPServlet$1.class
 com\bank\controller\DashboardServlet.class
 com\bank\dao\ATMRequestDAO.class
 com\bank\model\KYC.class
@@ -38,5 +42,6 @@ com\bank\model\User.class
 com\bank\controller\UpdateCustomerServlet.class
 com\bank\controller\CustomerDetailsServlet.class
 com\bank\controller\UnblockAccountServlet.class
+com\bank\dao\OTPDAO.class
 com\bank\controller\UnfreezeAccountServlet.class
 com\bank\controller\ATMRequestServlet.class

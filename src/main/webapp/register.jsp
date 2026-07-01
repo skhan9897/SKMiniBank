@@ -37,174 +37,102 @@
     <form action="RegisterServlet" method="post">
 <div class="row">
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Full Name</label>
-<input type="text" class="form-control"
-name="fullname" required>
-</div>
+<!-- Personal Details -->
+<h4 class="text-primary mb-3">Personal Details</h4>
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Father Name</label>
-<input type="text" class="form-control"
-name="fathername" required>
-</div>
+Full Name *
+Father Name *
+Mother Name
+Date of Birth *
+Gender *
+Marital Status
+Occupation
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Date of Birth</label>
-<input type="date" class="form-control"
-name="dob" required>
-</div>
+<hr>
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Gender</label>
-<select class="form-control" name="gender" required>
-<option value="">Select Gender</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
-<option value="Other">Other</option>
-</select>
-</div>
+<!-- Contact Details -->
+<h4 class="text-primary mb-3">Contact Details</h4>
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Mobile Number</label>
-<input type="text" class="form-control"
-name="mobile" maxlength="10" required>
-</div>
+Mobile Number *
+[Send OTP]
 
-<div class="col-md-6 mb-3">
-<label class="form-label">Email Address</label>
-<input type="email" class="form-control"
-name="email" required>
-</div>
+Enter Mobile OTP
+[Verify OTP]
 
-</div>
-    <div class="row">
+Email Address *
+[Send OTP]
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Aadhaar Number</label>
-        <input type="text"
-               class="form-control"
-               name="aadhaar"
-               maxlength="12"
-               required>
-    </div>
+Enter Email OTP
+[Verify OTP]
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">PAN Number</label>
-        <input type="text"
-               class="form-control"
-               name="pan"
-               maxlength="10"
-               required>
-    </div>
+Alternate Mobile Number
 
-    <div class="col-md-12 mb-3">
-        <label class="form-label">Address</label>
-        <textarea class="form-control"
-                  name="address"
-                  rows="3"
-                  required></textarea>
-    </div>
+<hr>
 
-    <div class="col-md-4 mb-3">
-        <label class="form-label">City</label>
-        <input type="text"
-               class="form-control"
-               name="city"
-               required>
-    </div>
+<!-- Identity Details -->
+<h4 class="text-primary mb-3">Identity Details</h4>
 
-    <div class="col-md-4 mb-3">
-        <label class="form-label">State</label>
-        <input type="text"
-               class="form-control"
-               name="state"
-               required>
-    </div>
+Aadhaar Number *
+PAN Number *
 
-    <div class="col-md-4 mb-3">
-        <label class="form-label">Pincode</label>
-        <input type="text"
-               class="form-control"
-               name="pincode"
-               maxlength="6"
-               required>
-    </div>
+<hr>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Password</label>
-        <input type="password"
-               class="form-control"
-               name="password"
-               required>
-    </div>
+<!-- Address -->
+<h4 class="text-primary mb-3">Address Details</h4>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Confirm Password</label>
-        <input type="password"
-               class="form-control"
-               name="confirmPassword"
-               required>
-    </div>
+Address *
+City *
+State *
+Pincode *
 
-</div>
-    <div class="row">
+<hr>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Account Type</label>
-        <select class="form-control" name="accountType" required>
-            <option value="SAVING">Saving Account</option>
-            <option value="CURRENT">Current Account</option>
-        </select>
-    </div>
+<!-- Nominee -->
+<h4 class="text-primary mb-3">Nominee Details</h4>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Branch</label>
-        <input type="text"
-               class="form-control"
-               name="branch"
-               value="Bareilly Main Branch"
-               readonly>
-    </div>
+Nominee Name
+Relationship
+Nominee Mobile Number
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">IFSC Code</label>
-        <input type="text"
-               class="form-control"
-               name="ifscCode"
-               value="SKMB0001001"
-               readonly>
-    </div>
+<hr>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Opening Balance</label>
-        <input type="number"
-               class="form-control"
-               name="balance"
-               value="5000"
-               readonly>
-    </div>
+<!-- Bank Details -->
+<h4 class="text-primary mb-3">Bank Details</h4>
 
-    <div class="col-md-6 mb-3">
-        <label class="form-label">Status</label>
-        <input type="text"
-               class="form-control"
-               name="status"
-               value="ACTIVE"
-               readonly>
-    </div>
+Account Type
+(Saving / Current)
 
-    <div class="col-md-12 text-center mt-4">
+Branch
+(Bareilly Main Branch)
 
-        <button type="submit"
-                class="btn btn-primary btn-lg">
-            Register Now
-        </button>
+IFSC
+(SKMB0001001)
 
-        <a href="login.jsp"
-           class="btn btn-success btn-lg">
-            Login
-        </a>
+Opening Balance
+₹5000
+
+<hr>
+
+<!-- Security -->
+<h4 class="text-primary mb-3">Security Details</h4>
+
+Password *
+Confirm Password *
+
+4 Digit Transaction PIN *
+Confirm Transaction PIN *
+
+<hr>
+
+<!-- Declaration -->
+
+☑ I hereby declare that all the information provided by me is true and correct.
+
+<hr>
+
+[ Register Now ]
+[ Reset ]
+[ Login ]
 
     </div>
 
