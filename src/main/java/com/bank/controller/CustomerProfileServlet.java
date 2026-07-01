@@ -1,12 +1,14 @@
 package com.bank.controller;
 
 import com.bank.dao.CustomerDAO;
-import com.bank.model.Customer;
-import com.bank.dao.FixedDepositDAO;
 import com.bank.dao.DebitCardDAO;
-import com.bank.model.FixedDeposit;
+import com.bank.dao.FixedDepositDAO;
+import com.bank.model.Customer;
 import com.bank.model.DebitCard;
+import com.bank.model.FixedDeposit;
+
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,42 +19,55 @@ import javax.servlet.http.HttpServletResponse;
 public class CustomerProfileServlet extends HttpServlet {
 
     @Override
-protected void doGet(HttpServletRequest request,
-        HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
 
-    try {
+        try {
 
-        int customerId = Integer.parseInt(request.getParameter("customerId"));
+            String id = request.getParameter("customerId");
 
-        // Customer
-        CustomerDAO customerDAO = new CustomerDAO();
-        Customer customer = customerDAO.searchCustomerById(customerId);
+            if (id == null || id.trim().isEmpty()) {
+                response.sendRedirect(request.getContextPath()
+                        + "/admin/customer-list.jsp");
+                return;
+            }
 
-        // Debit Card
-        DebitCardDAO debitDAO = new DebitCardDAO();
-        DebitCard card = debitDAO.getCardByCustomerId(customerId);
+            int customerId = Integer.parseInt(id);
 
-        // Fixed Deposit
-        FixedDepositDAO fdDAO = new FixedDepositDAO();
-        FixedDeposit fd = fdDAO.getFDByCustomerId(customerId);
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.searchCustomerById(customerId);
 
-        request.setAttribute("customer", customer);
-        request.setAttribute("card", card);
-        request.setAttribute("fd", fd);
+            if (customer == null) {
+                response.sendRedirect(request.getContextPath()
+                        + "/admin/customer-list.jsp?error=Customer Not Found");
+                return;
+            }
 
-        request.getRequestDispatcher("/admin/customer-profile.jsp")
-               .forward(request, response);
+            DebitCardDAO debitDAO = new DebitCardDAO();
+            DebitCard card = debitDAO.getCardByCustomerId(customerId);
 
-    } catch (Exception e) {
-    e.printStackTrace();
+            FixedDepositDAO fdDAO = new FixedDepositDAO();
+            FixedDeposit fd = fdDAO.getFDByCustomerId(customerId);
 
-    try {
-        response.setContentType("text/plain");
-        e.printStackTrace(new java.io.PrintWriter(response.getWriter(), true));
-    } catch (Exception ex) {
-        ex.printStackTrace();
+            request.setAttribute("customer", customer);
+            request.setAttribute("card", card);
+            request.setAttribute("fd", fd);
+
+            request.getRequestDispatcher("/admin/customer-profile.jsp")
+                    .forward(request, response);
+
+        } catch (NumberFormatException e) {
+
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath()
+                    + "/admin/customer-list.jsp?error=Invalid Customer ID");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            throw new ServletException("Unable to Load Customer Profile", e);
+
+        }
     }
-}
-}
 }
