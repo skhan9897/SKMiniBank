@@ -1,4 +1,5 @@
 com\bank\controller\FixedDepositServlet.class
+com\bank\model\ChequeBookRequest.class
 com\bank\model\DebitCard.class
 com\bank\util\DBConnection.class
 com\bank\dao\KYCDAO.class
@@ -23,8 +24,10 @@ com\bank\model\KYC.class
 com\bank\controller\TransactionServlet.class
 com\bank\dao\AccountDAO.class
 com\bank\dao\FixedDepositDAO.class
+com\bank\dao\ChequeBookRequestDAO.class
 com\bank\controller\CustomerServlet.class
 com\bank\controller\FreezeAccountServlet.class
+com\bank\controller\ChequeBookRequestServlet.class
 com\bank\controller\CustomerProfileServlet.class
 com\bank\controller\CustomerDashboardServlet.class
 com\bank\controller\DeleteCustomerServlet.class
