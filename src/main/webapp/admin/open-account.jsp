@@ -61,7 +61,7 @@ Open New Account
 
 <div class="card-body">
 
-<form action="RegisterServlet" method="post">
+<form action="/admin/RegisterServlet" method="post">
 
 <!-- Personal Details -->
 
