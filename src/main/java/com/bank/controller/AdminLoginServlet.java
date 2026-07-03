@@ -20,7 +20,7 @@ public class AdminLoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         // Default Admin Login
-        if ("admin".equals(adminId) && "admin123".equals(password)) {
+        if ("SKMB9897".equals(adminId) && "admin123".equals(password)) {
 
             HttpSession session = request.getSession();
             session.setAttribute("admin", adminId);
