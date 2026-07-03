@@ -23,26 +23,56 @@ public class RegisterServlet extends HttpServlet {
 
         Customer customer = new Customer();
 
-        customer.setFullName(request.getParameter("fullname"));
-        customer.setFatherName(request.getParameter("fathername"));
-        customer.setDob(request.getParameter("dob"));
-        customer.setGender(request.getParameter("gender"));
-        customer.setMobile(request.getParameter("mobile"));
-        customer.setEmail(request.getParameter("email"));
-        customer.setAadhaar(request.getParameter("aadhaar"));
-        customer.setPan(request.getParameter("pan"));
-        customer.setAddress(request.getParameter("address"));
-        customer.setCity(request.getParameter("city"));
-        customer.setState(request.getParameter("state"));
-        customer.setPincode(request.getParameter("pincode"));
+        customer.setFullName(request.getParameter("fullName"));
+customer.setFatherName(request.getParameter("fatherName"));
+customer.setMotherName(request.getParameter("motherName"));
+customer.setDob(request.getParameter("dob"));
+customer.setGender(request.getParameter("gender"));
+customer.setMaritalStatus(request.getParameter("maritalStatus"));
+customer.setOccupation(request.getParameter("occupation"));
 
+customer.setMobile(request.getParameter("mobile"));
+customer.setAlternateMobile(request.getParameter("alternateMobile"));
+customer.setEmail(request.getParameter("email"));
+
+customer.setAadhaar(request.getParameter("aadhaar"));
+customer.setPan(request.getParameter("pan"));
+
+customer.setAddress(request.getParameter("address"));
+customer.setCity(request.getParameter("city"));
+customer.setState(request.getParameter("state"));
+customer.setPincode(request.getParameter("pincode"));
+
+customer.setNomineeName(request.getParameter("nomineeName"));
+customer.setRelationship(request.getParameter("relationship"));
+customer.setNomineeMobile(request.getParameter("nomineeMobile"));
         // Bank Details Auto Generate
-        customer.setAccountNumber("SKM" + System.currentTimeMillis());
-        customer.setIfscCode("SKMB0001001");
-        customer.setAccountType("SAVING");
-        customer.setBranch("Bareilly Main Branch");
-        customer.setBalance(5000.00);
-        customer.setStatus("ACTIVE");
+
+customer.setCustomerCode("SKC" + System.currentTimeMillis());
+
+customer.setCifNumber("CIF" + System.currentTimeMillis());
+
+customer.setAccountNumber("SKM" + System.currentTimeMillis());
+
+customer.setIfscCode("SKMB0001001");
+
+customer.setAccountType(request.getParameter("accountType"));
+
+customer.setBranch("Bareilly Main Branch");
+
+customer.setBalance(Double.parseDouble(request.getParameter("balance")));
+
+customer.setUpiId(request.getParameter("mobile") + "@skpay");
+
+customer.setUpiStatus("ACTIVE");
+
+customer.setStatus("ACTIVE");
+
+customer.setKycStatus("PENDING");
+
+customer.setPassword(request.getParameter("password"));
+
+customer.setTransactionPin(request.getParameter("transactionPin"));
 
         String password = request.getParameter("password");
 

@@ -158,7 +158,7 @@ body{
     <i class="fa fa-gauge"></i> Dashboard
 </a>
 
-<a href="${pageContext.request.contextPath}/CustomerServlet">
+<a href="${pageContext.request.contextPath}/admin/customer-list.jsp">
     <i class="fa fa-user"></i> Customer
 </a>
 

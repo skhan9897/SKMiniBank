@@ -61,7 +61,7 @@ Open New Account
 
 <div class="card-body">
 
-<form action="/admin/RegisterServlet" method="post">
+<form action="<%=request.getContextPath()%>/RegisterServlet" method="post">
 
 <!-- Personal Details -->
 
@@ -127,7 +127,9 @@ Personal Details
 
 </div>
 
+<<!-- ========================= -->
 <!-- Contact Details -->
+<!-- ========================= -->
 
 <h4 class="section-title">
     <i class="fas fa-phone"></i>
@@ -136,54 +138,132 @@ Personal Details
 
 <div class="row">
 
-    <div class="col-md-6 mb-3">
+    <!-- Mobile Number -->
+    <div class="col-md-4 mb-3">
         <label>Mobile Number *</label>
-        <input type="text" name="mobile" class="form-control" maxlength="10" required>
+        <input type="text"
+               name="mobile"
+               class="form-control"
+               maxlength="10"
+               pattern="[0-9]{10}"
+               placeholder="Enter Mobile Number"
+               required>
     </div>
 
+    <!-- Send OTP -->
     <div class="col-md-2 mb-3 d-grid">
         <label>&nbsp;</label>
-        <button type="button" class="btn btn-primary">
+        <button type="button"
+                class="btn btn-primary"
+                onclick="sendMobileOTP()">
+            <i class="fas fa-paper-plane"></i>
             Send OTP
         </button>
     </div>
 
-    <div class="col-md-4 mb-3">
+    <!-- Mobile OTP -->
+    <div class="col-md-3 mb-3">
         <label>Enter Mobile OTP</label>
-        <input type="text" name="mobileOtp" class="form-control">
+        <input type="text"
+               name="mobileOtp"
+               class="form-control"
+               maxlength="6"
+               placeholder="6 Digit OTP">
+    </div>
+
+    <!-- Verify -->
+    <div class="col-md-3 mb-3 d-grid">
+        <label>&nbsp;</label>
+        <button type="button"
+                class="btn btn-success"
+                onclick="verifyMobileOTP()">
+            <i class="fas fa-check-circle"></i>
+            Verify OTP
+        </button>
     </div>
 
 </div>
 
 <div class="row">
 
-    <div class="col-md-6 mb-3">
+    <!-- Email -->
+    <div class="col-md-4 mb-3">
         <label>Email Address *</label>
-        <input type="email" name="email" class="form-control" required>
+        <input type="email"
+               name="email"
+               class="form-control"
+               placeholder="Enter Email Address"
+               required>
     </div>
 
+    <!-- Send Email OTP -->
     <div class="col-md-2 mb-3 d-grid">
         <label>&nbsp;</label>
-        <button type="button" class="btn btn-success">
+        <button type="button"
+                class="btn btn-info text-white"
+                onclick="sendEmailOTP()">
+            <i class="fas fa-envelope"></i>
             Send OTP
         </button>
     </div>
 
-    <div class="col-md-4 mb-3">
+    <!-- Email OTP -->
+    <div class="col-md-3 mb-3">
         <label>Enter Email OTP</label>
-        <input type="text" name="emailOtp" class="form-control">
+        <input type="text"
+               name="emailOtp"
+               class="form-control"
+               maxlength="6"
+               placeholder="6 Digit OTP">
+    </div>
+
+    <!-- Verify Email -->
+    <div class="col-md-3 mb-3 d-grid">
+        <label>&nbsp;</label>
+        <button type="button"
+                class="btn btn-success"
+                onclick="verifyEmailOTP()">
+            <i class="fas fa-check-circle"></i>
+            Verify OTP
+        </button>
     </div>
 
 </div>
 
 <div class="row">
 
+    <!-- Alternate Mobile -->
     <div class="col-md-6 mb-3">
         <label>Alternate Mobile Number</label>
-        <input type="text" name="alternateMobile" class="form-control" maxlength="10">
+        <input type="text"
+               name="alternateMobile"
+               class="form-control"
+               maxlength="10"
+               pattern="[0-9]{10}"
+               placeholder="Enter Alternate Mobile Number">
     </div>
 
 </div>
+
+<script>
+
+function sendMobileOTP(){
+    alert("Mobile OTP Sent Successfully");
+}
+
+function verifyMobileOTP(){
+    alert("Mobile OTP Verified Successfully");
+}
+
+function sendEmailOTP(){
+    alert("Email OTP Sent Successfully");
+}
+
+function verifyEmailOTP(){
+    alert("Email OTP Verified Successfully");
+}
+
+</script>
 <!-- Identity Details -->
 
 <h4 class="section-title">
@@ -317,20 +397,26 @@ Personal Details
 <div class="row">
 
     <div class="col-md-3 mb-3">
-        <label>Customer ID</label>
+        <label>Customer Code</label>
         <input type="text"
-               name="customerId"
                class="form-control"
-               value="${customerId}"
+               value="Auto Generated"
+               readonly>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <label>CIF Number</label>
+        <input type="text"
+               class="form-control"
+               value="Auto Generated"
                readonly>
     </div>
 
     <div class="col-md-3 mb-3">
         <label>Account Number</label>
         <input type="text"
-               name="accountNumber"
                class="form-control"
-               value="${accountNumber}"
+               value="Auto Generated"
                readonly>
     </div>
 
@@ -343,7 +429,11 @@ Personal Details
                readonly>
     </div>
 
-    <div class="col-md-3 mb-3">
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
         <label>Branch</label>
         <input type="text"
                name="branch"
@@ -352,11 +442,7 @@ Personal Details
                readonly>
     </div>
 
-</div>
-
-<div class="row">
-
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label>Account Type</label>
         <select name="accountType" class="form-select" required>
             <option value="">Select Account Type</option>
@@ -365,17 +451,36 @@ Personal Details
         </select>
     </div>
 
-    <div class="col-md-6 mb-3">
+    <div class="col-md-4 mb-3">
         <label>Opening Balance</label>
         <input type="number"
                name="balance"
                class="form-control"
                value="5000"
-               required>
+               readonly>
     </div>
 
 </div>
 
+<div class="row">
+
+    <div class="col-md-6 mb-3">
+        <label>UPI ID</label>
+        <input type="text"
+               class="form-control"
+               value="Auto Generated"
+               readonly>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label>UPI Status</label>
+        <input type="text"
+               class="form-control"
+               value="ACTIVE"
+               readonly>
+    </div>
+
+</div>
 <!-- ========================= -->
 <!-- Security Details -->
 <!-- ========================= -->
@@ -474,7 +579,7 @@ Personal Details
 </div>
 
 </form>
-s
+
 </div>
 
 </div>

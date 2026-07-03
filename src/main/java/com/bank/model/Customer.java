@@ -2,21 +2,41 @@ package com.bank.model;
 
 public class Customer {
 
+    // Customer Details
     private int customerId;
     private String fullName;
     private String fatherName;
+    private String motherName;
     private String dob;
     private String gender;
+    private String maritalStatus;
+    private String occupation;
+
+    // Contact Details
     private String mobile;
+    private String alternateMobile;
     private String email;
+
+    // Identity
     private String aadhaar;
     private String pan;
+
+    // Address
     private String address;
     private String city;
     private String state;
     private String pincode;
 
+    // Nominee
+    private String nomineeName;
+    private String relationship;
+    private String nomineeMobile;
+
     // Bank Details
+    private String customerCode;
+    private String cifNumber;
+    private String upiId;
+    private String upiStatus;
     private String accountNumber;
     private String ifscCode;
     private String accountType;
@@ -25,8 +45,44 @@ public class Customer {
     private String status;
     private String kycStatus;
 
+    // Security
+    private String password;
+    private String transactionPin;
+
     public Customer() {
+        
     }
+    public String getCustomerCode() {
+    return customerCode;
+}
+
+public void setCustomerCode(String customerCode) {
+    this.customerCode = customerCode;
+}
+
+public String getCifNumber() {
+    return cifNumber;
+}
+
+public void setCifNumber(String cifNumber) {
+    this.cifNumber = cifNumber;
+}
+
+public String getUpiId() {
+    return upiId;
+}
+
+public void setUpiId(String upiId) {
+    this.upiId = upiId;
+}
+
+public String getUpiStatus() {
+    return upiStatus;
+}
+
+public void setUpiStatus(String upiStatus) {
+    this.upiStatus = upiStatus;
+}
 
     public int getCustomerId() {
         return customerId;
@@ -52,6 +108,14 @@ public class Customer {
         this.fatherName = fatherName;
     }
 
+    public String getMotherName() {
+        return motherName;
+    }
+
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
+
     public String getDob() {
         return dob;
     }
@@ -68,12 +132,36 @@ public class Customer {
         this.gender = gender;
     }
 
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
     public String getMobile() {
         return mobile;
     }
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getAlternateMobile() {
+        return alternateMobile;
+    }
+
+    public void setAlternateMobile(String alternateMobile) {
+        this.alternateMobile = alternateMobile;
     }
 
     public String getEmail() {
@@ -132,9 +220,29 @@ public class Customer {
         this.pincode = pincode;
     }
 
-    // ==========================
-    // Bank Details
-    // ==========================
+    public String getNomineeName() {
+        return nomineeName;
+    }
+
+    public void setNomineeName(String nomineeName) {
+        this.nomineeName = nomineeName;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getNomineeMobile() {
+        return nomineeMobile;
+    }
+
+    public void setNomineeMobile(String nomineeMobile) {
+        this.nomineeMobile = nomineeMobile;
+    }
 
     public String getAccountNumber() {
         return accountNumber;
@@ -183,11 +291,28 @@ public class Customer {
     public void setStatus(String status) {
         this.status = status;
     }
-    public String getKycStatus() {
-    return kycStatus;
-}
 
-public void setKycStatus(String kycStatus) {
-    this.kycStatus = kycStatus;
-}
+    public String getKycStatus() {
+        return kycStatus;
+    }
+
+    public void setKycStatus(String kycStatus) {
+        this.kycStatus = kycStatus;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTransactionPin() {
+        return transactionPin;
+    }
+
+    public void setTransactionPin(String transactionPin) {
+        this.transactionPin = transactionPin;
+    }
 }
