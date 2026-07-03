@@ -58,7 +58,7 @@
 
         <div class="col-md-6">
 
-            <img src="images/banner.png"
+            <img src="images/banner2.jpg"
                  class="img-fluid rounded shadow"
                  alt="Bank">
 

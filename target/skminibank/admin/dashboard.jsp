@@ -1,4 +1,5 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -129,63 +130,81 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <div class="row">
 
-<div class="col-md-3 mb-4">
-<div class="card bg-primary text-white shadow">
-<div class="card-body text-center">
+<div class="row mt-4">
 
-<i class="fas fa-users fa-3x"></i>
+    <!-- Total Customers -->
+    <div class="col-md-3 mb-3">
+        <a href="${pageContext.request.contextPath}/CustomerListServlet"
+           style="text-decoration:none;color:white;">
+            <div class="card bg-primary shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-3x mb-3"></i>
+                    <h3>${totalCustomers}</h3>
+                    <h5>Total Customers</h5>
+                </div>
+            </div>
+        </a>
+    </div>
 
-<h2 class="mt-3">${totalCustomers}</h2>
+    <!-- Total Accounts -->
+    <div class="col-md-3 mb-3">
+        <a href="${pageContext.request.contextPath}/AccountListServlet"
+           style="text-decoration:none;color:white;">
+            <div class="card bg-success shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-wallet fa-3x mb-3"></i>
+                    <h3>${totalAccounts}</h3>
+                    <h5>Total Accounts</h5>
+                </div>
+            </div>
+        </a>
+    </div>
 
-<h5>Total Customers</h5>
+    <!-- Total Balance -->
+    <div class="col-md-3 mb-3">
+        <a href="${pageContext.request.contextPath}/BalanceReportServlet"
+           style="text-decoration:none;color:white;">
+            <div class="card bg-warning shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-money-bill-wave fa-3x mb-3"></i>
+                    <h3>₹ ${totalBalance}</h3>
+                    <h5>Total Balance</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Transactions -->
+    <div class="col-md-3 mb-3">
+        <a href="${pageContext.request.contextPath}/TransactionServlet"
+           style="text-decoration:none;color:white;">
+            <div class="card bg-danger shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+                    <h3>${totalTransactions}</h3>
+                    <h5>Transactions</h5>
+                </div>
+            </div>
+        </a>
+    </div>
 
 </div>
 </div>
-</div>
+                    <!-- Dashboard Banner -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-lg overflow-hidden rounded-4">
 
-<div class="col-md-3 mb-4">
-<div class="card bg-success text-white shadow">
-<div class="card-body text-center">
-
-<i class="fas fa-wallet fa-3x"></i>
-
-<h2 class="mt-3">${totalAccounts}</h2>
-
-<h5>Total Accounts</h5>
-
-</div>
-</div>
-</div>
-<div class="col-md-3 mb-4">
-    <div class="card bg-warning shadow">
-        <div class="card-body text-center">
-
-            <i class="fas fa-money-bill-wave fa-3x"></i>
-
-            <h2 class="mt-3">${totalBalance}</h2>
-
-            <h5>Total Balance</h5>
+            <img src="<%=request.getContextPath()%>/images/banner2.jpg"
+                 alt="SK Mini Bank Banner"
+                 style="width:100%;
+                       height: calc(100vh - 250px);
+                        object-fit:cover;
+                        object-position:center;
+                        display:block;">
 
         </div>
     </div>
-</div>
-
-<div class="col-md-3 mb-4">
-    <div class="card bg-danger text-white shadow">
-        <div class="card-body text-center">
-
-            <i class="fas fa-exchange-alt fa-3x"></i>
-
-            <h2 class="mt-3">${totalTransactions}</h2>
-
-            <h5>Transactions</h5>
-
-        </div>
-    </div>
-</div>
-
-</div>
-
 </div>
 <!-- Main Content End -->
 

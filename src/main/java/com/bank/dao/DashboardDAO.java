@@ -1,9 +1,9 @@
 package com.bank.dao;
 
+import com.bank.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import com.bank.util.DBConnection;
 
 public class DashboardDAO {
 
@@ -11,16 +11,12 @@ public class DashboardDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
+    // Total Customers
     public int getTotalCustomers() {
-
         int total = 0;
-
         try {
-
             con = DBConnection.getConnection();
-
             ps = con.prepareStatement("SELECT COUNT(*) FROM customer");
-
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -30,20 +26,15 @@ public class DashboardDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return total;
     }
 
+    // Total Accounts
     public int getTotalAccounts() {
-
         int total = 0;
-
         try {
-
             con = DBConnection.getConnection();
-
             ps = con.prepareStatement("SELECT COUNT(*) FROM account");
-
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -53,54 +44,42 @@ public class DashboardDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return total;
     }
 
+    // Total Balance
     public double getTotalBalance() {
-
-        double balance = 0;
-
+        double total = 0;
         try {
-
             con = DBConnection.getConnection();
-
             ps = con.prepareStatement("SELECT SUM(balance) FROM account");
-
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                balance = rs.getDouble(1);
+                total = rs.getDouble(1);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return balance;
+        return total;
     }
 
+    // Total Transactions
     public int getTotalTransactions() {
+        int total = 0;
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement("SELECT COUNT(*) FROM transactions");
+            rs = ps.executeQuery();
 
-    int total = 0;
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
 
-    try {
-
-        con = DBConnection.getConnection();
-
-        ps = con.prepareStatement(
-                "SELECT COUNT(*) FROM transactions");
-
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-            total = rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return total;
     }
-
-    return total;
-}
 }

@@ -7,6 +7,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\DashboardDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\AccountDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\FixedDeposit.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\AccountListServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\ChequeBookRequestDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\CustomerDashboardServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\TransferServlet.java
@@ -14,6 +15,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\BlockAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\ATMRequestServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\User.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\CustomerListServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\DepositServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\FixedDepositServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\KYC.java
