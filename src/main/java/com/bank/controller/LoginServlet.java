@@ -17,7 +17,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
@@ -31,9 +31,10 @@ public class LoginServlet extends HttpServlet {
 
             con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM users WHERE email=? AND password=?";
+            String sql = "SELECT * FROM customer WHERE email=? AND password=?";
 
             ps = con.prepareStatement(sql);
+
             ps.setString(1, email);
             ps.setString(2, password);
 
@@ -43,33 +44,63 @@ public class LoginServlet extends HttpServlet {
 
                 HttpSession session = request.getSession(true);
 
-                session.setAttribute("userId", rs.getInt("user_id"));
-                session.setAttribute("username", rs.getString("username"));
-                session.setAttribute("email", rs.getString("email"));
-                session.setAttribute("role", rs.getString("role"));
+                session.setAttribute("customerId",
+                        rs.getString("customer_code"));
 
-                response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+                session.setAttribute("customerName",
+                        rs.getString("full_name"));
+
+                session.setAttribute("accountNumber",
+                        rs.getString("account_number"));
+
+                session.setAttribute("email",
+                        rs.getString("email"));
+
+                session.setAttribute("mobile",
+                        rs.getString("mobile"));
+
+                response.sendRedirect(request.getContextPath()
+                        + "/CustomerProfileServlet");
 
             } else {
 
-                response.sendRedirect(request.getContextPath()
-                        + "/login.jsp?error=Invalid Email or Password");
+                request.setAttribute("error",
+                        "Invalid Email or Password");
+
+                request.getRequestDispatcher("login.jsp")
+                        .forward(request, response);
+
             }
 
         } catch (Exception e) {
 
             e.printStackTrace();
-            response.getWriter().println("Database Error : " + e.getMessage());
+
+            request.setAttribute("error",
+                    "Database Error");
+
+            request.getRequestDispatcher("login.jsp")
+                    .forward(request, response);
 
         } finally {
 
             try {
                 if (rs != null) rs.close();
+            } catch (Exception e) {
+            }
+
+            try {
                 if (ps != null) ps.close();
+            } catch (Exception e) {
+            }
+
+            try {
                 if (con != null) con.close();
             } catch (Exception e) {
-                e.printStackTrace();
             }
+
         }
+
     }
+
 }

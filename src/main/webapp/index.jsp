@@ -129,17 +129,13 @@ Safe • Secure • Digital Banking
 
 </p>
 
-<a href="register.jsp"
-class="btn btn-warning btn-lg">
-
-Open Account
 
 </a>
 
-<a href="login.jsp"
+<a href="admin-login.jsp"
 class="btn btn-light btn-lg">
 
-Internet Banking
+Admin Login 
 
 </a>
 
@@ -337,7 +333,7 @@ Open FD
 
         <div class="carousel-item active">
 
-            <img src="images/banner1.jpg"
+            <img src="images/banner.png"
                  class="d-block w-100"
                  height="500">
 
@@ -353,7 +349,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner2.jpg"
+            <img src="images/banner.png"
                  class="d-block w-100"
                  height="500">
 
@@ -369,7 +365,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner3.jpg"
+            <img src="images/banner.png"
                  class="d-block w-100"
                  height="500">
 
@@ -385,7 +381,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner4.jpg"
+            <img src="images/banner.png"
                  class="d-block w-100"
                  height="500">
 

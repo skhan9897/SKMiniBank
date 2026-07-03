@@ -27,10 +27,20 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
             SK Mini Bank Admin
         </a>
 
-        <span class="text-white">
-            <i class="fas fa-user"></i>
-            Welcome Admin
-        </span>
+        <div class="d-flex align-items-center">
+
+    <span class="me-3">
+        <i class="fa fa-user"></i>
+        Welcome Admin
+    </span>
+
+    <a href="<%=request.getContextPath()%>/AdminLogoutServlet"
+       class="btn btn-danger btn-sm">
+        <i class="fa fa-sign-out-alt"></i>
+        Logout
+    </a>
+
+</div>
 
     </div>
 </nav>
@@ -104,9 +114,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         📊 Reports
     </a>
 
-    <a href="${pageContext.request.contextPath}/LogoutServlet">
-        🚪 Logout
-    </a>
+    <a href="<%=request.getContextPath()%>/AdminLogoutServlet"
+   class="btn btn-danger">
+    <i class="fa fa-sign-out-alt"></i> Logout
+</a>
 
 </div>
 

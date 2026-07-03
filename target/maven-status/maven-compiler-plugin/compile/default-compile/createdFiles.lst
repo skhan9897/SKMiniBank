@@ -24,6 +24,7 @@ com\bank\dao\KYCDAO.class
 com\bank\controller\LoginServlet.class
 com\bank\model\OTP.class
 com\bank\controller\BlockAccountServlet.class
+com\bank\controller\AdminLoginServlet.class
 com\bank\controller\RegisterServlet.class
 com\bank\controller\DepositServlet.class
 com\bank\dao\DashboardDAO.class
@@ -40,6 +41,7 @@ com\bank\model\FixedDeposit.class
 com\bank\controller\SendEmailOTPServlet$1.class
 com\bank\dao\ATMRequestDAO.class
 com\bank\model\KYC.class
+com\bank\controller\AdminLogoutServlet.class
 com\bank\dao\ChequeBookRequestDAO.class
 com\bank\controller\CustomerDashboardServlet.class
 com\bank\controller\TransferServlet.class
