@@ -333,7 +333,7 @@ Open FD
 
         <div class="carousel-item active">
 
-            <img src="images/banner2.jpg"
+            <img src="images/splash.png"
                  class="d-block w-100"
                  height="500">
 
@@ -349,7 +349,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner2.jpg"
+            <img src="images/splash.png"
                  class="d-block w-100"
                  height="500">
 
@@ -365,7 +365,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner.jpg"
+            <img src="images/splash.png"
                  class="d-block w-100"
                  height="500">
 
@@ -381,7 +381,7 @@ Open FD
 
         <div class="carousel-item">
 
-            <img src="images/banner2.jpg"
+            <img src="images/splash.png"
                  class="d-block w-100"
                  height="500">
 
