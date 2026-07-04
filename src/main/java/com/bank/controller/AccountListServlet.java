@@ -17,14 +17,26 @@ public class AccountListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        AccountDAO dao = new AccountDAO();
+        try {
 
-        List<Account> accountList = dao.getAllAccounts();
+            AccountDAO dao = new AccountDAO();
 
-        request.setAttribute("accountList", accountList);
+            List<Account> accountList = dao.getAllAccounts();
 
-        request.getRequestDispatcher("/admin/account-list.jsp")
-               .forward(request, response);
+            request.setAttribute("accountList", accountList);
+
+            request.getRequestDispatcher("/admin/account-list.jsp")
+                   .forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            request.setAttribute("errorMessage", e.getMessage());
+
+            request.getRequestDispatcher("/admin/error.jsp")
+                   .forward(request, response);
+        }
     }
 
     @Override
@@ -32,5 +44,6 @@ public class AccountListServlet extends HttpServlet {
             throws ServletException, IOException {
 
         doGet(request, response);
+
     }
 }

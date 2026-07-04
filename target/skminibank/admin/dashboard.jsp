@@ -148,7 +148,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <!-- Total Accounts -->
     <div class="col-md-3 mb-3">
-        <a href="${pageContext.request.contextPath}/AccountListServlet"
+       <a href="<%=request.getContextPath()%>/AccountListServlet"
            style="text-decoration:none;color:white;">
             <div class="card bg-success shadow">
                 <div class="card-body text-center">
@@ -176,7 +176,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <!-- Transactions -->
     <div class="col-md-3 mb-3">
-        <a href="${pageContext.request.contextPath}/TransactionServlet"
+       <a href="<%=request.getContextPath()%>/TransactionListServlet"
+
+
            style="text-decoration:none;color:white;">
             <div class="card bg-danger shadow">
                 <div class="card-body text-center">

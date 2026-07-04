@@ -2,41 +2,40 @@ package com.bank.dao;
 
 import com.bank.model.Transaction;
 import com.bank.util.DBConnection;
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionDAO {
 
-    Connection con = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    // Add Transaction
-    public boolean addTransaction(Transaction t) {
+    // Save Transaction
+    public boolean saveTransaction(Transaction t) {
 
         boolean status = false;
 
         try {
 
-            con = DBConnection.getConnection();
+            Connection con = DBConnection.getConnection();
 
-            String sql = "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,status) VALUES(?,?,?,?,?,?)";
+            String sql = "INSERT INTO transactions(account_number, customer_name, transaction_type, amount, balance, transaction_date, status) VALUES(?,?,?,?,?,?,?)";
 
-            ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, t.getAccountNumber());
             ps.setString(2, t.getCustomerName());
             ps.setString(3, t.getTransactionType());
             ps.setDouble(4, t.getAmount());
             ps.setDouble(5, t.getBalance());
-            ps.setString(6, t.getStatus());
+            ps.setTimestamp(6, t.getTransactionDate());
+            ps.setString(7, t.getStatus());
 
-            int i = ps.executeUpdate();
+            status = ps.executeUpdate() > 0;
 
-            if (i > 0) {
-                status = true;
-            }
+            ps.close();
+            con.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,36 +44,40 @@ public class TransactionDAO {
         return status;
     }
 
-    // View All Transactions
+    // Get All Transactions
     public List<Transaction> getAllTransactions() {
 
         List<Transaction> list = new ArrayList<>();
 
         try {
 
-            con = DBConnection.getConnection();
+            Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM transactions ORDER BY transaction_id DESC";
+            String sql = "SELECT * FROM transactions ORDER BY id DESC";
 
-            ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
 
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
 
                 Transaction t = new Transaction();
 
-                t.setTransactionId(rs.getInt("transaction_id"));
+                t.setId(rs.getInt("id"));
                 t.setAccountNumber(rs.getString("account_number"));
                 t.setCustomerName(rs.getString("customer_name"));
                 t.setTransactionType(rs.getString("transaction_type"));
                 t.setAmount(rs.getDouble("amount"));
                 t.setBalance(rs.getDouble("balance"));
-                t.setTransactionDate(rs.getString("transaction_date"));
+                t.setTransactionDate(rs.getTimestamp("transaction_date"));
                 t.setStatus(rs.getString("status"));
 
                 list.add(t);
             }
+
+            rs.close();
+            ps.close();
+            con.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,72 +85,51 @@ public class TransactionDAO {
 
         return list;
     }
+// Add Transaction
+public boolean addTransaction(Transaction t) {
+    return saveTransaction(t);
+}
 
-    // Search by Account Number
-    public List<Transaction> searchTransaction(String accountNumber) {
+// Search Transaction by Account Number
+public List<Transaction> searchTransaction(String accountNumber) {
 
-        List<Transaction> list = new ArrayList<>();
+    List<Transaction> list = new ArrayList<>();
 
-        try {
+    try {
 
-            con = DBConnection.getConnection();
+        Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM transactions WHERE account_number=? ORDER BY transaction_id DESC";
+        String sql = "SELECT * FROM transactions WHERE account_number=? ORDER BY id DESC";
 
-            ps = con.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, accountNumber);
 
-            ps.setString(1, accountNumber);
+        ResultSet rs = ps.executeQuery();
 
-            rs = ps.executeQuery();
+        while (rs.next()) {
 
-            while (rs.next()) {
+            Transaction t = new Transaction();
 
-                Transaction t = new Transaction();
+            t.setId(rs.getInt("id"));
+            t.setAccountNumber(rs.getString("account_number"));
+            t.setCustomerName(rs.getString("customer_name"));
+            t.setTransactionType(rs.getString("transaction_type"));
+            t.setAmount(rs.getDouble("amount"));
+            t.setBalance(rs.getDouble("balance"));
+            t.setTransactionDate(rs.getTimestamp("transaction_date"));
+            t.setStatus(rs.getString("status"));
 
-                t.setTransactionId(rs.getInt("transaction_id"));
-                t.setAccountNumber(rs.getString("account_number"));
-                t.setCustomerName(rs.getString("customer_name"));
-                t.setTransactionType(rs.getString("transaction_type"));
-                t.setAmount(rs.getDouble("amount"));
-                t.setBalance(rs.getDouble("balance"));
-                t.setTransactionDate(rs.getString("transaction_date"));
-                t.setStatus(rs.getString("status"));
-
-                list.add(t);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            list.add(t);
         }
 
-        return list;
+        rs.close();
+        ps.close();
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 
-    // Delete Transaction
-    public boolean deleteTransaction(int transactionId) {
-
-        boolean status = false;
-
-        try {
-
-            con = DBConnection.getConnection();
-
-            String sql = "DELETE FROM transactions WHERE transaction_id=?";
-
-            ps = con.prepareStatement(sql);
-
-            ps.setInt(1, transactionId);
-
-            int i = ps.executeUpdate();
-
-            if (i > 0) {
-                status = true;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return status;
-    }
+    return list;
+}
 }

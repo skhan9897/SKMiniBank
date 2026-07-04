@@ -1,25 +1,27 @@
 package com.bank.model;
 
+import java.sql.Timestamp;
+
 public class Transaction {
 
-    private int transactionId;
+    private int id;
     private String accountNumber;
     private String customerName;
     private String transactionType;
     private double amount;
     private double balance;
-    private String transactionDate;
+    private Timestamp transactionDate;
     private String status;
 
     public Transaction() {
     }
 
-    public int getTransactionId() {
-        return transactionId;
+    public int getId() {
+        return id;
     }
 
-    public void setTransactionId(int transactionId) {
-        this.transactionId = transactionId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAccountNumber() {
@@ -62,11 +64,11 @@ public class Transaction {
         this.balance = balance;
     }
 
-    public String getTransactionDate() {
+    public Timestamp getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(String transactionDate) {
+    public void setTransactionDate(Timestamp transactionDate) {
         this.transactionDate = transactionDate;
     }
 
