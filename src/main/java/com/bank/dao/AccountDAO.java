@@ -176,7 +176,7 @@ public Account getAccountByNumber(String accountNumber) {
 
     return status;
 }
-    public boolean withdraw(String accountNumber, double amount) {
+  public boolean withdraw(String accountNumber, double amount) {
 
     boolean status = false;
 
@@ -184,8 +184,12 @@ public Account getAccountByNumber(String accountNumber) {
 
         con = DBConnection.getConnection();
 
-        ps = con.prepareStatement(
-                "SELECT balance FROM customer WHERE account_number=?");
+        accountNumber = accountNumber.trim();
+
+        // पहले balance check
+        String sql = "SELECT balance FROM customer WHERE TRIM(account_number)=?";
+
+        ps = con.prepareStatement(sql);
         ps.setString(1, accountNumber);
 
         rs = ps.executeQuery();
@@ -194,22 +198,49 @@ public Account getAccountByNumber(String accountNumber) {
 
             double balance = rs.getDouble("balance");
 
+            System.out.println("Current Balance = " + balance);
+
             if (balance >= amount) {
 
-                ps = con.prepareStatement(
-                        "UPDATE customer SET balance = balance - ? WHERE account_number=?");
+                ps.close();
 
-                ps.setDouble(1, amount);
+                sql = "UPDATE customer SET balance=? WHERE TRIM(account_number)=?";
+
+                ps = con.prepareStatement(sql);
+
+                ps.setDouble(1, balance - amount);
                 ps.setString(2, accountNumber);
 
-                if (ps.executeUpdate() > 0) {
-                    status = true;
-                }
+                int rows = ps.executeUpdate();
+
+                System.out.println("Rows Updated = " + rows);
+
+                status = rows > 0;
+
+            } else {
+
+                System.out.println("Insufficient Balance");
+
             }
+
+        } else {
+
+            System.out.println("Account Not Found");
+
         }
 
     } catch (Exception e) {
         e.printStackTrace();
+    } finally {
+
+        try {
+            if(rs!=null) rs.close();
+            if(ps!=null) ps.close();
+            if(con!=null) con.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     return status;

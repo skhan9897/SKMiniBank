@@ -592,6 +592,45 @@ c.setKycStatus(rs.getString("kyc_status"));
 
     return status;
 }
+    public Customer getCustomerByAccountNumber(String accountNumber) {
+
+    Customer c = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql = "SELECT * FROM customer WHERE account_number=?";
+
+        ps = con.prepareStatement(sql);
+        ps.setString(1, accountNumber);
+
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            c = new Customer();
+
+            c.setCustomerId(rs.getInt("customer_id"));
+            c.setFullName(rs.getString("full_name"));
+            c.setAccountNumber(rs.getString("account_number"));
+            c.setBalance(rs.getDouble("balance"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (rs != null) rs.close();
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    return c;
+}
 
 // 👇 यह CustomerDAO class का आखिरी bracket रहेगा
 }

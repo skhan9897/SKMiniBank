@@ -1,8 +1,10 @@
 package com.bank.controller;
 
-import com.bank.model.Account;
 import com.bank.dao.AccountDAO;
+import com.bank.dao.CustomerDAO;
 import com.bank.dao.TransactionDAO;
+import com.bank.model.Account;
+import com.bank.model.Customer;
 import com.bank.model.Transaction;
 
 import java.io.IOException;
@@ -27,31 +29,51 @@ public class WithdrawServlet extends HttpServlet {
 
         boolean status = dao.withdraw(accountNumber, amount);
 
-       if (status) {
+        if (status) {
 
-    Account account = dao.getAccountByNumber(accountNumber);
+            // Updated Account
+            Account account = dao.getAccountByNumber(accountNumber);
 
-    Transaction t = new Transaction();
+            // Save Transaction
+            Transaction t = new Transaction();
 
-    t.setAccountNumber(accountNumber);
+            t.setAccountNumber(accountNumber);
 
-    if (account != null) {
-        t.setCustomerName(account.getCustomerName());
-        t.setBalance(account.getBalance());
-    }
+            if (account != null) {
+                t.setCustomerName(account.getCustomerName());
+                t.setBalance(account.getBalance());
+            }
 
-    t.setTransactionType("Withdraw");
-    t.setAmount(amount);
-    t.setStatus("SUCCESS");
+            t.setTransactionType("Withdraw");
+            t.setAmount(amount);
+            t.setStatus("SUCCESS");
 
-    TransactionDAO td = new TransactionDAO();
-    td.addTransaction(t);
+            TransactionDAO td = new TransactionDAO();
+            td.addTransaction(t);
 
-    response.sendRedirect("admin/withdraw.jsp?msg=success");
+            // Get Customer
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
-} else {
+            if (customer != null) {
 
-    response.sendRedirect("admin/withdraw.jsp?msg=failed");
-}
+                response.sendRedirect(
+                        "TransactionSuccess.jsp?customerId="
+                        + customer.getCustomerId()
+                        + "&amount="
+                        + amount
+                        + "&type=Withdraw");
+
+            } else {
+
+                response.sendRedirect("admin/customer-list.jsp");
+
+            }
+
+        } else {
+
+            response.sendRedirect("admin/withdraw.jsp?msg=failed");
+
+        }
     }
 }

@@ -1,9 +1,15 @@
 package com.bank.controller;
-import com.bank.dao.TransactionDAO;
-import com.bank.model.Transaction;
-import com.bank.model.Account;
+
 import com.bank.dao.AccountDAO;
+import com.bank.dao.CustomerDAO;
+import com.bank.dao.TransactionDAO;
+
+import com.bank.model.Account;
+import com.bank.model.Customer;
+import com.bank.model.Transaction;
+
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,30 +35,47 @@ public class TransferServlet extends HttpServlet {
 
         if (status) {
 
-    Account sender = dao.getAccountByNumber(fromAccount);
+            // Sender Account
+            Account sender = dao.getAccountByNumber(fromAccount);
 
-Transaction t = new Transaction();
+            // Save Transaction
+            Transaction t = new Transaction();
 
-t.setAccountNumber(fromAccount);
+            t.setAccountNumber(fromAccount);
 
-if (sender != null) {
-    t.setCustomerName(sender.getCustomerName());
-    t.setBalance(sender.getBalance());
-}
+            if (sender != null) {
+                t.setCustomerName(sender.getCustomerName());
+                t.setBalance(sender.getBalance());
+            }
 
-t.setTransactionType("Transfer");
-t.setAmount(amount);
-t.setStatus("SUCCESS");
+            t.setTransactionType("Transfer");
+            t.setAmount(amount);
+            t.setStatus("SUCCESS");
 
-TransactionDAO td = new TransactionDAO();
-td.addTransaction(t);
-    response.sendRedirect("customer/dashboard.jsp?msg=Transfer Success");
+            TransactionDAO td = new TransactionDAO();
+            td.addTransaction(t);
 
-} else {
+            // Get Customer ID
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.getCustomerByAccountNumber(fromAccount);
 
-    response.sendRedirect("transfer.jsp?msg=Transfer Failed");
-}
+            if (customer != null) {
 
+                response.sendRedirect(
+                        "TransactionSuccess.jsp?customerId="
+                        + customer.getCustomerId()
+                        + "&amount="
+                        + amount
+                        + "&type=Transfer");
+
+            } else {
+
+                response.sendRedirect("admin/customer-list.jsp");
+            }
+
+        } else {
+
+            response.sendRedirect("admin/transfer.jsp?msg=failed");
+        }
     }
-
 }
