@@ -3,7 +3,6 @@ com\bank\model\DebitCard.class
 com\bank\controller\TransactionListServlet.class
 com\bank\controller\VerifyEmailOTPServlet.class
 com\bank\controller\KYCServlet.class
-com\bank\controller\ApiLoginServlet.class
 com\bank\controller\DashboardServlet.class
 com\bank\dao\AccountDAO.class
 com\bank\dao\FixedDepositDAO.class
