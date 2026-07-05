@@ -178,7 +178,8 @@ public Account getAccountByNumber(String accountNumber) {
 }
   public boolean withdraw(String accountNumber, double amount) {
 
-    boolean status = false;
+    Connection con = null;
+    PreparedStatement ps = null;
 
     try {
 
@@ -186,64 +187,39 @@ public Account getAccountByNumber(String accountNumber) {
 
         accountNumber = accountNumber.trim();
 
-        // पहले balance check
-        String sql = "SELECT balance FROM customer WHERE TRIM(account_number)=?";
+        String sql =
+            "UPDATE customer " +
+            "SET balance = balance - ? " +
+            "WHERE TRIM(account_number)=TRIM(?) " +
+            "AND balance >= ?";
 
         ps = con.prepareStatement(sql);
-        ps.setString(1, accountNumber);
 
-        rs = ps.executeQuery();
+        ps.setDouble(1, amount);
+        ps.setString(2, accountNumber);
+        ps.setDouble(3, amount);
 
-        if (rs.next()) {
+        int rows = ps.executeUpdate();
 
-            double balance = rs.getDouble("balance");
+        System.out.println("Rows Updated = " + rows);
 
-            System.out.println("Current Balance = " + balance);
-
-            if (balance >= amount) {
-
-                ps.close();
-
-                sql = "UPDATE customer SET balance=? WHERE TRIM(account_number)=?";
-
-                ps = con.prepareStatement(sql);
-
-                ps.setDouble(1, balance - amount);
-                ps.setString(2, accountNumber);
-
-                int rows = ps.executeUpdate();
-
-                System.out.println("Rows Updated = " + rows);
-
-                status = rows > 0;
-
-            } else {
-
-                System.out.println("Insufficient Balance");
-
-            }
-
-        } else {
-
-            System.out.println("Account Not Found");
-
-        }
+        return rows > 0;
 
     } catch (Exception e) {
+
         e.printStackTrace();
+        return false;
+
     } finally {
 
         try {
-            if(rs!=null) rs.close();
-            if(ps!=null) ps.close();
-            if(con!=null) con.close();
-        } catch(Exception e){
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
-    return status;
 }
     public boolean transferMoney(String fromAccount,
                              String toAccount,

@@ -8,6 +8,7 @@ import com.bank.model.Customer;
 import com.bank.model.Transaction;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,36 +23,48 @@ public class WithdrawServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String accountNumber = request.getParameter("accountNumber");
-        double amount = Double.parseDouble(request.getParameter("amount"));
+        try {
 
-        AccountDAO dao = new AccountDAO();
+            String accountNumber = request.getParameter("accountNumber").trim();
+            double amount = Double.parseDouble(request.getParameter("amount"));
 
-        boolean status = dao.withdraw(accountNumber, amount);
+            if (amount <= 0) {
+                response.sendRedirect("admin/withdraw.jsp?msg=invalid");
+                return;
+            }
 
-        if (status) {
+            System.out.println("===== WITHDRAW =====");
+            System.out.println("Account : " + accountNumber);
+            System.out.println("Amount  : " + amount);
 
-            // Updated Account
+            AccountDAO dao = new AccountDAO();
+
+            boolean status = dao.withdraw(accountNumber, amount);
+
+            System.out.println("Withdraw Status : " + status);
+
+            if (!status) {
+                response.sendRedirect("admin/withdraw.jsp?msg=failed");
+                return;
+            }
+
             Account account = dao.getAccountByNumber(accountNumber);
 
-            // Save Transaction
             Transaction t = new Transaction();
-
             t.setAccountNumber(accountNumber);
+            t.setTransactionType("Withdraw");
+            t.setAmount(amount);
+            t.setStatus("SUCCESS");
+            t.setTransactionDate(new Timestamp(System.currentTimeMillis()));
 
             if (account != null) {
                 t.setCustomerName(account.getCustomerName());
                 t.setBalance(account.getBalance());
             }
 
-            t.setTransactionType("Withdraw");
-            t.setAmount(amount);
-            t.setStatus("SUCCESS");
-
             TransactionDAO td = new TransactionDAO();
             td.addTransaction(t);
 
-            // Get Customer
             CustomerDAO customerDAO = new CustomerDAO();
             Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
@@ -70,10 +83,12 @@ public class WithdrawServlet extends HttpServlet {
 
             }
 
-        } else {
+        } catch (Exception e) {
 
-            response.sendRedirect("admin/withdraw.jsp?msg=failed");
+            e.printStackTrace();
+            response.getWriter().println("ERROR : " + e.getMessage());
 
         }
+
     }
 }

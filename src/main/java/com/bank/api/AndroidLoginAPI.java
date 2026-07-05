@@ -1,10 +1,10 @@
 package com.bank.api;
 
-
 import com.bank.dao.LoginDAO;
 import com.bank.model.Customer;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,33 +23,68 @@ public class AndroidLoginAPI extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        PrintWriter out = response.getWriter();
 
-        LoginDAO dao = new LoginDAO();
+        try {
 
-        Customer customer = dao.login(email, password);
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-        if (customer != null) {
+            if (email == null || password == null
+                    || email.trim().isEmpty()
+                    || password.trim().isEmpty()) {
 
-            String json =
-                    "{"
-                    + "\"status\":\"success\","
-                    + "\"customerId\":\"" + customer.getCustomerId() + "\","
-                    + "\"customerName\":\"" + customer.getFullName() + "\","
-                    + "\"accountNumber\":\"" + customer.getAccountNumber() + "\","
-                    + "\"balance\":\"" + customer.getBalance() + "\""
-                    + "}";
+                out.print("{"
+                        + "\"status\":\"failed\","
+                        + "\"message\":\"Email and Password Required\""
+                        + "}");
+                return;
+            }
 
-            response.getWriter().print(json);
+            LoginDAO dao = new LoginDAO();
 
-        } else {
+            Customer customer = dao.login(email.trim(), password.trim());
 
-            response.getWriter().print(
-                    "{\"status\":\"failed\"}"
-            );
+            if (customer != null) {
+
+                String json = "{"
+                        + "\"status\":\"success\","
+                        + "\"customerId\":\"" + customer.getCustomerId() + "\","
+                        + "\"customerCode\":\"" + customer.getCustomerCode() + "\","
+                        + "\"customerName\":\"" + customer.getFullName() + "\","
+                        + "\"accountNumber\":\"" + customer.getAccountNumber() + "\","
+                        + "\"email\":\"" + customer.getEmail() + "\","
+                        + "\"mobile\":\"" + customer.getMobile() + "\","
+                        + "\"balance\":\"" + customer.getBalance() + "\","
+                        + "\"upiId\":\"" + customer.getUpiId() + "\","
+                        + "\"statusText\":\"" + customer.getStatus() + "\""
+                        + "}";
+
+                out.print(json);
+
+            } else {
+
+                out.print("{"
+                        + "\"status\":\"failed\","
+                        + "\"message\":\"Invalid Email or Password\""
+                        + "}");
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            out.print("{"
+                    + "\"status\":\"error\","
+                    + "\"message\":\"" + e.getMessage().replace("\"", "'") + "\""
+                    + "}");
+
+        } finally {
+
+            out.flush();
+            out.close();
 
         }
-
     }
 }
