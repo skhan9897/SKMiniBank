@@ -25,7 +25,7 @@ public class AdminLoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("admin", adminId);
 
-            response.sendRedirect("admin/dashboard.jsp");
+            response.sendRedirect("admin/SKMiniBank-System.jsp");
 
         } else {
 

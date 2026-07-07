@@ -227,7 +227,7 @@ Admin Login
 
 <div class="mt-3 text-center">
 
-<a href="index.jsp" class="btn btn-outline-secondary">
+<a href="SKMiniBank.jsp" class="btn btn-outline-secondary">
 
 <i class="fa fa-house"></i>
 

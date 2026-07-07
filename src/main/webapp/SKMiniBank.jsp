@@ -132,7 +132,7 @@ Safe • Secure • Digital Banking
 
 </a>
 
-<a href="admin-login.jsp"
+<a href="SKMiniBankadmin-login.jsp"
 class="btn btn-light btn-lg">
 
 Admin Login 

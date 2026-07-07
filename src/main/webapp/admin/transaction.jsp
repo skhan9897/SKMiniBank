@@ -72,7 +72,7 @@ Transaction History
 
 <div class="card-body">
 
-<form action="<%=request.getContextPath()%>/TransactionListServlet" method="get">
+<form action="<%=request.getContextPath()%>/TransactionServlet" method="get">
 
 <div class="row search-box">
 
@@ -90,7 +90,7 @@ Search
 </div>
 
 <div class="col-md-2">
-<a href="<%=request.getContextPath()%>/TransactionListServlet"
+<a href="<%=request.getContextPath()%>/TransactionServlet"
 class="btn btn-success w-100">
 Refresh
 </a>

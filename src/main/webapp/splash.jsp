@@ -83,7 +83,7 @@ p{
 <script>
 window.onload = function () {
     setTimeout(function () {
-        window.location.replace("<%=request.getContextPath()%>/index.jsp");
+        window.location.replace("<%=request.getContextPath()%>/SKMiniBank.jsp");
     }, 4000);
 };
 </script>

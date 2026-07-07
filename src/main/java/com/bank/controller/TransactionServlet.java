@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/TransactionListServlet")
-public class TransactionListServlet extends HttpServlet {
+@WebServlet("/TransactionServlet")
+public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
