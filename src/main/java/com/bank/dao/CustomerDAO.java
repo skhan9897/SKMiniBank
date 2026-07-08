@@ -632,5 +632,4 @@ c.setKycStatus(rs.getString("kyc_status"));
     return c;
 }
 
-// 👇 यह CustomerDAO class का आखिरी bracket रहेगा
 }

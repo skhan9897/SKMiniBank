@@ -107,13 +107,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         📦 Fixed Deposit
     </a>
 
-    <a href="${pageContext.request.contextPath}/admin/loan.jsp">
+    <a href="${pageContext.request.contextPath}/admin/loan-dashboard.jsp">
         🏠 Loan
     </a>
 
-    <a href="${pageContext.request.contextPath}/admin/reports.jsp">
-        📊 Reports
+    
+    <a href="<%=request.getContextPath()%>/ReportServlet">
+        <i class="fa fa-bar-chart"></i> Reports
     </a>
+
 
     <a href="<%=request.getContextPath()%>/AdminLogoutServlet"
    class="btn btn-danger">

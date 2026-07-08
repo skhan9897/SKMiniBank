@@ -154,7 +154,7 @@ body{
     SK MINI BANK
 </h3>
 
-<a href="${pageContext.request.contextPath}/admin/dashboard.jsp">
+<a href="${pageContext.request.contextPath}/admin/SKMiniBank-System.jsp">
     <i class="fa fa-gauge"></i> Dashboard
 </a>
 

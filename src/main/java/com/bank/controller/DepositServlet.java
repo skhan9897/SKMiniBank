@@ -39,20 +39,23 @@ public class DepositServlet extends HttpServlet {
             // Save Transaction
             Transaction t = new Transaction();
 
-            t.setAccountNumber(accountNumber);
+t.setAccountNumber(accountNumber);
 
-            if (account != null) {
-                t.setCustomerName(account.getCustomerName());
-                t.setBalance(account.getBalance());
-            }
+if (account != null) {
+    t.setCustomerName(account.getCustomerName());
+    t.setBalance(account.getBalance());
+}
 
-            t.setTransactionType("Deposit");
-            t.setAmount(amount);
-            t.setStatus("SUCCESS");
+t.setTransactionType("Deposit");
+t.setAmount(amount);
+t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
+t.setStatus("SUCCESS");
 
-            TransactionDAO td = new TransactionDAO();
-            td.addTransaction(t);
+TransactionDAO td = new TransactionDAO();
 
+boolean saved = td.addTransaction(t);
+
+System.out.println("Transaction Saved : " + saved);
             // Get Customer ID from Account Number
             CustomerDAO customerDAO = new CustomerDAO();
             Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);

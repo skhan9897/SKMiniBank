@@ -3,9 +3,7 @@ package com.bank.dao;
 import com.bank.model.Transaction;
 import com.bank.util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class TransactionDAO {
             ps.setString(3, t.getTransactionType());
             ps.setDouble(4, t.getAmount());
             ps.setDouble(5, t.getBalance());
-            ps.setTimestamp(6, t.getTransactionDate());
+            ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
             ps.setString(7, t.getStatus());
 
             status = ps.executeUpdate() > 0;
@@ -44,7 +42,11 @@ public class TransactionDAO {
         return status;
     }
 
-    // Get All Transactions
+    public boolean addTransaction(Transaction t) {
+        return saveTransaction(t);
+    }
+
+    // All Transactions
     public List<Transaction> getAllTransactions() {
 
         List<Transaction> list = new ArrayList<>();
@@ -53,9 +55,8 @@ public class TransactionDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM transactions ORDER BY id DESC";
-
-            PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT * FROM transactions ORDER BY transaction_date DESC");
 
             ResultSet rs = ps.executeQuery();
 
@@ -85,51 +86,120 @@ public class TransactionDAO {
 
         return list;
     }
-// Add Transaction
-public boolean addTransaction(Transaction t) {
-    return saveTransaction(t);
-}
 
-// Search Transaction by Account Number
-public List<Transaction> searchTransaction(String accountNumber) {
+    // Total Transactions
+    public int getTotalTransactions() {
 
-    List<Transaction> list = new ArrayList<>();
+        int total = 0;
 
-    try {
+        try {
 
-        Connection con = DBConnection.getConnection();
+            Connection con = DBConnection.getConnection();
 
-        String sql = "SELECT * FROM transactions WHERE account_number=? ORDER BY id DESC";
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT COUNT(*) FROM transactions");
 
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setString(1, accountNumber);
+            ResultSet rs = ps.executeQuery();
 
-        ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
 
-        while (rs.next()) {
+            rs.close();
+            ps.close();
+            con.close();
 
-            Transaction t = new Transaction();
-
-            t.setId(rs.getInt("id"));
-            t.setAccountNumber(rs.getString("account_number"));
-            t.setCustomerName(rs.getString("customer_name"));
-            t.setTransactionType(rs.getString("transaction_type"));
-            t.setAmount(rs.getDouble("amount"));
-            t.setBalance(rs.getDouble("balance"));
-            t.setTransactionDate(rs.getTimestamp("transaction_date"));
-            t.setStatus(rs.getString("status"));
-
-            list.add(t);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        rs.close();
-        ps.close();
-        con.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return total;
     }
 
-    return list;
-}
+    // Total Deposit
+    public double getTotalDeposit() {
+
+        double total = 0;
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT IFNULL(SUM(amount),0) FROM transactions WHERE transaction_type='Deposit'");
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    // Total Withdraw
+    public double getTotalWithdraw() {
+
+        double total = 0;
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT IFNULL(SUM(amount),0) FROM transactions WHERE transaction_type='Withdraw'");
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    // Total Transfer
+    public double getTotalTransfer() {
+
+        double total = 0;
+
+        try {
+
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT IFNULL(SUM(amount),0) FROM transactions WHERE transaction_type='Transfer'");
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+
+            rs.close();
+            ps.close();
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
 }
