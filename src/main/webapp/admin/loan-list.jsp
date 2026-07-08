@@ -1,16 +1,12 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.List"%>
-<%@page import="com.bank.model.Loan"%>
+<%@ page import="java.util.List" %>
+<%@ page import="com.bank.dao.LoanDAO" %>
+<%@ page import="com.bank.model.Loan" %>
 
 <%
-List<Loan> loanList =
-(List<Loan>) request.getAttribute("loanList");
-
-if(loanList==null){
-    loanList = new java.util.ArrayList<Loan>();
-}
+LoanDAO dao = new LoanDAO();
+List<Loan> loanList = dao.getAllLoans();
 %>
-
+<h3>Total Loans: <%= loanList.size() %></h3>
 <!DOCTYPE html>
 <html>
 
@@ -163,7 +159,10 @@ background:#dc3545;
 
 <h2>
 
-🏦 Loan Management
+<h2>
+    <i class="fas fa-file-invoice-dollar"></i>
+    Loan Management
+</h2>
 
 </h2>
 
@@ -212,7 +211,7 @@ for(Loan loan : loanList){
 
 <td><%=loan.getLoanType()%></td>
 
-<td>₹ <%=loan.getLoanAmount()%></td>
+<td>? <%=loan.getLoanAmount()%></td>
 
 <td><%=loan.getInterestRate()%> %</td>
 
@@ -420,7 +419,7 @@ color:white;">
 
 <h3>
 
-🏦 SK Mini Bank
+? SK Mini Bank
 
 </h3>
 
