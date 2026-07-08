@@ -2,9 +2,11 @@ com\bank\model\ChequeBookRequest.class
 com\bank\model\DebitCard.class
 com\bank\model\Loan.class
 com\bank\controller\VerifyEmailOTPServlet.class
+com\bank\controller\DeleteInternetBankingServlet.class
 com\bank\controller\KYCServlet.class
 com\bank\controller\DashboardServlet.class
 com\bank\controller\TransactionServlet.class
+com\bank\controller\InternetBankingDashboardServlet.class
 com\bank\dao\AccountDAO.class
 com\bank\dao\FixedDepositDAO.class
 com\bank\controller\CustomerServlet.class
@@ -18,9 +20,11 @@ com\bank\model\Account.class
 com\bank\model\User.class
 com\bank\controller\CustomerDetailsServlet.class
 com\bank\controller\UnblockAccountServlet.class
+com\bank\controller\ApproveInternetBankingServlet.class
 com\bank\dao\ReportDAO.class
 com\bank\dao\OTPDAO.class
 com\bank\controller\UnfreezeAccountServlet.class
+com\bank\model\InternetBanking.class
 com\bank\controller\FixedDepositServlet.class
 com\bank\util\DBConnection.class
 com\bank\dao\KYCDAO.class
@@ -54,8 +58,12 @@ com\bank\controller\AdminLogoutServlet.class
 com\bank\controller\RejectLoanServlet.class
 com\bank\dao\ChequeBookRequestDAO.class
 com\bank\controller\CustomerDashboardServlet.class
+com\bank\dao\InternetBankingDAO.class
 com\bank\controller\LoanListServlet.class
 com\bank\controller\TransferServlet.class
+com\bank\controller\InternetBankingServlet.class
 com\bank\dao\CustomerDAO.class
+com\bank\controller\RejectInternetBankingServlet.class
 com\bank\controller\UpdateCustomerServlet.class
+com\bank\controller\InternetBankingListServlet.class
 com\bank\controller\ATMRequestServlet.class

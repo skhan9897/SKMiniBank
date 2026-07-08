@@ -91,7 +91,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         📦 Cheque Book Request
     </a>
 
-    <a href="${pageContext.request.contextPath}/admin/internet-banking-request.jsp">
+    <a href="${pageContext.request.contextPath}/admin/internet-banking-dashboard.jsp">
         🌐 Internet Banking
     </a>
 
