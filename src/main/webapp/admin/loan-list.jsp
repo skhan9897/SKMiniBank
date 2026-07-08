@@ -211,7 +211,7 @@ for(Loan loan : loanList){
 
 <td><%=loan.getLoanType()%></td>
 
-<td>? <%=loan.getLoanAmount()%></td>
+<td>&#8377; <%=loan.getLoanAmount()%></td>
 
 <td><%=loan.getInterestRate()%> %</td>
 
