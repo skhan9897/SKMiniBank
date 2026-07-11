@@ -7,6 +7,7 @@ import com.bank.util.DBConnection;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,99 +19,133 @@ import javax.servlet.http.HttpServletResponse;
 public class RegisterServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
-        Customer customer = new Customer();
+        try {
 
-        customer.setFullName(request.getParameter("fullName"));
-customer.setFatherName(request.getParameter("fatherName"));
-customer.setMotherName(request.getParameter("motherName"));
-customer.setDob(request.getParameter("dob"));
-customer.setGender(request.getParameter("gender"));
-customer.setMaritalStatus(request.getParameter("maritalStatus"));
-customer.setOccupation(request.getParameter("occupation"));
+            Customer customer = new Customer();
 
-customer.setMobile(request.getParameter("mobile"));
-customer.setAlternateMobile(request.getParameter("alternateMobile"));
-customer.setEmail(request.getParameter("email"));
+            // Personal Details
+            customer.setFullName(request.getParameter("fullName"));
+            customer.setFatherName(request.getParameter("fatherName"));
+            customer.setMotherName(request.getParameter("motherName"));
+            customer.setDob(request.getParameter("dob"));
+            customer.setGender(request.getParameter("gender"));
+            customer.setMaritalStatus(request.getParameter("maritalStatus"));
+            customer.setOccupation(request.getParameter("occupation"));
 
-customer.setAadhaar(request.getParameter("aadhaar"));
-customer.setPan(request.getParameter("pan"));
+            // Contact Details
+            customer.setMobile(request.getParameter("mobile"));
+            customer.setAlternateMobile(request.getParameter("alternateMobile"));
+            customer.setEmail(request.getParameter("email"));
 
-customer.setAddress(request.getParameter("address"));
-customer.setCity(request.getParameter("city"));
-customer.setState(request.getParameter("state"));
-customer.setPincode(request.getParameter("pincode"));
+            // Identity
+            customer.setAadhaar(request.getParameter("aadhaar"));
+            customer.setPan(request.getParameter("pan"));
 
-customer.setNomineeName(request.getParameter("nomineeName"));
-customer.setRelationship(request.getParameter("relationship"));
-customer.setNomineeMobile(request.getParameter("nomineeMobile"));
-        // Bank Details Auto Generate
+            // Address
+            customer.setAddress(request.getParameter("address"));
+            customer.setCity(request.getParameter("city"));
+            customer.setState(request.getParameter("state"));
+            customer.setPincode(request.getParameter("pincode"));
 
-customer.setCustomerCode("SKC" + System.currentTimeMillis());
+            // Nominee
+            customer.setNomineeName(request.getParameter("nomineeName"));
+            customer.setRelationship(request.getParameter("relationship"));
+            customer.setNomineeMobile(request.getParameter("nomineeMobile"));
 
-customer.setCifNumber("CIF" + System.currentTimeMillis());
+            // Bank Details
+            customer.setCustomerCode("SKC" + System.currentTimeMillis());
+            customer.setCifNumber("CIF" + System.currentTimeMillis());
+            customer.setAccountNumber("SKM" + System.currentTimeMillis());
+            customer.setIfscCode("SKMB0001001");
+            customer.setAccountType(request.getParameter("accountType"));
+            customer.setBranch("Bareilly Main Branch");
 
-customer.setAccountNumber("SKM" + System.currentTimeMillis());
+            customer.setBalance(
+                    Double.parseDouble(request.getParameter("balance")));
 
-customer.setIfscCode("SKMB0001001");
+            customer.setUpiId(customer.getMobile() + "@skpay");
+            customer.setUpiStatus("ACTIVE");
+            customer.setStatus("ACTIVE");
+            customer.setKycStatus("PENDING");
 
-customer.setAccountType(request.getParameter("accountType"));
+            customer.setPassword(request.getParameter("password"));
+            customer.setTransactionPin(
+                    request.getParameter("transactionPin"));
 
-customer.setBranch("Bareilly Main Branch");
+            CustomerDAO dao = new CustomerDAO();
 
-customer.setBalance(Double.parseDouble(request.getParameter("balance")));
+            boolean status = dao.addCustomer(customer);
 
-customer.setUpiId(request.getParameter("mobile") + "@skpay");
+            if (!status) {
 
-customer.setUpiStatus("ACTIVE");
+                response.sendRedirect(
+                        "register.jsp?error=Registration Failed");
 
-customer.setStatus("ACTIVE");
+                return;
 
-customer.setKycStatus("PENDING");
+            }
 
-customer.setPassword(request.getParameter("password"));
+            Connection con = DBConnection.getConnection();
 
-customer.setTransactionPin(request.getParameter("transactionPin"));
+            String sql = "INSERT INTO users(username,email,password,role,status)"
+                    + " VALUES(?,?,?,?,?)";
 
-        String password = request.getParameter("password");
+            PreparedStatement ps =
+                    con.prepareStatement(sql);
 
-        CustomerDAO dao = new CustomerDAO();
+            ps.setString(1, customer.getFullName());
 
-        boolean status = dao.addCustomer(customer);
+            // IMPORTANT:
+            // Customer Login = Account Number
+            ps.setString(2, customer.getAccountNumber());
 
-        if (status) {
+            ps.setString(3, customer.getPassword());
 
-            try {
+            ps.setString(4, "CUSTOMER");
 
-                Connection con = DBConnection.getConnection();
+            ps.setString(5, "ACTIVE");
 
-                String sql = "INSERT INTO users(username,email,password,role,status) VALUES(?,?,?,?,?)";
+            ps.executeUpdate();
 
-                PreparedStatement ps = con.prepareStatement(sql);
+            ps.close();
 
-                ps.setString(1, customer.getFullName());
-                ps.setString(2, customer.getEmail());
-                ps.setString(3, password);
-                ps.setString(4, "CUSTOMER");
-                ps.setString(5, "ACTIVE");
+            // Customer ID निकालना
+            PreparedStatement ps2 =
+                    con.prepareStatement(
+                    "SELECT customer_id FROM customer WHERE account_number=?");
 
-                ps.executeUpdate();
+            ps2.setString(1,
+                    customer.getAccountNumber());
 
-                ps.close();
-                con.close();
+            ResultSet rs = ps2.executeQuery();
 
-                response.sendRedirect("login.jsp?success=Registration Successful");
+            int customerId = 0;
 
-            } catch (Exception e) {
-    e.printStackTrace();
-    response.getWriter().println(e.getMessage());
-}
+            if (rs.next()) {
 
-        } else {
+                customerId = rs.getInt("customer_id");
 
-            response.sendRedirect("register.jsp?error=Registration Failed");
+            }
+
+            rs.close();
+            ps2.close();
+            con.close();
+
+            // Receipt Open
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/AccountReceiptServlet?customerId="
+                    + customerId);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.getWriter().println(e.getMessage());
 
         }
 

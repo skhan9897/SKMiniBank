@@ -20,7 +20,7 @@ public class LoginServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String email = request.getParameter("email");
+        String accountNumber = request.getParameter("accountNumber");
         String password = request.getParameter("password");
 
         Connection con = null;
@@ -31,11 +31,14 @@ public class LoginServlet extends HttpServlet {
 
             con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM customer WHERE email=? AND password=?";
+            String sql = "SELECT * FROM customer "
+                    + "WHERE account_number=? "
+                    + "AND password=? "
+                    + "AND status='ACTIVE'";
 
             ps = con.prepareStatement(sql);
 
-            ps.setString(1, email);
+            ps.setString(1, accountNumber);
             ps.setString(2, password);
 
             rs = ps.executeQuery();
@@ -45,6 +48,9 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
 
                 session.setAttribute("customerId",
+                        rs.getInt("customer_id"));
+
+                session.setAttribute("customerCode",
                         rs.getString("customer_code"));
 
                 session.setAttribute("customerName",
@@ -59,13 +65,22 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("mobile",
                         rs.getString("mobile"));
 
+                session.setAttribute("branch",
+                        rs.getString("branch"));
+
+                session.setAttribute("accountType",
+                        rs.getString("account_type"));
+
+                session.setAttribute("balance",
+                        rs.getDouble("balance"));
+
                 response.sendRedirect(request.getContextPath()
                         + "/CustomerProfileServlet");
 
             } else {
 
                 request.setAttribute("error",
-                        "Invalid Email or Password");
+                        "Invalid Account Number or Password");
 
                 request.getRequestDispatcher("login.jsp")
                         .forward(request, response);
@@ -77,7 +92,7 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
 
             request.setAttribute("error",
-                    "Database Error");
+                    "Database Error : " + e.getMessage());
 
             request.getRequestDispatcher("login.jsp")
                     .forward(request, response);

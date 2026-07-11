@@ -77,12 +77,12 @@
 
                         <div class="mb-3">
 
-                            <label>Email</label>
+                            <label>Account Number</label>
 
-                            <input type="email"
-                                   name="email"
+                            <input type="text"
+                                   name="accountNumber"
                                    class="form-control"
-                                   placeholder="Enter Email"
+                                   placeholder="Enter Account Number"
                                    required>
 
                         </div>
