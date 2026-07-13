@@ -29,7 +29,7 @@ public class CustomerProfileServlet extends HttpServlet {
 
             if (id == null || id.trim().isEmpty()) {
                 response.sendRedirect(request.getContextPath()
-                        + "/admin/customer-list.jsp");
+                        + "/admin/customer-profile.jsp");
                 return;
             }
 
