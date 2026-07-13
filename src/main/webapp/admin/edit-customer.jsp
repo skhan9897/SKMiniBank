@@ -43,6 +43,21 @@ Customer c=dao.getCustomerById(id);
 name="customerId"
 value="<%=c.getCustomerId()%>">
 
+
+<div class="mb-3">
+
+<label>ID</label>
+
+<input
+type="text"
+name="customerId"
+value="<%=c.getCustomerId()%>"
+class="form-control">
+
+</div>
+
+
+
 <div class="mb-3">
 
 <label>Full Name</label>

@@ -7,6 +7,7 @@ com\bank\controller\AccountReceiptServlet.class
 com\bank\controller\DeleteInternetBankingServlet.class
 com\bank\controller\KYCServlet.class
 com\bank\controller\DashboardServlet.class
+com\bank\controller\LoanApprovalServlet.class
 com\bank\controller\TransactionServlet.class
 com\bank\controller\InternetBankingDashboardServlet.class
 com\bank\util\Fast2SMSOTPUtil.class
@@ -54,6 +55,7 @@ com\bank\dao\LoginDAO.class
 com\bank\controller\LogoutServlet.class
 com\bank\controller\AccountServlet.class
 com\bank\dao\TransactionDAO.class
+com\bank\controller\LoanProfileServlet.class
 com\bank\model\FixedDeposit.class
 com\bank\controller\SendEmailOTPServlet$1.class
 com\bank\controller\DeleteLoanServlet.class
