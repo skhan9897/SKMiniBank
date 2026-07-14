@@ -13,6 +13,126 @@ import java.util.List;
 
 public class LoanDAO {
     
+    
+    private Loan getLoanDetails(Connection con, int loanId) throws Exception {
+
+    Loan loan = null;
+
+    String sql = "SELECT * FROM loan WHERE loan_id=?";
+
+    PreparedStatement ps = con.prepareStatement(sql);
+
+    ps.setInt(1, loanId);
+
+    ResultSet rs = ps.executeQuery();
+
+    if(rs.next()){
+
+        loan = new Loan();
+
+        loan.setLoanId(rs.getInt("loan_id"));
+        loan.setCustomerId(rs.getInt("customer_id"));
+        loan.setAccountNumber(rs.getString("account_number"));
+        loan.setCustomerName(rs.getString("customer_name"));
+        loan.setLoanType(rs.getString("loan_type"));
+        loan.setLoanAmount(rs.getDouble("loan_amount"));
+        loan.setInterestRate(rs.getDouble("interest_rate"));
+        loan.setDurationYear(rs.getInt("duration_year"));
+        loan.setStatus(rs.getString("status"));
+        loan.setApplyDate(rs.getDate("apply_date"));
+
+    }
+
+    rs.close();
+    ps.close();
+
+    return loan;
+
+}
+    
+    private boolean creditLoanAmount(Connection con,
+                                 String accountNumber,
+                                 double loanAmount) throws Exception {
+
+    String sql =
+            "UPDATE customer "
+          + "SET balance = balance + ? "
+          + "WHERE account_number=?";
+
+    PreparedStatement ps =
+            con.prepareStatement(sql);
+
+    ps.setDouble(1, loanAmount);
+    ps.setString(2, accountNumber);
+
+    int row = ps.executeUpdate();
+
+    ps.close();
+
+    return row > 0;
+
+}
+    
+    
+    private double getCurrentBalance(Connection con,
+                                 String accountNumber) throws Exception {
+
+    double balance = 0;
+
+    String sql =
+            "SELECT balance FROM customer "
+          + "WHERE account_number=?";
+
+    PreparedStatement ps =
+            con.prepareStatement(sql);
+
+    ps.setString(1, accountNumber);
+
+    ResultSet rs = ps.executeQuery();
+
+    if (rs.next()) {
+
+        balance = rs.getDouble("balance");
+
+    }
+
+    rs.close();
+    ps.close();
+
+    return balance;
+
+}
+    
+    private boolean saveLoanTransaction(Connection con,
+                                    String accountNumber,
+                                    double loanAmount,
+                                    double currentBalance) throws Exception {
+
+    String sql =
+        "INSERT INTO transactions "
+      + "(account_number,transaction_type,amount,balance,remarks,transaction_date) "
+      + "VALUES(?,?,?,?,?,NOW())";
+
+    PreparedStatement ps = con.prepareStatement(sql);
+
+    ps.setString(1, accountNumber);
+
+    ps.setString(2, "LOAN CREDIT");
+
+    ps.setDouble(3, loanAmount);
+
+    ps.setDouble(4, currentBalance);
+
+    ps.setString(5, "Loan Amount Credited By Admin");
+
+    int row = ps.executeUpdate();
+
+    ps.close();
+
+    return row > 0;
+
+}
+    
   public boolean applyLoan(Loan loan) {
 
     boolean status = false;
@@ -134,31 +254,120 @@ public Loan getLoanById(int loanId) {
 
     return loan;
 }
-
 public boolean approveLoan(int loanId) {
 
-    boolean status = false;
+    Connection con = null;
 
     try {
 
-        Connection con = DBConnection.getConnection();
+        con = DBConnection.getConnection();
 
-        String sql = "UPDATE loan SET status='Approved' WHERE loan_id=?";
+        con.setAutoCommit(false);
 
-        PreparedStatement ps = con.prepareStatement(sql);
+        // Loan Details
+        Loan loan = getLoanDetails(con, loanId);
+
+        if (loan == null) {
+
+            return false;
+
+        }
+
+        if ("Approved".equalsIgnoreCase(loan.getStatus())) {
+
+            return false;
+
+        }
+
+        // Update Loan Status
+        PreparedStatement ps = con.prepareStatement(
+                "UPDATE loan SET status='Approved' WHERE loan_id=?");
 
         ps.setInt(1, loanId);
 
-        status = ps.executeUpdate() > 0;
+        ps.executeUpdate();
 
         ps.close();
-        con.close();
+
+        // Credit Amount
+        boolean balanceUpdated =
+                creditLoanAmount(con,
+                        loan.getAccountNumber(),
+                        loan.getLoanAmount());
+
+        if (!balanceUpdated) {
+
+            con.rollback();
+
+            return false;
+
+        }
+
+        // Current Balance
+        double balance =
+                getCurrentBalance(con,
+                        loan.getAccountNumber());
+
+        // Transaction Entry
+        boolean transactionSaved =
+                saveLoanTransaction(con,
+                        loan.getAccountNumber(),
+                        loan.getLoanAmount(),
+                        balance);
+
+        if (!transactionSaved) {
+
+            con.rollback();
+
+            return false;
+
+        }
+
+        // Notification
+        saveLoanNotification(con,
+                loan.getCustomerId(),
+                loan.getLoanAmount());
+
+        con.commit();
+
+        return true;
 
     } catch (Exception e) {
+
+        try {
+
+            if (con != null) {
+
+                con.rollback();
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         e.printStackTrace();
+
+        return false;
+
+    } finally {
+
+        try {
+
+            if (con != null) {
+
+                con.setAutoCommit(true);
+
+                con.close();
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    return status;
 }
 public boolean rejectLoan(int loanId) {
 
@@ -348,6 +557,175 @@ public double getTotalLoanAmount() {
 }
 
  // Save Loan Application
+private boolean saveLoanNotification(Connection con,
+                                     int customerId,
+                                     double loanAmount) throws Exception {
 
+    String sql =
+        "INSERT INTO notifications(customer_id,title,message,status,created_date) "
+      + "VALUES(?,?,?,?,NOW())";
+
+    PreparedStatement ps = con.prepareStatement(sql);
+
+    ps.setInt(1, customerId);
+
+    ps.setString(2, "Loan Approved");
+
+    ps.setString(3,
+        "Congratulations! Your loan of ₹"
+        + loanAmount
+        + " has been approved and credited to your account.");
+
+    ps.setString(4, "UNREAD");
+
+    int row = ps.executeUpdate();
+
+    ps.close();
+
+    return row > 0;
+
+}
+
+public boolean creditLoanAmount(String accountNumber, double loanAmount) {
+
+    boolean status = false;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql =
+                "UPDATE customer SET balance = balance + ? WHERE account_number=?";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setDouble(1, loanAmount);
+        ps.setString(2, accountNumber);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {
+        }
+
+    }
+
+    return status;
+}
+
+public boolean addLoanTransaction(String accountNumber,
+                                  double amount,
+                                  double balance) {
+
+    boolean status = false;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql = "INSERT INTO transactions "
+                + "(account_number, transaction_type, amount, balance, remarks) "
+                + "VALUES(?,?,?,?,?)";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setString(1, accountNumber);
+        ps.setString(2, "LOAN CREDIT");
+        ps.setDouble(3, amount);
+        ps.setDouble(4, balance);
+        ps.setString(5, "Loan Approved By Admin");
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {
+        }
+
+    }
+
+    return status;
+}
+public double getCustomerBalance(String accountNumber) {
+
+    double balance = 0;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql =
+                "SELECT balance FROM customer WHERE account_number=?";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setString(1, accountNumber);
+
+        rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            balance = rs.getDouble("balance");
+
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (rs != null) rs.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {
+        }
+
+    }
+
+    return balance;
+}
 
 }

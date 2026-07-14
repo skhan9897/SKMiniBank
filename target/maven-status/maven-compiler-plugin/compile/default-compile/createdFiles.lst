@@ -1,18 +1,21 @@
 com\bank\model\ChequeBookRequest.class
 com\bank\model\DebitCard.class
+com\bank\controller\LoanRejectServlet.class
 com\bank\model\Loan.class
+com\bank\controller\LoanDocumentVerifyServlet.class
 com\bank\controller\VerifyOTPServlet.class
 com\bank\controller\VerifyEmailOTPServlet.class
 com\bank\controller\AccountReceiptServlet.class
 com\bank\controller\DeleteInternetBankingServlet.class
+com\bank\controller\LoanApproveServlet.class
 com\bank\controller\KYCServlet.class
 com\bank\controller\DashboardServlet.class
-com\bank\controller\LoanApprovalServlet.class
 com\bank\controller\TransactionServlet.class
 com\bank\controller\InternetBankingDashboardServlet.class
 com\bank\util\Fast2SMSOTPUtil.class
 com\bank\dao\AccountDAO.class
 com\bank\dao\FixedDepositDAO.class
+com\bank\model\LoanDocument.class
 com\bank\util\SendOTPGenerator.class
 com\bank\controller\CustomerServlet.class
 com\bank\controller\FreezeAccountServlet.class
@@ -45,6 +48,7 @@ com\bank\controller\RegisterServlet.class
 com\bank\controller\DepositServlet.class
 com\bank\dao\DashboardDAO.class
 com\bank\model\ATMRequest.class
+com\bank\controller\LoanDocumentServlet.class
 com\bank\controller\SendEmailOTPServlet.class
 com\bank\dao\DebitCardDAO.class
 com\bank\model\Customer.class
@@ -57,6 +61,7 @@ com\bank\controller\AccountServlet.class
 com\bank\dao\TransactionDAO.class
 com\bank\controller\LoanProfileServlet.class
 com\bank\model\FixedDeposit.class
+com\bank\controller\LoanDocumentRejectServlet.class
 com\bank\controller\SendEmailOTPServlet$1.class
 com\bank\controller\DeleteLoanServlet.class
 com\bank\dao\ATMRequestDAO.class
@@ -74,6 +79,7 @@ com\bank\controller\LoanListServlet.class
 com\bank\controller\TransferServlet.class
 com\bank\controller\InternetBankingServlet.class
 com\bank\dao\CustomerDAO.class
+com\bank\dao\LoanDocumentDAO.class
 com\bank\controller\RejectInternetBankingServlet.class
 com\bank\model\ReceiptPDF.class
 com\bank\controller\UpdateCustomerServlet.class

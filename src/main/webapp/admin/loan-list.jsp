@@ -1,23 +1,37 @@
-<%@ page import="java.util.List" %>
-<%@ page import="com.bank.dao.LoanDAO" %>
-<%@ page import="com.bank.model.Loan" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.*"%>
+<%@page import="com.bank.model.Loan"%>
+<%@page import="com.bank.dao.LoanDAO"%>
 
 <%
 LoanDAO dao = new LoanDAO();
+
 List<Loan> loanList = dao.getAllLoans();
+
+int totalLoan = dao.getTotalLoans();
+int approvedLoan = dao.getApprovedLoans();
+int pendingLoan = dao.getPendingLoans();
+int rejectedLoan = dao.getRejectedLoans();
+
+double totalAmount = dao.getTotalLoanAmount();
 %>
-<h3>Total Loans: <%= loanList.size() %></h3>
+
 <!DOCTYPE html>
+
 <html>
 
 <head>
 
 <meta charset="UTF-8">
 
-<title>SK Mini Bank | Loan List</title>
+<title>Loan Management | SK Mini Bank</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
 <style>
 
@@ -25,125 +39,106 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+font-family:'Segoe UI',sans-serif;
 }
 
 body{
-background:#eef3fb;
+
+background:#eef3f8;
+
 }
 
-.container{
-width:96%;
-margin:25px auto;
+.sidebar{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:250px;
+
+height:100vh;
+
+background:#0b4f8a;
+
+padding-top:20px;
+
 }
 
-.header{
-background:linear-gradient(90deg,#0d6efd,#003b8e);
+.sidebar h3{
+
 color:white;
+
+text-align:center;
+
+margin-bottom:30px;
+
+font-weight:bold;
+
+}
+
+.sidebar a{
+
+display:block;
+
+padding:14px 20px;
+
+color:white;
+
+text-decoration:none;
+
+transition:.3s;
+
+}
+
+.sidebar a:hover{
+
+background:#1565c0;
+
+padding-left:28px;
+
+}
+
+.main{
+
+margin-left:250px;
+
+padding:20px;
+
+}
+
+.topbar{
+
+background:white;
+
 padding:18px;
+
 border-radius:10px;
-margin-bottom:25px;
-}
 
-.header h2{
-font-size:28px;
-}
+box-shadow:0 2px 10px rgba(0,0,0,.1);
 
-.searchBox{
+display:flex;
 
-width:350px;
-padding:12px;
-border:1px solid #ccc;
-border-radius:6px;
+justify-content:space-between;
+
+align-items:center;
+
 margin-bottom:20px;
 
 }
 
-table{
+.topbar h2{
 
-width:100%;
-border-collapse:collapse;
-background:white;
-box-shadow:0 3px 10px rgba(0,0,0,.15);
+color:#0b4f8a;
 
-}
-
-th{
-
-background:#0d6efd;
-color:white;
-padding:12px;
+font-weight:bold;
 
 }
 
-td{
+.search-box{
 
-padding:12px;
-text-align:center;
-border-bottom:1px solid #ddd;
-
-}
-
-tr:hover{
-
-background:#f8f9fa;
-
-}
-
-.approve{
-
-background:#198754;
-color:white;
-padding:8px 14px;
-border-radius:5px;
-text-decoration:none;
-
-}
-
-.reject{
-
-background:#dc3545;
-color:white;
-padding:8px 14px;
-border-radius:5px;
-text-decoration:none;
-
-}
-
-.delete{
-
-background:#6c757d;
-color:white;
-padding:8px 14px;
-border-radius:5px;
-text-decoration:none;
-
-}
-
-.badge{
-
-padding:6px 12px;
-border-radius:20px;
-color:white;
-font-size:13px;
-
-}
-
-.pending{
-
-background:#fd7e14;
-
-}
-
-.approved{
-
-background:#198754;
-
-}
-
-.rejected{
-
-background:#dc3545;
+width:300px;
 
 }
 
@@ -153,291 +148,493 @@ background:#dc3545;
 
 <body>
 
-<div class="container">
+<div class="sidebar">
 
-<div class="header">
+<h3>🏦 SK MINI BANK</h3>
 
-<h2>
+<a href="dashboard.jsp">
 
-<h2>
-    <i class="fas fa-file-invoice-dollar"></i>
-    Loan Management
-</h2>
+<i class="fa fa-home"></i>
 
-</h2>
+Dashboard
+
+</a>
+
+<a href="customer-list.jsp">
+
+<i class="fa fa-users"></i>
+
+Customers
+
+</a>
+
+<a href="loan-list.jsp" class="active">
+
+<i class="fa fa-money-bill-wave"></i>
+
+Loan Management
+
+</a>
+
+<a href="logout.jsp">
+
+<i class="fa fa-sign-out-alt"></i>
+
+Logout
+
+</a>
 
 </div>
 
-<input
-type="text"
-id="searchLoan"
-class="searchBox"
-placeholder="Search Account Number..."
-onkeyup="searchLoan()">
+<div class="main">
 
-<table id="loanTable">
+<div class="topbar">
 
-<thead>
+<h2>
 
-<tr>
+Loan Management
 
-<th>ID</th>
-<th>Customer</th>
-<th>Account</th>
-<th>Loan Type</th>
-<th>Amount</th>
-<th>Interest</th>
-<th>Years</th>
-<th>Status</th>
-<th>Apply Date</th>
-<th>Action</th>
+</h2>
 
-</tr>
-
-</thead>
-
-<tbody>
-    <%
-for(Loan loan : loanList){
-%>
-
-<tr>
-
-<td><%=loan.getLoanId()%></td>
-
-<td><%=loan.getCustomerName()%></td>
-
-<td><%=loan.getAccountNumber()%></td>
-
-<td><%=loan.getLoanType()%></td>
-
-<td>&#8377; <%=loan.getLoanAmount()%></td>
-
-<td><%=loan.getInterestRate()%> %</td>
-
-<td><%=loan.getDurationYear()%> Years</td>
-
-<td>
-
-<%
-if("Approved".equalsIgnoreCase(loan.getStatus())){
-%>
-
-<span class="badge approved">
-
-Approved
-
-</span>
-
-<%
-}else if("Rejected".equalsIgnoreCase(loan.getStatus())){
-%>
-
-<span class="badge rejected">
-
-Rejected
-
-</span>
-
-<%
-}else{
-%>
-
-<span class="badge pending">
-
-Pending
-
-</span>
-
-<%
-}
-%>
-
-</td>
-
-<td><%=loan.getApplyDate()%></td>
-
-<td>
-
-<a class="approve"
-href="../ApproveLoanServlet?id=<%=loan.getLoanId()%>">
-
-<i class="fa fa-check"></i>
-
-Approve
-
-</a>
-
-&nbsp;
-
-<a class="reject"
-href="../RejectLoanServlet?id=<%=loan.getLoanId()%>">
-
-<i class="fa fa-times"></i>
-
-Reject
-
-</a>
-
-&nbsp;
-
-<a class="delete"
-href="../DeleteLoanServlet?id=<%=loan.getLoanId()%>"
-onclick="return confirm('Delete this loan?');">
-
-<i class="fa fa-trash"></i>
-
-Delete
-
-</a>
-
-</td>
-
-</tr>
-
-<%
-}
-%>
-
-</tbody>
-
-</table>
-
-<br><br>
-
-<div style="text-align:center;color:#666;">
-
-SK Mini Bank Loan Management System
+<input type="text"
+id="searchInput"
+class="form-control search-box"
+placeholder="Search Loan...">
 
 </div>
+    <!-- Dashboard Cards -->
+
+<div class="row g-4 mb-4">
+
+    <!-- Total Loan -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <i class="fa fa-file-invoice-dollar fa-2x text-primary mb-2"></i>
+
+                <h6>Total Loans</h6>
+
+                <h3 class="text-primary">
+                    <%=totalLoan%>
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pending -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <i class="fa fa-clock fa-2x text-warning mb-2"></i>
+
+                <h6>Pending</h6>
+
+                <h3 class="text-warning">
+                    <%=pendingLoan%>
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Approved -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <i class="fa fa-circle-check fa-2x text-success mb-2"></i>
+
+                <h6>Approved</h6>
+
+                <h3 class="text-success">
+                    <%=approvedLoan%>
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Rejected -->
+    <div class="col-lg-2 col-md-4 col-sm-6">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <i class="fa fa-circle-xmark fa-2x text-danger mb-2"></i>
+
+                <h6>Rejected</h6>
+
+                <h3 class="text-danger">
+                    <%=rejectedLoan%>
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Total Amount -->
+
+    <div class="col-lg-4 col-md-12">
+
+        <div class="card shadow border-0">
+
+            <div class="card-body text-center">
+
+                <i class="fa fa-indian-rupee-sign fa-2x text-info mb-2"></i>
+
+                <h6>Total Loan Amount</h6>
+
+                <h3 class="text-info">
+
+                    &#8377; <%=String.format("%,.2f", totalAmount)%>
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+                    <!-- Loan List Table -->
+
+<div class="card shadow border-0">
+
+    <div class="card-header bg-primary text-white">
+
+        <h5 class="mb-0">
+
+            <i class="fa fa-list"></i>
+
+            Loan Application List
+
+        </h5>
+
+    </div>
+
+    <div class="card-body table-responsive">
+
+        <table class="table table-bordered table-hover align-middle"
+               id="loanTable">
+
+            <thead class="table-dark">
+
+            <tr>
+
+                <th>Loan ID</th>
+
+                <th>Customer Name</th>
+
+                <th>Account Number</th>
+
+                <th>Loan Type</th>
+
+                <th>Loan Amount</th>
+
+                <th>Interest</th>
+
+                <th>Duration</th>
+
+                <th>Status</th>
+
+                <th>Apply Date</th>
+
+                <th>Action</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <%
+
+                if(loanList!=null && !loanList.isEmpty()){
+
+                for(Loan loan : loanList){
+
+            %>
+
+            <tr>
+
+                <td>
+
+                    <a href="<%=request.getContextPath()%>/LoanProfileServlet?loanId=<%=loan.getLoanId()%>"
+
+                       class="fw-bold text-decoration-none">
+
+                        LN-<%=loan.getLoanId()%>
+
+                    </a>
+
+                </td>
+
+                <td>
+
+                    <%=loan.getCustomerName()%>
+
+                </td>
+
+                <td>
+
+                    <%=loan.getAccountNumber()%>
+
+                </td>
+
+                <td>
+
+                    <%=loan.getLoanType()%>
+
+                </td>
+
+                <td>
+
+                    ₹ <%=String.format("%,.2f",loan.getLoanAmount())%>
+
+                </td>
+
+                <td>
+
+                    <%=loan.getInterestRate()%> %
+
+                </td>
+
+                <td>
+
+                    <%=loan.getDurationYear()%> Years
+
+                </td>
+
+                <td>
+
+                    <%
+
+                        if("Approved".equalsIgnoreCase(loan.getStatus())){
+
+                    %>
+
+                    <span class="badge bg-success">
+
+                        Approved
+
+                    </span>
+
+                    <%
+
+                        }else if("Rejected".equalsIgnoreCase(loan.getStatus())){
+
+                    %>
+
+                    <span class="badge bg-danger">
+
+                        Rejected
+
+                    </span>
+
+                    <%
+
+                        }else{
+
+                    %>
+
+                    <span class="badge bg-warning text-dark">
+
+                        Pending
+
+                    </span>
+
+                    <%
+
+                        }
+
+                    %>
+
+                </td>
+
+                <td>
+
+                    <%=loan.getApplyDate()%>
+
+                </td>
+
+                <td>
+
+                    <a href="<%=request.getContextPath()%>/LoanProfileServlet?loanId=<%=loan.getLoanId()%>"
+
+                       class="btn btn-primary btn-sm">
+
+                        <i class="fa fa-eye"></i>
+
+                        View
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <%
+
+                }
+
+                }else{
+
+            %>
+
+            <tr>
+
+                <td colspan="10" class="text-center text-danger">
+
+                    No Loan Applications Found
+
+                </td>
+
+            </tr>
+
+            <%
+
+                }
+
+            %>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+            
+                    <!-- Action Toolbar -->
+
+<div class="row mt-4 mb-3">
+
+    <div class="col-md-6">
+
+        <button class="btn btn-success"
+                onclick="window.location.reload();">
+
+            <i class="fa fa-rotate"></i>
+
+            Refresh
+
+        </button>
+
+        <button class="btn btn-primary"
+                onclick="window.print();">
+
+            <i class="fa fa-print"></i>
+
+            Print
+
+        </button>
+
+        <button class="btn btn-danger"
+                onclick="downloadPDF();">
+
+            <i class="fa fa-file-pdf"></i>
+
+            Export PDF
+
+        </button>
+
+    </div>
+
+    <div class="col-md-6 text-end">
+
+        <input type="text"
+               id="searchLoan"
+               class="form-control"
+               style="max-width:320px;float:right;"
+               placeholder="Search Customer / Account / Loan">
+
+    </div>
+
+</div>
+
 <script>
 
-function searchLoan(){
+document.getElementById("searchLoan")
+.addEventListener("keyup", function(){
 
-    let input =
-    document.getElementById("searchLoan").value.toUpperCase();
+let filter = this.value.toUpperCase();
 
-    let table =
-    document.getElementById("loanTable");
+let table = document.getElementById("loanTable");
 
-    let tr =
-    table.getElementsByTagName("tr");
+let tr = table.getElementsByTagName("tr");
 
-    for(let i=1;i<tr.length;i++){
+for(let i=1;i<tr.length;i++){
 
-        let td =
-        tr[i].getElementsByTagName("td")[2];
+let show = false;
 
-        if(td){
+let td = tr[i].getElementsByTagName("td");
 
-            let txt =
-            td.textContent || td.innerText;
+for(let j=0;j<td.length;j++){
 
-            if(txt.toUpperCase().indexOf(input)>-1){
+if(td[j]){
 
-                tr[i].style.display="";
+let txt = td[j].textContent || td[j].innerText;
 
-            }else{
+if(txt.toUpperCase().indexOf(filter)>-1){
 
-                tr[i].style.display="none";
+show = true;
 
-            }
+}
 
-        }
+}
 
-    }
+}
+
+tr[i].style.display = show ? "" : "none";
+
+}
+
+});
+
+function downloadPDF(){
+
+window.location.href="<%=request.getContextPath()%>/LoanReportServlet";
 
 }
 
 </script>
 
-<br>
+<hr>
 
-<div style="display:flex;gap:15px;justify-content:center;">
+<div class="text-center mt-3">
 
-<button onclick="window.print()"
-style="background:#0d6efd;
-color:white;
-padding:12px 25px;
-border:none;
-border-radius:6px;
-cursor:pointer;">
+<h6 class="text-secondary">
 
-<i class="fa fa-print"></i>
+SK MINI BANK • Loan Management System
 
-Print Report
+</h6>
 
-</button>
+<p class="text-muted">
 
-<button
-style="background:#198754;
-color:white;
-padding:12px 25px;
-border:none;
-border-radius:6px;
-cursor:pointer;">
+Manage Customer Loan Applications Efficiently
 
-<i class="fa fa-file-excel"></i>
-
-Export Excel
-
-</button>
-
-<button
-onclick="location.href='loan-apply.jsp'"
-style="background:#fd7e14;
-color:white;
-padding:12px 25px;
-border:none;
-border-radius:6px;
-cursor:pointer;">
-
-<i class="fa fa-plus"></i>
-
-Apply New Loan
-
-</button>
+</p>
 
 </div>
-
-<script>
-
-setTimeout(function(){
-
-location.reload();
-
-},30000);
-
-</script>
-
-<footer
-style="margin-top:40px;
-background:#0d6efd;
-padding:20px;
-text-align:center;
-color:white;">
-
-<h3>
-
-? SK Mini Bank
-
-</h3>
-
-<p>
-
-Loan Management System
-
-</p>
-
-<p>
-
-Generated :
-<%= new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
-.format(new java.util.Date()) %>
-
-</p>
-
-</footer>
 
 </div>
 
