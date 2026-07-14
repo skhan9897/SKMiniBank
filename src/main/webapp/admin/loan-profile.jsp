@@ -353,13 +353,14 @@ Account No :
             class="btn btn-secondary me-2">
         <i class="fa fa-print"></i> Print
     </button>
-
+<br><br>
     <!-- Download PDF -->
     <a href="<%=request.getContextPath()%>/LoanPdfServlet?loanId=<%=loan.getLoanId()%>"
        class="btn btn-warning me-2">
         <i class="fa fa-file-pdf"></i> Download PDF
     </a>
-
+       
+           
     <!-- Back -->
     <a href="<%=request.getContextPath()%>/LoanListServlet"
        class="btn btn-dark">

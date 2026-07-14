@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/LoanApproveServlet")
-public class LoanApproveServlet extends HttpServlet {
+@WebServlet("/VerifyDocumentsServlet")
+public class VerifyDocumentsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -24,7 +24,7 @@ public class LoanApproveServlet extends HttpServlet {
 
             LoanDAO dao = new LoanDAO();
 
-            boolean status = dao.approveLoan(loanId);
+            boolean status = dao.verifyDocuments(loanId);
 
             if (status) {
 
@@ -32,7 +32,7 @@ public class LoanApproveServlet extends HttpServlet {
                         request.getContextPath()
                         + "/LoanProfileServlet?loanId="
                         + loanId
-                        + "&msg=approved");
+                        + "&msg=verified");
 
             } else {
 
@@ -50,7 +50,7 @@ public class LoanApproveServlet extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                    + "/LoanListServlet?msg=error");
+                    + "/LoanProfileServlet?msg=error");
 
         }
 

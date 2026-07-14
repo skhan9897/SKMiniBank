@@ -6,7 +6,6 @@ import com.bank.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -261,72 +260,106 @@ public boolean approveLoan(int loanId) {
     try {
 
         con = DBConnection.getConnection();
-
         con.setAutoCommit(false);
 
         // Loan Details
         Loan loan = getLoanDetails(con, loanId);
 
         if (loan == null) {
-
             return false;
-
         }
 
+        // Already Approved
         if ("Approved".equalsIgnoreCase(loan.getStatus())) {
-
-            return false;
-
+            return true;
         }
 
         // Update Loan Status
-        PreparedStatement ps = con.prepareStatement(
-                "UPDATE loan SET status='Approved' WHERE loan_id=?");
+        String updateLoan =
+                "UPDATE loan SET status='Approved' WHERE loan_id=?";
 
-        ps.setInt(1, loanId);
+        PreparedStatement ps1 = con.prepareStatement(updateLoan);
+        ps1.setInt(1, loanId);
 
-        ps.executeUpdate();
+        int loanRow = ps1.executeUpdate();
 
-        ps.close();
+        ps1.close();
 
-        // Credit Amount
-        boolean balanceUpdated =
-                creditLoanAmount(con,
-                        loan.getAccountNumber(),
-                        loan.getLoanAmount());
-
-        if (!balanceUpdated) {
-
+        if (loanRow == 0) {
             con.rollback();
-
             return false;
+        }
 
+        // Credit Loan Amount
+        String updateBalance =
+                "UPDATE customer SET balance = balance + ? WHERE account_number=?";
+
+        PreparedStatement ps2 = con.prepareStatement(updateBalance);
+
+        ps2.setDouble(1, loan.getLoanAmount());
+        ps2.setString(2, loan.getAccountNumber());
+
+        int balanceRow = ps2.executeUpdate();
+
+        ps2.close();
+
+        if (balanceRow == 0) {
+            con.rollback();
+            return false;
         }
 
         // Current Balance
-        double balance =
-                getCurrentBalance(con,
-                        loan.getAccountNumber());
+        double currentBalance = 0;
 
-        // Transaction Entry
-        boolean transactionSaved =
-                saveLoanTransaction(con,
-                        loan.getAccountNumber(),
-                        loan.getLoanAmount(),
-                        balance);
+        PreparedStatement ps3 =
+                con.prepareStatement(
+                        "SELECT balance FROM customer WHERE account_number=?");
 
-        if (!transactionSaved) {
+        ps3.setString(1, loan.getAccountNumber());
 
-            con.rollback();
+        ResultSet rs = ps3.executeQuery();
 
-            return false;
-
+        if (rs.next()) {
+            currentBalance = rs.getDouble("balance");
         }
 
+        rs.close();
+        ps3.close();
+
+        // Transaction Entry
+        PreparedStatement ps4 = con.prepareStatement(
+
+            "INSERT INTO transactions(account_number,transaction_type,amount,balance,remarks,transaction_date) VALUES(?,?,?,?,?,NOW())"
+
+        );
+
+        ps4.setString(1, loan.getAccountNumber());
+        ps4.setString(2, "LOAN CREDIT");
+        ps4.setDouble(3, loan.getLoanAmount());
+        ps4.setDouble(4, currentBalance);
+        ps4.setString(5, "Loan Approved By Admin");
+
+        ps4.executeUpdate();
+
+        ps4.close();
+
         // Notification
-        saveLoanNotification(con,
-                loan.getCustomerId(),
-                loan.getLoanAmount());
+        PreparedStatement ps5 = con.prepareStatement(
+
+            "INSERT INTO notification(customer_id,title,message,status,created_date) VALUES(?,?,?,?,NOW())"
+
+        );
+
+        ps5.setInt(1, loan.getCustomerId());
+        ps5.setString(2, "Loan Approved");
+        ps5.setString(3,
+                "Your loan of ₹" + loan.getLoanAmount()
+                        + " has been approved and credited to your account.");
+        ps5.setString(4, "UNREAD");
+
+        ps5.executeUpdate();
+
+        ps5.close();
 
         con.commit();
 
@@ -335,33 +368,23 @@ public boolean approveLoan(int loanId) {
     } catch (Exception e) {
 
         try {
-
             if (con != null) {
-
                 con.rollback();
-
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         e.printStackTrace();
-
         return false;
 
     } finally {
 
         try {
-
             if (con != null) {
-
                 con.setAutoCommit(true);
-
                 con.close();
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -728,4 +751,48 @@ public double getCustomerBalance(String accountNumber) {
     return balance;
 }
 
+public boolean verifyDocuments(int loanId) {
+
+    boolean status = false;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql =
+            "UPDATE loan_documents "
+          + "SET verification_status='VERIFIED', "
+          + "verified_by='ADMIN', "
+          + "verified_date=NOW() "
+          + "WHERE loan_id=?";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setInt(1, loanId);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {
+        }
+
+    }
+
+    return status;
+}
 }

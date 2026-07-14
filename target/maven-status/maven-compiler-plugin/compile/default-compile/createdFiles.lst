@@ -45,6 +45,7 @@ com\bank\controller\BlockAccountServlet.class
 com\bank\controller\AdminLoginServlet.class
 com\bank\controller\CustomerListServlet.class
 com\bank\controller\RegisterServlet.class
+com\bank\controller\VerifyDocumentsServlet.class
 com\bank\controller\DepositServlet.class
 com\bank\dao\DashboardDAO.class
 com\bank\model\ATMRequest.class
