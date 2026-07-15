@@ -241,7 +241,9 @@ Apply Home, Vehicle, Business, Personal & Other Loans
 
 <div class="form-card">
 
-<form action="../LoanServlet" method="post">
+<form action="../LoanServlet"
+      method="post"
+      enctype="multipart/form-data">
     <div class="row">
 
     <div class="col">
@@ -337,6 +339,58 @@ Apply Home, Vehicle, Business, Personal & Other Loans
                id="emi"
                readonly
                style="background:#f8f9fa;font-weight:bold;">
+    </div>
+
+</div>
+    
+    <div class="row">
+
+    <div class="col">
+        <label>Aadhaar Card (PDF)</label>
+        <input type="file"
+               name="aadhaar"
+               accept=".pdf"
+               required>
+    </div>
+
+    <div class="col">
+        <label>PAN Card (PDF)</label>
+        <input type="file"
+               name="pan"
+               accept=".pdf"
+               required>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col">
+        <label>Salary Slip (PDF)</label>
+        <input type="file"
+               name="salarySlip"
+               accept=".pdf"
+               required>
+    </div>
+
+    <div class="col">
+        <label>Bank Statement (PDF)</label>
+        <input type="file"
+               name="bankStatement"
+               accept=".pdf"
+               required>
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col">
+        <label>Address Proof (PDF)</label>
+        <input type="file"
+               name="addressProof"
+               accept=".pdf"
+               required>
     </div>
 
 </div>

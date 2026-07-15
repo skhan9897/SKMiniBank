@@ -2,7 +2,7 @@ package com.bank.dao;
 
 import com.bank.model.Loan;
 import com.bank.util.DBConnection;
-
+import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -132,17 +132,25 @@ public class LoanDAO {
 
 }
     
-  public boolean applyLoan(Loan loan) {
+ public int applyLoanAndReturnId(Loan loan) {
 
-    boolean status = false;
+    int loanId = 0;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
     try {
 
-        Connection con = DBConnection.getConnection();
+        con = DBConnection.getConnection();
 
-        String sql = "INSERT INTO loan(customer_id,account_number,customer_name,loan_type,loan_amount,interest_rate,duration_year,status,apply_date) VALUES(?,?,?,?,?,?,?,?,CURDATE())";
+        String sql = "INSERT INTO loan "
+                + "(customer_id,account_number,customer_name,"
+                + "loan_type,loan_amount,interest_rate,"
+                + "duration_year,status,apply_date) "
+                + "VALUES(?,?,?,?,?,?,?,?,CURDATE())";
 
-        PreparedStatement ps = con.prepareStatement(sql);
+        ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
         ps.setInt(1, loan.getCustomerId());
         ps.setString(2, loan.getAccountNumber());
@@ -153,19 +161,43 @@ public class LoanDAO {
         ps.setInt(7, loan.getDurationYear());
         ps.setString(8, "Pending");
 
-        status = ps.executeUpdate() > 0;
+        int row = ps.executeUpdate();
 
-        ps.close();
-        con.close();
+        if (row > 0) {
+
+            rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+
+                loanId = rs.getInt(1);
+
+            }
+
+        }
 
     } catch (Exception e) {
+
         e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (rs != null) rs.close();
+        } catch (Exception e) {}
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {}
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {}
+
     }
 
-    return status;
+    return loanId;
+
 }
-
-
 public List<Loan> getAllLoans() {
 
     List<Loan> list = new ArrayList<>();

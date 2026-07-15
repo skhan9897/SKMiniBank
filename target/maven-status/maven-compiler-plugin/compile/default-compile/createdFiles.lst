@@ -22,6 +22,7 @@ com\bank\controller\FreezeAccountServlet.class
 com\bank\controller\ChequeBookRequestServlet.class
 com\bank\controller\ReportServlet.class
 com\bank\controller\CustomerProfileServlet.class
+com\bank\controller\LoanPdfServlet.class
 com\bank\controller\DeleteCustomerServlet.class
 com\bank\controller\ApproveLoanServlet.class
 com\bank\controller\ReceiptPDFServlet.class

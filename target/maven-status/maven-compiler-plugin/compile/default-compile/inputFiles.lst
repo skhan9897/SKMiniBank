@@ -36,6 +36,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\TransactionServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\LoanDocumentVerifyServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\VerifyOTPServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\LoanPdfServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\util\DBConnection.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\UnfreezeAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\Transaction.java
