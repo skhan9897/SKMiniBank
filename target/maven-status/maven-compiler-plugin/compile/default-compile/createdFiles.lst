@@ -26,6 +26,7 @@ com\bank\controller\LoanPdfServlet.class
 com\bank\controller\DeleteCustomerServlet.class
 com\bank\controller\ReceiptPDFServlet.class
 com\bank\model\Account.class
+com\bank\controller\TransactionPDFServlet.class
 com\bank\model\User.class
 com\bank\controller\CustomerDetailsServlet.class
 com\bank\controller\ResendOTPServlet.class

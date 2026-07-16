@@ -51,11 +51,24 @@ body{
     color:white;
 }
 
-.badge-failed{
-    background:red;
-    color:white;
+.no-print{
+    display:block;
 }
 
+@media print{
+
+    .no-print{
+        display:none !important;
+    }
+
+    .card-header{
+        background:#0d6efd !important;
+        color:#fff !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+}
 </style>
 
 </head>
@@ -70,42 +83,44 @@ body{
 Transaction History
 </div>
 
-<div class="card-body">
+<div class="no-print">
 
 <form action="<%=request.getContextPath()%>/TransactionServlet" method="get">
 
-<div class="row search-box">
+    <div class="row search-box">
 
-<div class="col-md-4">
-<input type="text"
-       name="accountNumber"
-       class="form-control"
-       placeholder="Enter Account Number">
-</div>
+        <div class="col-md-4">
+            <input type="text"
+                   name="accountNumber"
+                   class="form-control"
+                   placeholder="Enter Account Number">
+        </div>
 
-<div class="col-md-2">
-<button class="btn btn-primary w-100">
-Search
-</button>
-</div>
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">
+                Search
+            </button>
+        </div>
 
-<div class="col-md-2">
-<a href="<%=request.getContextPath()%>/TransactionServlet"
-class="btn btn-success w-100">
-Refresh
-</a>
-</div>
+        <div class="col-md-2">
+            <a href="<%=request.getContextPath()%>/TransactionServlet"
+               class="btn btn-success w-100">
+               Refresh
+            </a>
+        </div>
 
-<div class="col-md-2">
-<a href="dashboard.jsp"
-class="btn btn-secondary w-100">
-Dashboard
-</a>
-</div>
+        <div class="col-md-2">
+            <a href="dashboard.jsp"
+               class="btn btn-secondary w-100">
+               Dashboard
+            </a>
+        </div>
 
-</div>
+    </div>
 
 </form>
+
+</div>
 
 <div class="table-responsive">
 
@@ -224,6 +239,28 @@ No Transaction Found
 </div>
 
 </div>
+
+<div class="text-center mt-4 no-print">
+
+    <a href="<%=request.getContextPath()%>/TransactionPDFServlet?accountNumber=<%=accountNumber%>"
+   class="btn btn-danger">
+
+    <i class="fa fa-file-pdf"></i> Download PDF
+
+</a>
+
+    <button onclick="window.print()"
+            class="btn btn-primary">
+        <i class="fa fa-print"></i> Print
+    </button>
+
+    <a href="admin/SKMiniBank-System.jsp"
+       class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Back To Dashboard
+    </a>
+
+</div>
+
 
 </body>
 </html>
