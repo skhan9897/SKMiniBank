@@ -41,11 +41,11 @@ public class TransactionServlet extends HttpServlet {
 
             }
 
-            request.setAttribute("transactionList",
-                    transactionList);
+            request.setAttribute("transactionList", transactionList);
+request.setAttribute("accountNumber", accountNumber);
 
-            request.getRequestDispatcher("/admin/transaction.jsp")
-                    .forward(request, response);
+request.getRequestDispatcher("/admin/transaction.jsp")
+       .forward(request, response);
 
         } catch (Exception e) {
 

@@ -1,7 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.*"%>
-<%@page import="com.bank.model.Transaction"%>
-
+<%@ page import="java.util.List" %>
+<%@ page import="com.bank.model.Transaction" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -240,25 +239,36 @@ No Transaction Found
 
 </div>
 
-<div class="text-center mt-4 no-print">
 
-    <a href="<%=request.getContextPath()%>/TransactionPDFServlet?accountNumber=<%=accountNumber%>"
+<div class="text-center mt-4 no-print">   
+
+ <%
+String accountNumber = (String) request.getAttribute("accountNumber");
+
+if (accountNumber == null || accountNumber.trim().isEmpty()) {
+
+    List<Transaction> txList =
+        (List<Transaction>) request.getAttribute("transactionList");
+
+    if (txList != null && !txList.isEmpty()) {
+        accountNumber = txList.get(0).getAccountNumber();
+    }
+}
+%>
+
+<a href="<%=request.getContextPath()%>/TransactionPDFServlet?accountNumber=<%=accountNumber%>"
    class="btn btn-danger">
-
     <i class="fa fa-file-pdf"></i> Download PDF
-
 </a>
 
-    <button onclick="window.print()"
-            class="btn btn-primary">
-        <i class="fa fa-print"></i> Print
-    </button>
+<button onclick="window.print()" class="btn btn-primary">
+    <i class="fa fa-print"></i> Print
+</button>
 
-    <a href="admin/SKMiniBank-System.jsp"
-       class="btn btn-secondary">
-        <i class="fa fa-arrow-left"></i> Back To Dashboard
-    </a>
-
+<a href="<%=request.getContextPath()%>/admin/SKMiniBank-System.jsp"
+   class="btn btn-secondary">
+    <i class="fa fa-arrow-left"></i> Back To Dashboard
+</a>
 </div>
 
 
