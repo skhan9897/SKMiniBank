@@ -83,9 +83,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         🔄 Fund Transfer
     </a>
 
-    <a href="${pageContext.request.contextPath}/admin/transaction.jsp">
-        📄 Transactions
-    </a>
+    <a href="${pageContext.request.contextPath}/TransactionServlet?customerId=${customer.customerId}">
+    Transactions
+</a>
 
     <a href="${pageContext.request.contextPath}/admin/cheque-book-request.jsp">
         📦 Cheque Book Request
