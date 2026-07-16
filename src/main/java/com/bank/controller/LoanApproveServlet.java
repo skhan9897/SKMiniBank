@@ -3,7 +3,6 @@ package com.bank.controller;
 import com.bank.dao.LoanDAO;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +19,18 @@ public class LoanApproveServlet extends HttpServlet {
 
         try {
 
-            int loanId = Integer.parseInt(request.getParameter("loanId"));
+            String id = request.getParameter("loanId");
+
+            if (id == null || id.trim().isEmpty()) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/LoanListServlet?msg=invalid");
+
+                return;
+            }
+
+            int loanId = Integer.parseInt(id);
 
             LoanDAO dao = new LoanDAO();
 
@@ -53,6 +63,15 @@ public class LoanApproveServlet extends HttpServlet {
                     + "/LoanListServlet?msg=error");
 
         }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        doGet(request, response);
 
     }
 

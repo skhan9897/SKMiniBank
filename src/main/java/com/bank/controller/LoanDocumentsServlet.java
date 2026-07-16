@@ -14,13 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-@WebServlet("/LoanDocumentServlet")
+@WebServlet("/LoanDocumentsServlet")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024 * 2,
     maxFileSize = 1024 * 1024 * 10,
     maxRequestSize = 1024 * 1024 * 50
 )
-public class LoanDocumentServlet extends HttpServlet {
+public class LoanDocumentsServlet extends HttpServlet {
 
     private static final String UPLOAD_DIR = "uploads/loan-documents";
 

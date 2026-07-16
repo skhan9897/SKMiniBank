@@ -328,18 +328,17 @@ Account No :
     </a>
 
     <!-- Verify Documents -->
-    <a href="<%=request.getContextPath()%>/LoanDocumentVerifyServlet?loanId=<%=loan.getLoanId()%>"
+    <a href="<%=request.getContextPath()%>/LoanDocumentsVerifyServlet?loanId=<%=loan.getLoanId()%>"
        class="btn btn-success me-2"
        onclick="return confirm('Verify all loan documents?');">
         <i class="fa fa-check-circle"></i> Verify Documents
     </a>
 
     <!-- Approve Loan -->
-    <a href="<%=request.getContextPath()%>/LoanApproveServlet?loanId=<%=loan.getLoanId()%>"
-       class="btn btn-success me-2"
-       onclick="return confirm('Approve this loan and transfer amount to customer account?');">
-        <i class="fa fa-check"></i> Approve Loan
-    </a>
+    <a href="${pageContext.request.contextPath}/LoanApproveServlet?loanId=${loan.loanId}"
+   class="btn btn-success">
+    <i class="fa fa-check"></i> Approve Loan
+</a>
 
     <!-- Reject Loan -->
     <a href="<%=request.getContextPath()%>/LoanRejectServlet?loanId=<%=loan.getLoanId()%>"

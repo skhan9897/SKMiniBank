@@ -3,10 +3,6 @@ package com.bank.controller;
 import com.bank.dao.TransactionDAO;
 import com.bank.model.Transaction;
 
-
-
-
-
 import java.io.IOException;
 import java.util.List;
 
@@ -21,24 +17,54 @@ public class TransactionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
-                         HttpServletResponse response)
+            HttpServletResponse response)
             throws ServletException, IOException {
 
-        TransactionDAO dao = new TransactionDAO();
+        try {
 
-        List<Transaction> transactionList = dao.getAllTransactions();
+            TransactionDAO dao = new TransactionDAO();
 
-        request.setAttribute("transactionList", transactionList);
+            String accountNumber = request.getParameter("accountNumber");
 
-        request.getRequestDispatcher("/admin/transaction.jsp")
-               .forward(request, response);
+            List<Transaction> transactionList;
+
+            if (accountNumber != null
+                    && !accountNumber.trim().isEmpty()) {
+
+                transactionList =
+                        dao.getTransactionsByAccount(accountNumber);
+
+            } else {
+
+                transactionList =
+                        dao.getAllTransactions();
+
+            }
+
+            request.setAttribute("transactionList",
+                    transactionList);
+
+            request.getRequestDispatcher("/admin/transaction.jsp")
+                    .forward(request, response);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendRedirect(
+                    "admin/transaction.jsp?msg=error");
+
+        }
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response)
+            HttpServletResponse response)
             throws ServletException, IOException {
 
         doGet(request, response);
+
     }
+
 }

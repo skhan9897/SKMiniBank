@@ -20,6 +20,16 @@ public class Loan {
     private String status;
 
     private Date applyDate;
+    
+    private String applicantCategory;
+
+public String getApplicantCategory() {
+    return applicantCategory;
+}
+
+public void setApplicantCategory(String applicantCategory) {
+    this.applicantCategory = applicantCategory;
+}
 
     public Loan() {
     }

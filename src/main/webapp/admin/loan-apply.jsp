@@ -293,9 +293,35 @@ Apply Home, Vehicle, Business, Personal & Other Loans
         </select>
 
     </div>
-
 </div>
 
+    <div class="row">
+
+    <div class="col">
+
+        <label>Applicant Category</label>
+
+        <select name="applicantCategory" id="applicantCategory" required>
+
+            <option value="">-- Select Category --</option>
+
+            <option value="Salaried">Salaried Employee</option>
+
+            <option value="Business">Business Owner</option>
+
+            <option value="SelfEmployed">Self Employed</option>
+
+            <option value="Farmer">Farmer</option>
+
+            <option value="Student">Student</option>
+
+            <option value="Pensioner">Pensioner</option>
+
+        </select>
+
+    </div>
+
+</div>
 <div class="row">
 
     <div class="col">
@@ -349,7 +375,7 @@ Apply Home, Vehicle, Business, Personal & Other Loans
         <label>Aadhaar Card (PDF)</label>
         <input type="file"
                name="aadhaar"
-               accept=".pdf"
+               accept=".pdf,.jpg,.jpeg,.png"
                required>
     </div>
 
@@ -357,21 +383,44 @@ Apply Home, Vehicle, Business, Personal & Other Loans
         <label>PAN Card (PDF)</label>
         <input type="file"
                name="pan"
-               accept=".pdf"
+               accept=".pdf,.jpg,.jpeg,.png"
                required>
     </div>
 
 </div>
 
 <div class="row">
+<div class="col">
 
-    <div class="col">
-        <label>Salary Slip (PDF)</label>
-        <input type="file"
-               name="salarySlip"
-               accept=".pdf"
+    <label>Income / Business Document Type</label>
+<input type="file"
+        accept=".pdf,.jpg,.jpeg,.png"
                required>
-    </div>
+    <select name="incomeDocumentType" required>
+
+        <option value="">-- Select Document --</option>
+
+        <option value="Salary Slip">Salary Slip</option>
+
+        <option value="Bank Statement">Bank Statement</option>
+
+        <option value="ITR">ITR (Income Tax Return)</option>
+
+        <option value="GST Certificate">GST Certificate</option>
+
+        <option value="Business Registration">Business Registration</option>
+
+        <option value="Shop License">Shop License</option>
+
+        <option value="Pension Certificate">Pension Certificate</option>
+
+        <option value="Income Certificate">Income Certificate</option>
+
+        <option value="Other">Other Document</option>
+
+    </select>
+
+</div>
 
     <div class="col">
         <label>Bank Statement (PDF)</label>

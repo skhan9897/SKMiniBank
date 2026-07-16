@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/LoanDocumentVerifyServlet")
-public class LoanDocumentVerifyServlet extends HttpServlet {
+@WebServlet("/LoanDocumentsVerifyServlet")
+public class LoanDocumentsVerifyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,

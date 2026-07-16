@@ -46,47 +46,70 @@ public class TransactionDAO {
         return saveTransaction(t);
     }
 
-    // All Transactions
-    public List<Transaction> getAllTransactions() {
+   // ================== GET ALL TRANSACTIONS ==================
+public List<Transaction> getAllTransactions() {
 
-        List<Transaction> list = new ArrayList<>();
+    List<Transaction> list = new ArrayList<>();
 
-        try {
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
-            Connection con = DBConnection.getConnection();
+    try {
 
-            PreparedStatement ps = con.prepareStatement(
-                    "SELECT * FROM transactions ORDER BY transaction_date DESC");
+        con = DBConnection.getConnection();
 
-            ResultSet rs = ps.executeQuery();
+        String sql =
+                "SELECT transaction_id, account_number, customer_name, "
+              + "transaction_type, amount, balance, transaction_date, status "
+              + "FROM transactions "
+              + "ORDER BY transaction_date DESC";
 
-            while (rs.next()) {
+        ps = con.prepareStatement(sql);
 
-                Transaction t = new Transaction();
+        rs = ps.executeQuery();
 
-                t.setId(rs.getInt("id"));
-                t.setAccountNumber(rs.getString("account_number"));
-                t.setCustomerName(rs.getString("customer_name"));
-                t.setTransactionType(rs.getString("transaction_type"));
-                t.setAmount(rs.getDouble("amount"));
-                t.setBalance(rs.getDouble("balance"));
-                t.setTransactionDate(rs.getTimestamp("transaction_date"));
-                t.setStatus(rs.getString("status"));
+        while (rs.next()) {
 
-                list.add(t);
-            }
+            Transaction t = new Transaction();
 
-            rs.close();
-            ps.close();
-            con.close();
+            t.setId(rs.getInt("transaction_id"));
+            t.setAccountNumber(rs.getString("account_number"));
+            t.setCustomerName(rs.getString("customer_name"));
+            t.setTransactionType(rs.getString("transaction_type"));
+            t.setAmount(rs.getDouble("amount"));
+            t.setBalance(rs.getDouble("balance"));
+            t.setTransactionDate(rs.getTimestamp("transaction_date"));
+            t.setStatus(rs.getString("status"));
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            list.add(t);
         }
 
-        return list;
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (rs != null) rs.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {
+        }
+
     }
 
+    return list;
+}
     // Total Transactions
     public int getTotalTransactions() {
 
@@ -202,4 +225,57 @@ public class TransactionDAO {
 
         return total;
     }
+    public List<Transaction> getTransactionsByAccount(String accountNumber) {
+
+    List<Transaction> list = new ArrayList<>();
+
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql =
+        "SELECT * FROM transactions "
+      + "WHERE account_number=? "
+      + "ORDER BY transaction_date DESC";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setString(1, accountNumber);
+
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            Transaction t = new Transaction();
+
+            t.setId(rs.getInt("transaction_id"));
+            t.setAccountNumber(rs.getString("account_number"));
+            t.setCustomerName(rs.getString("customer_name"));
+            t.setTransactionType(rs.getString("transaction_type"));
+            t.setAmount(rs.getDouble("amount"));
+            t.setBalance(rs.getDouble("balance"));
+            t.setTransactionDate(rs.getTimestamp("transaction_date"));
+            t.setStatus(rs.getString("status"));
+
+            list.add(t);
+        }
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try { if(rs!=null) rs.close(); } catch(Exception e){}
+        try { if(ps!=null) ps.close(); } catch(Exception e){}
+        try { if(con!=null) con.close(); } catch(Exception e){}
+
+    }
+
+    return list;
+}
 }
