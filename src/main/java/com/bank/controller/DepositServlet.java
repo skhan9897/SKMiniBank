@@ -3,10 +3,13 @@ package com.bank.controller;
 import com.bank.dao.AccountDAO;
 import com.bank.dao.CustomerDAO;
 import com.bank.dao.TransactionDAO;
+import com.bank.dao.NotificationDAO;
 
 import com.bank.model.Account;
 import com.bank.model.Customer;
 import com.bank.model.Transaction;
+import com.bank.model.Notification;
+
 
 import java.io.IOException;
 
@@ -74,27 +77,36 @@ public class DepositServlet extends HttpServlet {
             t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
             t.setStatus("SUCCESS");
 
-            TransactionDAO td = new TransactionDAO();
-            td.addTransaction(t);
+           TransactionDAO td = new TransactionDAO();
+td.addTransaction(t);
 
-            CustomerDAO customerDAO = new CustomerDAO();
-            Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
+CustomerDAO customerDAO = new CustomerDAO();
+Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
-            if (customer != null) {
+if (customer != null) {
 
-                response.sendRedirect(
-                        "TransactionSuccess.jsp?customerId="
-                        + customer.getCustomerId()
-                        + "&amount="
-                        + amount
-                        + "&type=Deposit");
+    Notification notification = new Notification();
+    notification.setCustomerId(customer.getCustomerId());
+    notification.setTitle("Deposit Successful");
+    notification.setMessage("₹ " + amount + " has been deposited into your account.");
+    notification.setNotificationType("DEPOSIT");
+    notification.setStatus("ACTIVE");
+    notification.setIsRead(0);
+    notification.setActionUrl("CustomerProfileServlet?customerId=" + customer.getCustomerId());
 
-            } else {
+    NotificationDAO notificationDAO = new NotificationDAO();
+    notificationDAO.addNotification(notification);
 
-                response.sendRedirect("admin/customer-list.jsp");
+    response.sendRedirect(
+            "TransactionSuccess.jsp?customerId="
+            + customer.getCustomerId()
+            + "&amount=" + amount
+            + "&type=Deposit");
 
-            }
+} else {
 
+    response.sendRedirect("admin/customer-list.jsp");
+}
         } else {
 
             response.sendRedirect("admin/deposit.jsp?msg=failed");

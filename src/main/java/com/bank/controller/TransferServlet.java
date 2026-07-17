@@ -2,9 +2,11 @@ package com.bank.controller;
 
 import com.bank.dao.AccountDAO;
 import com.bank.dao.CustomerDAO;
+import com.bank.dao.NotificationDAO;
 import com.bank.dao.TransactionDAO;
 import com.bank.model.Account;
 import com.bank.model.Customer;
+import com.bank.model.Notification;
 import com.bank.model.Transaction;
 
 import java.io.IOException;
@@ -41,24 +43,20 @@ public class TransferServlet extends HttpServlet {
         String accountStatus = sender.getStatus();
 
         if ("BLOCKED".equalsIgnoreCase(accountStatus)) {
-
             response.sendRedirect(
                     request.getContextPath()
                     + "/CustomerProfileServlet?customerId="
                     + sender.getCustomerId()
                     + "&msg=blocked");
-
             return;
         }
 
         if ("FREEZE".equalsIgnoreCase(accountStatus)) {
-
             response.sendRedirect(
                     request.getContextPath()
                     + "/CustomerProfileServlet?customerId="
                     + sender.getCustomerId()
                     + "&msg=freeze");
-
             return;
         }
 
@@ -70,7 +68,6 @@ public class TransferServlet extends HttpServlet {
             sender = dao.getAccountByNumber(fromAccount);
 
             Transaction t = new Transaction();
-
             t.setAccountNumber(fromAccount);
             t.setCustomerName(sender.getCustomerName());
             t.setBalance(sender.getBalance());
@@ -83,13 +80,56 @@ public class TransferServlet extends HttpServlet {
             td.addTransaction(t);
 
             CustomerDAO customerDAO = new CustomerDAO();
-            Customer customer = customerDAO.getCustomerByAccountNumber(fromAccount);
 
-            if (customer != null) {
+            Customer senderCustomer =
+                    customerDAO.getCustomerByAccountNumber(fromAccount);
+
+            Customer receiverCustomer =
+                    customerDAO.getCustomerByAccountNumber(toAccount);
+
+            NotificationDAO notificationDAO = new NotificationDAO();
+
+            // Sender Notification
+            if (senderCustomer != null) {
+
+                Notification senderNotification = new Notification();
+
+                senderNotification.setCustomerId(senderCustomer.getCustomerId());
+                senderNotification.setTitle("Transfer Successful");
+                senderNotification.setMessage("₹ " + amount + " has been transferred successfully.");
+                senderNotification.setNotificationType("TRANSFER");
+                senderNotification.setStatus("ACTIVE");
+                senderNotification.setIsRead(0);
+                senderNotification.setActionUrl(
+                        "CustomerProfileServlet?customerId="
+                        + senderCustomer.getCustomerId());
+
+                notificationDAO.addNotification(senderNotification);
+            }
+
+            // Receiver Notification
+            if (receiverCustomer != null) {
+
+                Notification receiverNotification = new Notification();
+
+                receiverNotification.setCustomerId(receiverCustomer.getCustomerId());
+                receiverNotification.setTitle("Amount Received");
+                receiverNotification.setMessage("₹ " + amount + " has been credited to your account.");
+                receiverNotification.setNotificationType("CREDIT");
+                receiverNotification.setStatus("ACTIVE");
+                receiverNotification.setIsRead(0);
+                receiverNotification.setActionUrl(
+                        "CustomerProfileServlet?customerId="
+                        + receiverCustomer.getCustomerId());
+
+                notificationDAO.addNotification(receiverNotification);
+            }
+
+            if (senderCustomer != null) {
 
                 response.sendRedirect(
                         "TransactionSuccess.jsp?customerId="
-                        + customer.getCustomerId()
+                        + senderCustomer.getCustomerId()
                         + "&amount="
                         + amount
                         + "&type=Transfer");

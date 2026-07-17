@@ -14,10 +14,13 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\FixedDeposit.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\AccountListServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\ChequeBookRequestDAO.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\Notification.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\CustomerDashboardServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\NotificationServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\TransferServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\SendOTPServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\LoanServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\NotificationDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\UnblockAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\BlockAccountServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\ATMRequestServlet.java
