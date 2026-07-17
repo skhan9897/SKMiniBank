@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,8 +34,7 @@ public class LoginServlet extends HttpServlet {
 
             String sql = "SELECT * FROM customer "
                     + "WHERE account_number=? "
-                    + "AND password=? "
-                    + "AND status='ACTIVE'";
+                    + "AND password=?";
 
             ps = con.prepareStatement(sql);
 
@@ -45,44 +45,38 @@ public class LoginServlet extends HttpServlet {
 
             if (rs.next()) {
 
+                int customerId = rs.getInt("customer_id");
+
                 HttpSession session = request.getSession(true);
 
-                session.setAttribute("customerId",
-                        rs.getInt("customer_id"));
+                session.setAttribute("customerId", customerId);
+                session.setAttribute("customerCode", rs.getString("customer_code"));
+                session.setAttribute("customerName", rs.getString("full_name"));
+                session.setAttribute("accountNumber", rs.getString("account_number"));
+                session.setAttribute("email", rs.getString("email"));
+                session.setAttribute("mobile", rs.getString("mobile"));
+                session.setAttribute("branch", rs.getString("branch"));
+                session.setAttribute("accountType", rs.getString("account_type"));
+                session.setAttribute("balance", rs.getDouble("balance"));
 
-                session.setAttribute("customerCode",
-                        rs.getString("customer_code"));
+                // Customer Role
+                session.setAttribute("role", "CUSTOMER");
 
-                session.setAttribute("customerName",
-                        rs.getString("full_name"));
+                // Account Status
+                session.setAttribute("accountStatus",
+                        rs.getString("status"));
 
-                session.setAttribute("accountNumber",
-                        rs.getString("account_number"));
-
-                session.setAttribute("email",
-                        rs.getString("email"));
-
-                session.setAttribute("mobile",
-                        rs.getString("mobile"));
-
-                session.setAttribute("branch",
-                        rs.getString("branch"));
-
-                session.setAttribute("accountType",
-                        rs.getString("account_type"));
-
-                session.setAttribute("balance",
-                        rs.getDouble("balance"));
-
-                response.sendRedirect(request.getContextPath()
-                        + "/CustomerProfileServlet");
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/CustomerProfileServlet?customerId="
+                        + customerId);
 
             } else {
 
                 request.setAttribute("error",
                         "Invalid Account Number or Password");
 
-                request.getRequestDispatcher("login.jsp")
+                request.getRequestDispatcher("/login.jsp")
                         .forward(request, response);
 
             }
@@ -94,7 +88,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("error",
                     "Database Error : " + e.getMessage());
 
-            request.getRequestDispatcher("login.jsp")
+            request.getRequestDispatcher("/login.jsp")
                     .forward(request, response);
 
         } finally {

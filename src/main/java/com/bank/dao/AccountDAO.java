@@ -159,16 +159,17 @@ public Account getAccountByNumber(String accountNumber) {
 
         con = DBConnection.getConnection();
 
-        String sql = "UPDATE customer SET balance = balance + ? WHERE account_number=?";
+        // FREEZE account me deposit allowed nahi
+        String sql = "UPDATE customer SET balance = balance + ? "
+                   + "WHERE account_number=? "
+                   + "AND status<>'FREEZE'";
 
         ps = con.prepareStatement(sql);
 
         ps.setDouble(1, amount);
         ps.setString(2, accountNumber);
 
-        if (ps.executeUpdate() > 0) {
-            status = true;
-        }
+        status = ps.executeUpdate() > 0;
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -178,20 +179,16 @@ public Account getAccountByNumber(String accountNumber) {
 }
   public boolean withdraw(String accountNumber, double amount) {
 
-    Connection con = null;
-    PreparedStatement ps = null;
-
     try {
 
         con = DBConnection.getConnection();
 
-        accountNumber = accountNumber.trim();
-
         String sql =
             "UPDATE customer " +
             "SET balance = balance - ? " +
-            "WHERE TRIM(account_number)=TRIM(?) " +
-            "AND balance >= ?";
+            "WHERE account_number=? " +
+            "AND balance>=? " +
+            "AND status='ACTIVE'";
 
         ps = con.prepareStatement(sql);
 
@@ -199,11 +196,7 @@ public Account getAccountByNumber(String accountNumber) {
         ps.setString(2, accountNumber);
         ps.setDouble(3, amount);
 
-        int rows = ps.executeUpdate();
-
-        System.out.println("Rows Updated = " + rows);
-
-        return rows > 0;
+        return ps.executeUpdate() > 0;
 
     } catch (Exception e) {
 
@@ -216,9 +209,7 @@ public Account getAccountByNumber(String accountNumber) {
             if (ps != null) ps.close();
             if (con != null) con.close();
         } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
 }
     public boolean transferMoney(String fromAccount,
@@ -233,7 +224,7 @@ public Account getAccountByNumber(String accountNumber) {
         con.setAutoCommit(false);
 
         ps = con.prepareStatement(
-                "SELECT balance FROM customer WHERE account_number=?");
+            "SELECT balance,status FROM customer WHERE account_number=?");
 
         ps.setString(1, fromAccount);
 
@@ -242,18 +233,25 @@ public Account getAccountByNumber(String accountNumber) {
         if (rs.next()) {
 
             double balance = rs.getDouble("balance");
+            String accountStatus = rs.getString("status");
+
+            // Sirf ACTIVE account transfer kar sakta hai
+            if (!"ACTIVE".equalsIgnoreCase(accountStatus)) {
+                con.rollback();
+                return false;
+            }
 
             if (balance >= amount) {
 
                 ps = con.prepareStatement(
-                        "UPDATE customer SET balance = balance - ? WHERE account_number=?");
+                    "UPDATE customer SET balance=balance-? WHERE account_number=?");
 
                 ps.setDouble(1, amount);
                 ps.setString(2, fromAccount);
                 ps.executeUpdate();
 
                 ps = con.prepareStatement(
-                        "UPDATE customer SET balance = balance + ? WHERE account_number=?");
+                    "UPDATE customer SET balance=balance+? WHERE account_number=?");
 
                 ps.setDouble(1, amount);
                 ps.setString(2, toAccount);
@@ -270,15 +268,13 @@ public Account getAccountByNumber(String accountNumber) {
 
     } catch (Exception e) {
 
-        e.printStackTrace();
-
         try {
-            if (con != null) {
+            if (con != null)
                 con.rollback();
-            }
         } catch (Exception ex) {
-            ex.printStackTrace();
         }
+
+        e.printStackTrace();
 
     } finally {
 
@@ -287,7 +283,6 @@ public Account getAccountByNumber(String accountNumber) {
             if (ps != null) ps.close();
             if (con != null) con.close();
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

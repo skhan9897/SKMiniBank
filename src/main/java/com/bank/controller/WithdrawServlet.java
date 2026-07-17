@@ -8,7 +8,7 @@ import com.bank.model.Customer;
 import com.bank.model.Transaction;
 
 import java.io.IOException;
-import java.sql.Timestamp;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,76 +19,89 @@ import javax.servlet.http.HttpServletResponse;
 public class WithdrawServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
+protected void doPost(HttpServletRequest request,
+        HttpServletResponse response)
+        throws ServletException, IOException {
 
-        try {
+    String accountNumber = request.getParameter("accountNumber");
+    double amount = Double.parseDouble(request.getParameter("amount"));
 
-            String accountNumber = request.getParameter("accountNumber").trim();
-            double amount = Double.parseDouble(request.getParameter("amount"));
+    AccountDAO dao = new AccountDAO();
 
-            if (amount <= 0) {
-                response.sendRedirect("admin/withdraw.jsp?msg=invalid");
-                return;
-            }
+    // Get Account
+    Account account = dao.getAccountByNumber(accountNumber);
 
-            System.out.println("===== WITHDRAW =====");
-            System.out.println("Account : " + accountNumber);
-            System.out.println("Amount  : " + amount);
+    if (account == null) {
+        response.sendRedirect("admin/withdraw.jsp?msg=invalid");
+        return;
+    }
 
-            AccountDAO dao = new AccountDAO();
+    // Account Status Validation
 
-            boolean status = dao.withdraw(accountNumber, amount);
+    String accountStatus = account.getStatus();
 
-            System.out.println("Withdraw Status : " + status);
+    if ("BLOCKED".equalsIgnoreCase(accountStatus)) {
 
-            if (!status) {
-                response.sendRedirect("admin/withdraw.jsp?msg=failed");
-                return;
-            }
+        response.sendRedirect(
+                request.getContextPath()
+                + "/CustomerProfileServlet?customerId="
+                + account.getCustomerId()
+                + "&msg=blocked");
 
-            Account account = dao.getAccountByNumber(accountNumber);
+        return;
+    }
 
-            Transaction t = new Transaction();
-            t.setAccountNumber(accountNumber);
-            t.setTransactionType("Withdraw");
-            t.setAmount(amount);
-            t.setStatus("SUCCESS");
-            t.setTransactionDate(new Timestamp(System.currentTimeMillis()));
+    if ("FREEZE".equalsIgnoreCase(accountStatus)) {
 
-            if (account != null) {
-                t.setCustomerName(account.getCustomerName());
-                t.setBalance(account.getBalance());
-            }
+        response.sendRedirect(
+                request.getContextPath()
+                + "/CustomerProfileServlet?customerId="
+                + account.getCustomerId()
+                + "&msg=freeze");
 
-            TransactionDAO td = new TransactionDAO();
-            td.addTransaction(t);
+        return;
+    }
 
-            CustomerDAO customerDAO = new CustomerDAO();
-            Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
+    // Withdraw
+    boolean status = dao.withdraw(accountNumber, amount);
 
-            if (customer != null) {
+    if (status) {
 
-                response.sendRedirect(
-                        "TransactionSuccess.jsp?customerId="
-                        + customer.getCustomerId()
-                        + "&amount="
-                        + amount
-                        + "&type=Withdraw");
+        account = dao.getAccountByNumber(accountNumber);
 
-            } else {
+        Transaction t = new Transaction();
 
-                response.sendRedirect("admin/customer-list.jsp");
+        t.setAccountNumber(accountNumber);
+        t.setCustomerName(account.getCustomerName());
+        t.setBalance(account.getBalance());
+        t.setTransactionType("Withdraw");
+        t.setAmount(amount);
+        t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
+        t.setStatus("SUCCESS");
 
-            }
+        TransactionDAO td = new TransactionDAO();
+        td.addTransaction(t);
 
-        } catch (Exception e) {
+        CustomerDAO customerDAO = new CustomerDAO();
+        Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
-            e.printStackTrace();
-            response.getWriter().println("ERROR : " + e.getMessage());
+        if (customer != null) {
 
+            response.sendRedirect(
+                    "TransactionSuccess.jsp?customerId="
+                    + customer.getCustomerId()
+                    + "&amount="
+                    + amount
+                    + "&type=Withdraw");
+
+        } else {
+
+            response.sendRedirect("admin/customer-list.jsp");
         }
 
+    } else {
+
+        response.sendRedirect("admin/withdraw.jsp?msg=failed");
     }
+}
 }

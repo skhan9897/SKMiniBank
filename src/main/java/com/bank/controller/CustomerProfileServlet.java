@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/CustomerProfileServlet")
 public class CustomerProfileServlet extends HttpServlet {
@@ -25,11 +26,26 @@ public class CustomerProfileServlet extends HttpServlet {
 
         try {
 
+            HttpSession session = request.getSession(false);
+
             String id = request.getParameter("customerId");
 
+            // URL में customerId नहीं है तो Session से लो
+            if ((id == null || id.trim().isEmpty()) && session != null) {
+
+                Object obj = session.getAttribute("customerId");
+
+                if (obj != null) {
+                    id = obj.toString();
+                }
+            }
+
+            // Login नहीं है
             if (id == null || id.trim().isEmpty()) {
+
                 response.sendRedirect(request.getContextPath()
-                        + "/admin/customer-profile.jsp");
+                        + "/login.jsp");
+
                 return;
             }
 
@@ -39,8 +55,10 @@ public class CustomerProfileServlet extends HttpServlet {
             Customer customer = customerDAO.searchCustomerById(customerId);
 
             if (customer == null) {
+
                 response.sendRedirect(request.getContextPath()
                         + "/admin/customer-list.jsp?error=Customer Not Found");
+
                 return;
             }
 
@@ -50,6 +68,13 @@ public class CustomerProfileServlet extends HttpServlet {
             FixedDepositDAO fdDAO = new FixedDepositDAO();
             FixedDeposit fd = fdDAO.getFDByCustomerId(customerId);
 
+            // Message Parameter
+            String msg = request.getParameter("msg");
+
+            if (msg != null && !msg.trim().isEmpty()) {
+                request.setAttribute("msg", msg);
+            }
+
             request.setAttribute("customer", customer);
             request.setAttribute("card", card);
             request.setAttribute("fd", fd);
@@ -57,17 +82,13 @@ public class CustomerProfileServlet extends HttpServlet {
             request.getRequestDispatcher("/admin/customer-profile.jsp")
                     .forward(request, response);
 
-        } catch (NumberFormatException e) {
-
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath()
-                    + "/admin/customer-list.jsp?error=Invalid Customer ID");
-
         } catch (Exception e) {
 
             e.printStackTrace();
-            throw new ServletException("Unable to Load Customer Profile", e);
 
+            throw new ServletException("Unable to Load Customer Profile", e);
         }
+
     }
+
 }

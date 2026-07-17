@@ -29,54 +29,76 @@ public class DepositServlet extends HttpServlet {
 
         AccountDAO dao = new AccountDAO();
 
+        // Get Account
+        Account account = dao.getAccountByNumber(accountNumber);
+
+        if (account == null) {
+            response.sendRedirect("admin/deposit.jsp?msg=invalid");
+            return;
+        }
+
+        // ==========================
+        // Account Status Validation
+        // ==========================
+
+        String accountStatus = account.getStatus();
+
+       
+        if ("FREEZE".equalsIgnoreCase(accountStatus)) {
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/CustomerProfileServlet?customerId="
+                    + account.getCustomerId()
+                    + "&msg=freeze");
+
+            return;
+        }
+
+        // Deposit
         boolean status = dao.deposit(accountNumber, amount);
 
         if (status) {
 
             // Get Updated Account
-            Account account = dao.getAccountByNumber(accountNumber);
+            account = dao.getAccountByNumber(accountNumber);
 
             // Save Transaction
             Transaction t = new Transaction();
 
-t.setAccountNumber(accountNumber);
+            t.setAccountNumber(accountNumber);
+            t.setCustomerName(account.getCustomerName());
+            t.setBalance(account.getBalance());
+            t.setTransactionType("Deposit");
+            t.setAmount(amount);
+            t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
+            t.setStatus("SUCCESS");
 
-if (account != null) {
-    t.setCustomerName(account.getCustomerName());
-    t.setBalance(account.getBalance());
-}
+            TransactionDAO td = new TransactionDAO();
+            td.addTransaction(t);
 
-t.setTransactionType("Deposit");
-t.setAmount(amount);
-t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
-t.setStatus("SUCCESS");
-
-TransactionDAO td = new TransactionDAO();
-
-boolean saved = td.addTransaction(t);
-
-System.out.println("Transaction Saved : " + saved);
-            // Get Customer ID from Account Number
             CustomerDAO customerDAO = new CustomerDAO();
             Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
             if (customer != null) {
 
                 response.sendRedirect(
-    "TransactionSuccess.jsp?customerId="
-    + customer.getCustomerId()
-    + "&amount="
-    + amount
-    + "&type=Deposit");
+                        "TransactionSuccess.jsp?customerId="
+                        + customer.getCustomerId()
+                        + "&amount="
+                        + amount
+                        + "&type=Deposit");
 
             } else {
 
                 response.sendRedirect("admin/customer-list.jsp");
+
             }
 
         } else {
 
             response.sendRedirect("admin/deposit.jsp?msg=failed");
+
         }
     }
 }

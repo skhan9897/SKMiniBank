@@ -22,10 +22,12 @@ public class AdminLoginServlet extends HttpServlet {
         // Default Admin Login
         if ("SKMB9897".equals(adminId) && "admin123".equals(password)) {
 
-            HttpSession session = request.getSession();
-            session.setAttribute("admin", adminId);
+           HttpSession session = request.getSession();
 
-            response.sendRedirect("admin/SKMiniBank-System.jsp");
+session.setAttribute("admin", adminId);
+session.setAttribute("role", "ADMIN");
+
+response.sendRedirect("admin/SKMiniBank-System.jsp");
 
         } else {
 

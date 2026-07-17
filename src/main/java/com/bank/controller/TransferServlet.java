@@ -3,7 +3,6 @@ package com.bank.controller;
 import com.bank.dao.AccountDAO;
 import com.bank.dao.CustomerDAO;
 import com.bank.dao.TransactionDAO;
-
 import com.bank.model.Account;
 import com.bank.model.Customer;
 import com.bank.model.Transaction;
@@ -26,36 +25,63 @@ public class TransferServlet extends HttpServlet {
 
         String fromAccount = request.getParameter("fromAccount");
         String toAccount = request.getParameter("toAccount");
-
         double amount = Double.parseDouble(request.getParameter("amount"));
 
         AccountDAO dao = new AccountDAO();
 
+        // Sender Account
+        Account sender = dao.getAccountByNumber(fromAccount);
+
+        if (sender == null) {
+            response.sendRedirect("admin/transfer.jsp?msg=invalid");
+            return;
+        }
+
+        // Account Status Validation
+        String accountStatus = sender.getStatus();
+
+        if ("BLOCKED".equalsIgnoreCase(accountStatus)) {
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/CustomerProfileServlet?customerId="
+                    + sender.getCustomerId()
+                    + "&msg=blocked");
+
+            return;
+        }
+
+        if ("FREEZE".equalsIgnoreCase(accountStatus)) {
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/CustomerProfileServlet?customerId="
+                    + sender.getCustomerId()
+                    + "&msg=freeze");
+
+            return;
+        }
+
+        // Transfer
         boolean status = dao.transferMoney(fromAccount, toAccount, amount);
 
         if (status) {
 
-            // Sender Account
-            Account sender = dao.getAccountByNumber(fromAccount);
+            sender = dao.getAccountByNumber(fromAccount);
 
-            // Save Transaction
             Transaction t = new Transaction();
 
             t.setAccountNumber(fromAccount);
-
-            if (sender != null) {
-                t.setCustomerName(sender.getCustomerName());
-                t.setBalance(sender.getBalance());
-            }
-
+            t.setCustomerName(sender.getCustomerName());
+            t.setBalance(sender.getBalance());
             t.setTransactionType("Transfer");
             t.setAmount(amount);
+            t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
             t.setStatus("SUCCESS");
 
             TransactionDAO td = new TransactionDAO();
             td.addTransaction(t);
 
-            // Get Customer ID
             CustomerDAO customerDAO = new CustomerDAO();
             Customer customer = customerDAO.getCustomerByAccountNumber(fromAccount);
 

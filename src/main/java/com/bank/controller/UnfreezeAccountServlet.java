@@ -35,14 +35,16 @@ public class UnfreezeAccountServlet extends HttpServlet {
             if (result > 0) {
 
                 response.sendRedirect(request.getContextPath()
-                        + "/admin/customer-profile.jsp?customerId="
-                        + customerId);
+        + "/CustomerProfileServlet?customerId="
+        + customerId
+        + "&msg=unfreeze");
 
             } else {
 
                 response.sendRedirect(request.getContextPath()
-                        + "/admin/customer-profile.jsp?customerId="
-                        + customerId);
+        + "/CustomerProfileServlet?customerId="
+        + customerId
+        + "&msg=error");
 
             }
 
@@ -51,6 +53,10 @@ public class UnfreezeAccountServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
+            response.sendRedirect(request.getContextPath()
+        + "/CustomerProfileServlet?customerId="
+        + customerId
+        + "&msg=error");
         }
     }
 }

@@ -154,17 +154,9 @@ body{
     SK MINI BANK
 </h3>
 
-<a href="${pageContext.request.contextPath}/admin/SKMiniBank-System.jsp">
-    <i class="fa fa-gauge"></i> Dashboard
-</a>
 
-<a href="${pageContext.request.contextPath}/admin/customer-list.jsp">
-    <i class="fa fa-user"></i> Customer
-</a>
 
-<a href="${pageContext.request.contextPath}/admin/deposit.jsp">
-    <i class="fa fa-money-bill"></i> Deposit
-</a>
+
 
 <a href="${pageContext.request.contextPath}/admin/withdraw.jsp">
     <i class="fa fa-wallet"></i> Withdraw
@@ -174,15 +166,6 @@ body{
     <i class="fa fa-right-left"></i> Transfer
 </a>
 
-
-    
-    <a href="<%= request.getContextPath() %>/KYCServlet?customerId=<%= c.getCustomerId() %>">
-    <i class="fa fa-id-card"></i> KYC
-</a>
-
-<a href="${pageContext.request.contextPath}/admin/fixed-deposit.jsp">
-    <i class="fa fa-building-columns"></i> Fixed Deposit
-</a>
 
 <a href="${pageContext.request.contextPath}/TransactionServlet?customerId=${customer.customerId}">
     Transactions
@@ -221,6 +204,90 @@ Welcome,
 </div>
 
 </div>
+
+
+<%
+String msg = request.getParameter("msg");
+
+if("blocked".equalsIgnoreCase(msg)){
+%>
+
+<div class="alert alert-danger mt-3">
+    <b>? Account Blocked Successfully.</b>
+</div>
+
+<%
+}else if("freeze".equalsIgnoreCase(msg)){
+%>
+
+<div class="alert alert-warning mt-3">
+    <b>? Account Frozen Successfully.</b>
+</div>
+
+<%
+}else if("unblocked".equalsIgnoreCase(msg)){
+%>
+
+<div class="alert alert-success mt-3">
+    <b>? Account Unblocked Successfully.</b>
+</div>
+
+<%
+}else if("unfreeze".equalsIgnoreCase(msg)){
+%>
+
+<div class="alert alert-success mt-3">
+    <b>? Account Unfrozen Successfully.</b>
+</div>
+
+<%
+}
+%>
+
+
+
+<%
+String accountStatus = c.getStatus();
+
+if(accountStatus == null){
+    accountStatus = "ACTIVE";
+}
+
+if("BLOCKED".equalsIgnoreCase(accountStatus)){
+%>
+
+<div class="alert alert-danger mt-3">
+    <h5><i class="fa fa-ban"></i> Account Blocked</h5>
+    Credit Transaction Allowed.<br>
+    Withdraw Not Allowed.<br>
+    Transfer Not Allowed.<br><br>
+    Please Contact Your Home Branch.
+</div>
+
+<%
+}else if("FREEZE".equalsIgnoreCase(accountStatus)){
+%>
+
+<div class="alert alert-warning mt-3">
+    <h5><i class="fa fa-lock"></i> Account Frozen</h5>
+    Deposit Not Allowed.<br>
+    Withdraw Not Allowed.<br>
+    Transfer Not Allowed.<br><br>
+    Please Visit Your Home Branch.
+</div>
+
+<%
+}else{
+%>
+
+<div class="alert alert-success mt-3">
+    <h5><i class="fa fa-circle-check"></i> Account Active</h5>
+    All Banking Services are Available.
+</div>
+
+<%
+}
+%>
 
                <div class="container-fluid mt-3">
 
@@ -300,7 +367,13 @@ Welcome,
 
         <div class="d-grid gap-2">
 
-            <a href="${pageContext.request.contextPath}/BlockAccountServlet?customerId=<%=c.getCustomerId()%>"
+           <%
+String role = (String) session.getAttribute("role");
+
+if ("ADMIN".equals(role)) {
+%>
+
+<a href="${pageContext.request.contextPath}/BlockAccountServlet?customerId=<%=c.getCustomerId()%>"
                class="btn btn-danger">
                 <i class="fa fa-ban"></i> Block Account
             </a>
@@ -319,6 +392,10 @@ Welcome,
                class="btn btn-primary">
                 <i class="fa fa-lock-open"></i> Unfreeze Account
             </a>
+
+<%
+}
+%>
 
         </div>
 
