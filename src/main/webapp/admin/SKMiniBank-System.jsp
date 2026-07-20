@@ -19,35 +19,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <body>
 
-<!-- Top Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-    <div class="container-fluid">
-
-        <a class="navbar-brand fw-bold" href="#">
-            <i class="fas fa-university"></i>
-            SK Mini Bank Admin
-        </a>
-
-        <div class="d-flex align-items-center">
-
-    <span class="me-3">
-        <i class="fa fa-user"></i>
-        Welcome Admin
-    </span>
-
-    <a href="<%=request.getContextPath()%>/AdminLogoutServlet"
-       class="btn btn-danger btn-sm">
-        <i class="fa fa-sign-out-alt"></i>
-        Logout
-    </a>
-
-</div>
-
-    </div>
-</nav>
-
 <!-- Sidebar -->
-
 <div class="sidebar">
 
     <div class="logo-section">
@@ -58,6 +30,39 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     <a href="${pageContext.request.contextPath}/admin/dashboard.jsp" class="active">
         🏠 Dashboard
     </a>
+
+    <!-- Service Requests -->
+    <a data-bs-toggle="collapse" href="#serviceMenu" role="button">
+        <i class="fas fa-tasks"></i> Service Requests
+    </a>
+
+    <div class="collapse show" id="serviceMenu">
+
+        <a href="${pageContext.request.contextPath}/AdminATMRequestServlet">
+            &nbsp;&nbsp;💳 ATM Card Requests
+        </a>
+
+        <a href="${pageContext.request.contextPath}/AdminChequeBookListServlet">
+            &nbsp;&nbsp;📒 Cheque Book Requests
+        </a>
+
+        <a href="${pageContext.request.contextPath}/AdminNetBankingServlet">
+            &nbsp;&nbsp;🌐 Net Banking Requests
+        </a>
+
+        <a href="${pageContext.request.contextPath}/AdminMobileBankingServlet">
+            &nbsp;&nbsp;📱 Mobile Banking Requests
+        </a>
+
+        <a href="${pageContext.request.contextPath}/AdminLoanRequestServlet">
+            &nbsp;&nbsp;🏦 Loan Requests
+        </a>
+
+        <a href="${pageContext.request.contextPath}/AdminAllRequestServlet">
+            &nbsp;&nbsp;📋 All Service Requests
+        </a>
+
+    </div>
 
     <a href="${pageContext.request.contextPath}/admin/customer-list.jsp">
         👥 Customers
@@ -83,26 +88,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         🔄 Fund Transfer
     </a>
 
-    <a href="${pageContext.request.contextPath}/TransactionServlet?customerId=${customer.customerId}">
-    Transactions
-</a>
-
-    <a href="${pageContext.request.contextPath}/admin/cheque-book-request.jsp">
-        📦 Cheque Book Request
-    </a>
-
-    <a href="${pageContext.request.contextPath}/admin/internet-banking-dashboard.jsp">
-        🌐 Internet Banking
-    </a>
-
-    <a href="${pageContext.request.contextPath}/admin/atm-request.jsp">
-        💳 ATM Request
-    </a>
-
-    <a href="${pageContext.request.contextPath}/admin/kyc.jsp">
-        🪪 KYC Verification
-    </a>
-
     <a href="${pageContext.request.contextPath}/admin/fixed-deposit.jsp">
         📦 Fixed Deposit
     </a>
@@ -111,19 +96,23 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         🏠 Loan
     </a>
 
-    
-    <a href="<%=request.getContextPath()%>/ReportServlet">
-        <i class="fa fa-bar-chart"></i> Reports
+    <a href="${pageContext.request.contextPath}/admin/kyc.jsp">
+        🪪 KYC Verification
     </a>
 
+    <a href="${pageContext.request.contextPath}/NotificationServlet">
+        🔔 Notifications
+    </a>
 
-    <a href="<%=request.getContextPath()%>/AdminLogoutServlet"
-   class="btn btn-danger">
-    <i class="fa fa-sign-out-alt"></i> Logout
-</a>
+    <a href="${pageContext.request.contextPath}/ReportServlet">
+        📊 Reports
+    </a>
+
+    <a href="${pageContext.request.contextPath}/AdminLogoutServlet">
+        🚪 Logout
+    </a>
 
 </div>
-
 <!-- Main Content -->
 
 <div class="main-content">

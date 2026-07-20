@@ -1,9 +1,10 @@
 package com.bank.controller;
 
-import com.bank.dao.ChequeBookRequestDAO;
-import com.bank.model.ChequeBookRequest;
+import com.bank.dao.ServiceRequestDAO;
+import com.bank.model.ServiceRequest;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,34 +15,44 @@ import javax.servlet.http.HttpServletResponse;
 public class ChequeBookRequestServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request,
+            HttpServletResponse response)
             throws ServletException, IOException {
 
-        String accountNumber = request.getParameter("accountNumber");
-        String customerName = request.getParameter("customerName");
-        String mobile = request.getParameter("mobile");
-        int leaves = Integer.parseInt(request.getParameter("leaves"));
-        String address = request.getParameter("address");
+        try {
 
-        ChequeBookRequest cheque = new ChequeBookRequest();
+            ServiceRequest sr = new ServiceRequest();
 
-        cheque.setAccountNumber(accountNumber);
-        cheque.setCustomerName(customerName);
-        cheque.setMobile(mobile);
-        cheque.setLeaves(leaves);
-        cheque.setAddress(address);
-        cheque.setStatus("Pending");
+            sr.setCustomerId(Integer.parseInt(request.getParameter("customerId")));
+            sr.setAccountNumber(request.getParameter("accountNumber"));
+            sr.setRequestType("CHEQUE_BOOK");
 
-        ChequeBookRequestDAO dao = new ChequeBookRequestDAO();
+            String details = "Cheque Book Request | Leaves : "
+                    + request.getParameter("leaves")
+                    + " | Address : "
+                    + request.getParameter("address");
 
-        boolean status = dao.saveRequest(cheque);
+            sr.setRequestDetails(details);
 
-System.out.println("Status = " + status);
+            ServiceRequestDAO dao = new ServiceRequestDAO();
 
-if (status) {
-    response.sendRedirect("admin/cheque-book-request.jsp?msg=success");
-} else {
-    response.sendRedirect("admin/cheque-book-request.jsp?msg=failed");
-}
+            boolean status = dao.saveRequest(sr);
+
+            if (status) {
+
+                response.sendRedirect("customer/cheque-book-request.jsp?msg=success");
+
+            } else {
+
+                response.sendRedirect("customer/cheque-book-request.jsp?msg=error");
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendRedirect("customer/cheque-book-request.jsp?msg=error");
+        }
     }
 }

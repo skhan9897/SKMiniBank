@@ -1,7 +1,9 @@
 package com.bank.controller;
 
 import com.bank.dao.InternetBankingDAO;
+import com.bank.dao.ServiceRequestDAO;
 import com.bank.model.InternetBanking;
+import com.bank.model.ServiceRequest;
 
 import java.io.IOException;
 
@@ -23,7 +25,9 @@ public class InternetBankingServlet extends HttpServlet {
 
             InternetBanking ib = new InternetBanking();
 
-            ib.setCustomerId(Integer.parseInt(request.getParameter("customerId")));
+            int customerId = Integer.parseInt(request.getParameter("customerId"));
+
+            ib.setCustomerId(customerId);
             ib.setAccountNumber(request.getParameter("accountNumber"));
             ib.setCustomerName(request.getParameter("customerName"));
             ib.setMobile(request.getParameter("mobile"));
@@ -37,6 +41,17 @@ public class InternetBankingServlet extends HttpServlet {
             boolean status = dao.saveRequest(ib);
 
             if (status) {
+
+                // Save Common Service Request
+                ServiceRequest sr = new ServiceRequest();
+
+                sr.setCustomerId(customerId);
+                sr.setAccountNumber(request.getParameter("accountNumber"));
+                sr.setRequestType("NET_BANKING");
+                sr.setRequestDetails("Net Banking Registration");
+
+                ServiceRequestDAO serviceDAO = new ServiceRequestDAO();
+                serviceDAO.saveRequest(sr);
 
                 response.sendRedirect(request.getContextPath()
                         + "/InternetBankingListServlet?msg=success");

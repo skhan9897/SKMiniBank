@@ -26,8 +26,9 @@ public class NotificationDAO {
 
         con = DBConnection.getConnection();
 
-        String sql =
-        "INSERT INTO notification(customer_id,title,message,notification_type,status,is_read,action_url,created_at) VALUES(?,?,?,?,?,?,?,NOW())";
+        String sql = "INSERT INTO notification "
+                + "(customer_id, title, message, notification_type, status, is_read, action_url, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
         ps = con.prepareStatement(sql);
 
@@ -39,9 +40,25 @@ public class NotificationDAO {
         ps.setInt(6, n.getIsRead());
         ps.setString(7, n.getActionUrl());
 
-        status = ps.executeUpdate() > 0;
+        System.out.println("========== Notification Debug ==========");
+        System.out.println("Customer ID : " + n.getCustomerId());
+        System.out.println("Title       : " + n.getTitle());
+        System.out.println("Message     : " + n.getMessage());
+        System.out.println("Type        : " + n.getNotificationType());
+
+        int rows = ps.executeUpdate();
+
+        System.out.println("Rows Inserted : " + rows);
+
+        if (rows > 0) {
+            status = true;
+            System.out.println("Notification Saved Successfully");
+        } else {
+            System.out.println("Notification Not Saved");
+        }
 
     } catch (Exception e) {
+        System.out.println("Notification Error:");
         e.printStackTrace();
     }
 

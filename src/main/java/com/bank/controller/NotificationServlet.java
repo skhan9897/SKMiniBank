@@ -40,7 +40,20 @@ public class NotificationServlet extends HttpServlet {
                 return;
             }
 
-            NotificationDAO dao = new NotificationDAO();
+            String notificationId = request.getParameter("notificationId");
+
+NotificationDAO dao = new NotificationDAO();
+
+if (notificationId != null && !notificationId.isEmpty()) {
+    dao.markAsRead(Integer.parseInt(notificationId));
+}
+
+String action = request.getParameter("action");
+
+if ("markAll".equals(action)) {
+    dao.markAllAsRead(customerId);
+}
+            
 
             List<Notification> list =
                     dao.getNotificationsByCustomer(customerId);

@@ -45,6 +45,14 @@ Unread Notifications :
 ${unreadCount}
 
 </span>
+<div class="mt-2 mb-3">
+
+    <a href="<%=request.getContextPath()%>/AdminNotificationServlet?action=markAll&customerId=${customerId}"
+   class="btn btn-success btn-sm">
+    <i class="fa fa-check-double"></i> Mark All Read
+</a>
+
+</div>
 
 </h6>
 
@@ -106,35 +114,24 @@ for(Notification n:list){
 <td>
 
 <%
-
 if(n.getIsRead()==0){
-
 %>
 
-<span class="badge bg-danger">
-
-UNREAD
-
-</span>
-
+<a href="<%=request.getContextPath()%>/AdminNotificationServlet?notificationId=<%=n.getNotificationId()%>&customerId=${customerId}"
+   class="badge bg-danger text-decoration-none">
+    UNREAD
+</a>
 <%
-
 }else{
-
 %>
 
 <span class="badge bg-success">
-
-READ
-
+    READ
 </span>
 
 <%
-
 }
-
 %>
-
 </td>
 
 <td>

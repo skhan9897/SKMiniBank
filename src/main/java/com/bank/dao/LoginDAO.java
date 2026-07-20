@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 
 public class LoginDAO {
 
-    public Customer login(String email, String password) {
+    public Customer login(String accountNumber, String password) {
 
         Customer customer = null;
 
@@ -17,11 +17,11 @@ public class LoginDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM customer WHERE email=? AND password=?";
+            String sql = "SELECT * FROM customer WHERE account_number=? AND password=?";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
-            ps.setString(1, email);
+            ps.setString(1, accountNumber);
             ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
@@ -30,6 +30,7 @@ public class LoginDAO {
 
                 customer = new Customer();
 
+                customer.setCustomerId(rs.getInt("customer_id"));
                 customer.setCustomerCode(rs.getString("customer_code"));
                 customer.setFullName(rs.getString("full_name"));
                 customer.setAccountNumber(rs.getString("account_number"));
@@ -41,7 +42,6 @@ public class LoginDAO {
 
             rs.close();
             ps.close();
-            con.close();
 
         } catch (Exception e) {
             e.printStackTrace();

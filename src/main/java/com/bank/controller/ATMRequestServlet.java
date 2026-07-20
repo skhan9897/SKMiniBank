@@ -1,14 +1,11 @@
 package com.bank.controller;
 
-import com.bank.dao.ATMRequestDAO;
 import com.bank.dao.CustomerDAO;
-import com.bank.dao.DebitCardDAO;
-import com.bank.model.ATMRequest;
+import com.bank.dao.ServiceRequestDAO;
 import com.bank.model.Customer;
-import com.bank.model.DebitCard;
+import com.bank.model.ServiceRequest;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -39,56 +36,37 @@ public class ATMRequestServlet extends HttpServlet {
                 return;
             }
 
-            // Save ATM Request
-            ATMRequest atm = new ATMRequest();
+            // Save ATM Request in Common Service Request Table
+            ServiceRequest sr = new ServiceRequest();
 
-            atm.setCustomerId(customerId);
-            atm.setCardType(cardType);
-            atm.setRequestDate(LocalDate.now().toString());
-            atm.setStatus("PENDING");
+            sr.setCustomerId(customerId);
+            sr.setAccountNumber(customer.getAccountNumber());
+            sr.setRequestType("ATM_CARD");
+            sr.setRequestDetails("ATM Card Type : " + cardType);
 
-            ATMRequestDAO atmDAO = new ATMRequestDAO();
+            ServiceRequestDAO dao = new ServiceRequestDAO();
 
-            boolean requestSaved = atmDAO.applyATM(atm);
+            boolean status = dao.saveRequest(sr);
 
-            if (!requestSaved) {
+            if (status) {
+
+                response.sendRedirect(request.getContextPath()
+                        + "/CustomerProfileServlet?customerId="
+                        + customerId
+                        + "&msg=ATM Request Submitted Successfully");
+
+            } else {
 
                 response.sendRedirect(request.getContextPath()
                         + "/customer/atm-request.jsp?msg=Request Failed");
-                return;
             }
 
-            // Generate Virtual Debit Card
-            DebitCard card = new DebitCard();
-
-            card.setCustomerId(customerId);
-            card.setCustomerName(customer.getFullName());
-            card.setAccountNumber(customer.getAccountNumber());
-            card.setCardType(cardType);
-
-            card.setCardNumber(DebitCardDAO.generateCardNumber());
-            card.setExpiryDate(DebitCardDAO.generateExpiry());
-            card.setCvv(DebitCardDAO.generateCVV());
-
-            card.setStatus("ACTIVE");
-            card.setDispatchStatus("Virtual Card Ready");
-            card.setExpectedDelivery("Within 7 Working Days");
-
-            DebitCardDAO debitDAO = new DebitCardDAO();
-
-            debitDAO.saveCard(card);
-
-            // Redirect to Customer Profile
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/CustomerProfileServlet?customerId="
-                    + customerId
-                    + "&msg=ATM Request Submitted Successfully");
-
         } catch (Exception e) {
-    e.printStackTrace();
-    response.setContentType("text/plain");
-    e.printStackTrace(response.getWriter());
-}
+
+            e.printStackTrace();
+
+            response.sendRedirect(request.getContextPath()
+                    + "/customer/atm-request.jsp?msg=Server Error");
+        }
     }
 }

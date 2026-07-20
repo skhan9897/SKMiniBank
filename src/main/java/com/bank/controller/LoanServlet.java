@@ -3,9 +3,11 @@ package com.bank.controller;
 import com.bank.dao.CustomerDAO;
 import com.bank.dao.LoanDAO;
 import com.bank.dao.LoanDocumentDAO;
+import com.bank.dao.ServiceRequestDAO;
 import com.bank.model.Customer;
 import com.bank.model.Loan;
 import com.bank.model.LoanDocument;
+import com.bank.model.ServiceRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,10 +105,28 @@ public class LoanServlet extends HttpServlet {
             doc.setVerificationStatus("Pending");
             doc.setRemarks("");
 
-            LoanDocumentDAO documentDAO = new LoanDocumentDAO();
+          LoanDocumentDAO documentDAO = new LoanDocumentDAO();
 
-            documentDAO.saveDocuments(doc);
+documentDAO.saveDocuments(doc);
 
+// Save Service Request
+ServiceRequest sr = new ServiceRequest();
+
+sr.setCustomerId(customerId);
+sr.setAccountNumber(customer.getAccountNumber());
+sr.setRequestType("LOAN");
+
+String details = "Loan Type: " + loan.getLoanType()
+        + ", Amount: ₹" + loan.getLoanAmount()
+        + ", Duration: " + loan.getDurationYear() + " Years";
+
+sr.setRequestDetails(details);
+
+ServiceRequestDAO serviceDAO = new ServiceRequestDAO();
+serviceDAO.saveRequest(sr);
+
+response.sendRedirect(request.getContextPath()
+        + "/LoanListServlet?msg=success");
             response.sendRedirect(request.getContextPath()
                     + "/LoanListServlet?msg=success");
 

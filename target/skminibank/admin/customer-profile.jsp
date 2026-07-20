@@ -147,6 +147,8 @@ body{
 
 <body>
 
+    
+    
 <div class="sidebar">
 
 <h3 class="text-white fw-bold">
@@ -155,7 +157,10 @@ body{
 </h3>
 
 
-
+<a href="#" id="serviceBtn">
+    <i class="fa fa-building-columns"></i> Services
+    <i class="fa fa-chevron-down float-end"></i>
+</a>
 
 
 <a href="${pageContext.request.contextPath}/admin/withdraw.jsp">
@@ -170,6 +175,90 @@ body{
 <a href="${pageContext.request.contextPath}/TransactionServlet?customerId=${customer.customerId}">
     Transactions
 </a>
+       
+    <li class="nav-item">
+
+    <a class="nav-link" data-bs-toggle="collapse" href="#serviceRequestMenu">
+
+        <i class="fas fa-tasks"></i>
+
+        Service Requests
+
+    </a>
+
+    <div class="collapse" id="serviceRequestMenu">
+
+        <a class="nav-link ms-3"
+           href="../AdminAllRequestServlet">
+
+            All Requests
+
+        </a>
+
+        <a class="nav-link ms-3"
+           href="../AdminATMRequestServlet">
+
+            ATM Requests
+
+        </a>
+
+        <a class="nav-link ms-3"
+           href="../AdminChequeBookListServlet">
+
+            Cheque Book
+
+        </a>
+
+        <a class="nav-link ms-3"
+           href="../AdminLoanRequestServlet">
+
+            Loan
+
+        </a>
+
+        <a class="nav-link ms-3"
+           href="../AdminNetBankingServlet">
+
+            Net Banking
+
+        </a>
+
+    </div>
+
+</li>
+    
+    
+ <div id="serviceMenu" style="display:none;">
+
+    <a href="<%=request.getContextPath()%>/admin/atm-request.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-credit-card"></i> Apply ATM Card
+    </a>
+
+    <a href="<%=request.getContextPath()%>/admin/cheque-book-request.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-book"></i> Apply Cheque Book
+    </a>
+
+    <a href="<%=request.getContextPath()%>/admin/internet-banking.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-globe"></i> Internet Banking
+    </a>
+
+    <a href="<%=request.getContextPath()%>/admin/mobile-banking.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-mobile"></i> Mobile Banking
+    </a>
+
+    <a href="<%=request.getContextPath()%>/admin/fixed-deposit.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-piggy-bank"></i> Fixed Deposit
+    </a>
+
+    <a href="<%=request.getContextPath()%>/admin/loan-dashboard.jsp?customerId=<%=c.getCustomerId()%>">
+        <i class="fa fa-hand-holding-dollar"></i> Loan
+    </a>
+
+</div>
+        
+        
+   
+    
 <a href="${pageContext.request.contextPath}/LogoutServlet">
     <i class="fa fa-right-from-bracket"></i> Logout
 </a>
@@ -310,6 +399,11 @@ if("BLOCKED".equalsIgnoreCase(accountStatus)){
     <div class="card-body">
 
         <table class="table table-borderless">
+            
+            <tr>
+    <th>Customer ID</th>
+    <td><%= c.getCustomerId() %></td>
+</tr>
 
             <tr>
                 <th>Account Number</th>
@@ -556,3 +650,23 @@ if ("ADMIN".equals(role)) {
     </div>
 </div>
 </c:if>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+document.getElementById("serviceBtn").onclick=function(e){
+
+    e.preventDefault();
+
+    var x=document.getElementById("serviceMenu");
+
+    if(x.style.display==="block"){
+        x.style.display="none";
+    }else{
+        x.style.display="block";
+    }
+
+};
+</script>
+    </body>
+</html>

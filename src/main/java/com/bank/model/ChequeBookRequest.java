@@ -9,6 +9,14 @@ public class ChequeBookRequest {
     private int leaves;
     private String address;
     private String status;
+    private int customerId;
+private String remarks;
+private int approvedBy;
+private java.sql.Timestamp approvalDate;
+private java.sql.Date expectedDelivery;
+private java.sql.Date dispatchedDate;
+private java.sql.Date deliveredDate;
+private java.sql.Timestamp requestDate;
 
     public ChequeBookRequest() {
     }
@@ -68,5 +76,69 @@ public class ChequeBookRequest {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    public int getCustomerId() {
+    return customerId;
+}
+
+public void setCustomerId(int customerId) {
+    this.customerId = customerId;
+}
+
+public String getRemarks() {
+    return remarks;
+}
+
+public void setRemarks(String remarks) {
+    this.remarks = remarks;
+}
+
+public int getApprovedBy() {
+    return approvedBy;
+}
+
+public void setApprovedBy(int approvedBy) {
+    this.approvedBy = approvedBy;
+}
+
+public java.sql.Timestamp getApprovalDate() {
+    return approvalDate;
+}
+
+public void setApprovalDate(java.sql.Timestamp approvalDate) {
+    this.approvalDate = approvalDate;
+}
+
+public java.sql.Date getExpectedDelivery() {
+    return expectedDelivery;
+}
+
+public void setExpectedDelivery(java.sql.Date expectedDelivery) {
+    this.expectedDelivery = expectedDelivery;
+}
+
+public java.sql.Date getDispatchedDate() {
+    return dispatchedDate;
+}
+
+public void setDispatchedDate(java.sql.Date dispatchedDate) {
+    this.dispatchedDate = dispatchedDate;
+}
+
+public java.sql.Date getDeliveredDate() {
+    return deliveredDate;
+}
+
+public void setDeliveredDate(java.sql.Date deliveredDate) {
+    this.deliveredDate = deliveredDate;
+}
+
+public java.sql.Timestamp getRequestDate() {
+    return requestDate;
+}
+
+public void setRequestDate(java.sql.Timestamp requestDate) {
+    this.requestDate = requestDate;
+}
 
 }

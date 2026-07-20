@@ -87,8 +87,13 @@ public class TransferServlet extends HttpServlet {
             Customer receiverCustomer =
                     customerDAO.getCustomerByAccountNumber(toAccount);
 
-            NotificationDAO notificationDAO = new NotificationDAO();
+           NotificationDAO notificationDAO = new NotificationDAO();
 
+System.out.println("Sender Customer = " + senderCustomer);
+System.out.println("Receiver Customer = " + receiverCustomer);
+
+// Sender Notification
+if (senderCustomer != null) {
             // Sender Notification
             if (senderCustomer != null) {
 
@@ -104,7 +109,8 @@ public class TransferServlet extends HttpServlet {
                         "CustomerProfileServlet?customerId="
                         + senderCustomer.getCustomerId());
 
-                notificationDAO.addNotification(senderNotification);
+               boolean saved = notificationDAO.addNotification(senderNotification);
+System.out.println("Sender Notification Saved = " + saved);
             }
 
             // Receiver Notification
@@ -122,7 +128,8 @@ public class TransferServlet extends HttpServlet {
                         "CustomerProfileServlet?customerId="
                         + receiverCustomer.getCustomerId());
 
-                notificationDAO.addNotification(receiverNotification);
+                boolean saved2 = notificationDAO.addNotification(receiverNotification);
+System.out.println("Receiver Notification Saved = " + saved2);
             }
 
             if (senderCustomer != null) {
@@ -144,4 +151,6 @@ public class TransferServlet extends HttpServlet {
             response.sendRedirect("admin/transfer.jsp?msg=failed");
         }
     }
+}
+    
 }

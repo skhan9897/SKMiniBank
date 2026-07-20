@@ -156,92 +156,76 @@ ps.setString(34, c.getTransactionPin());
 
     return list;
 }
-    public Customer getCustomerById(int customerId) {
+   public Customer getCustomerById(int customerId) {
 
-    Customer c = null;
+    Customer customer = null;
 
     try {
 
-        con = DBConnection.getConnection();
+        Connection con = DBConnection.getConnection();
 
         String sql = "SELECT * FROM customer WHERE customer_id=?";
 
-        ps = con.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
+
         ps.setInt(1, customerId);
 
-        rs = ps.executeQuery();
+        ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
 
-            c = new Customer();
+            customer = new Customer();
 
-c.setCustomerId(rs.getInt("customer_id"));
+            customer.setCustomerId(rs.getInt("customer_id"));
+            customer.setCustomerCode(rs.getString("customer_code"));
+            customer.setFullName(rs.getString("full_name"));
+            customer.setFatherName(rs.getString("father_name"));
+            customer.setMotherName(rs.getString("mother_name"));
+            customer.setDob(rs.getString("dob"));
+            customer.setGender(rs.getString("gender"));
+            customer.setMaritalStatus(rs.getString("marital_status"));
+            customer.setOccupation(rs.getString("occupation"));
 
-c.setFullName(rs.getString("full_name"));
-c.setFatherName(rs.getString("father_name"));
-c.setMotherName(rs.getString("mother_name"));
+            customer.setMobile(rs.getString("mobile"));
+            customer.setAlternateMobile(rs.getString("alternate_mobile"));
+            customer.setEmail(rs.getString("email"));
 
-c.setDob(rs.getString("dob"));
-c.setGender(rs.getString("gender"));
-c.setMaritalStatus(rs.getString("marital_status"));
-c.setOccupation(rs.getString("occupation"));
+            customer.setAadhaar(rs.getString("aadhaar"));
+            customer.setPan(rs.getString("pan"));
 
-c.setMobile(rs.getString("mobile"));
-c.setAlternateMobile(rs.getString("alternate_mobile"));
-c.setEmail(rs.getString("email"));
+            customer.setAddress(rs.getString("address"));
+            customer.setCity(rs.getString("city"));
+            customer.setState(rs.getString("state"));
+            customer.setPincode(rs.getString("pincode"));
 
-c.setAadhaar(rs.getString("aadhaar"));
-c.setPan(rs.getString("pan"));
+            customer.setNomineeName(rs.getString("nominee_name"));
+            customer.setRelationship(rs.getString("relationship"));
+            customer.setNomineeMobile(rs.getString("nominee_mobile"));
 
-c.setAddress(rs.getString("address"));
-c.setCity(rs.getString("city"));
-c.setState(rs.getString("state"));
-c.setPincode(rs.getString("pincode"));
+            customer.setAccountNumber(rs.getString("account_number"));
+            customer.setIfscCode(rs.getString("ifsc_code"));
+            customer.setAccountType(rs.getString("account_type"));
+            customer.setBranch(rs.getString("branch"));
+            customer.setBalance(rs.getDouble("balance"));
 
-c.setNomineeName(rs.getString("nominee_name"));
-c.setRelationship(rs.getString("relationship"));
-c.setNomineeMobile(rs.getString("nominee_mobile"));
+            customer.setStatus(rs.getString("status"));
+            customer.setKycStatus(rs.getString("kyc_status"));
 
-c.setAccountNumber(rs.getString("account_number"));
-c.setIfscCode(rs.getString("ifsc_code"));
-c.setAccountType(rs.getString("account_type"));
-c.setBranch(rs.getString("branch"));
-
-c.setBalance(rs.getDouble("balance"));
-c.setStatus(rs.getString("status"));
-c.setKycStatus(rs.getString("kyc_status"));
-
-c.setPassword(rs.getString("password"));
-c.setTransactionPin(rs.getString("transaction_pin"));
-
-            // Bank Details
-            c.setAccountNumber(rs.getString("account_number"));
-            c.setIfscCode(rs.getString("ifsc_code"));
-            c.setAccountType(rs.getString("account_type"));
-            c.setBranch(rs.getString("branch"));
-            c.setBalance(rs.getDouble("balance"));
-            c.setStatus(rs.getString("status"));
-            c.setKycStatus(rs.getString("kyc_status"));
+            customer.setUpiId(rs.getString("upi_id"));
+            customer.setUpiStatus(rs.getString("upi_status"));
 
         }
+
+        rs.close();
+        ps.close();
 
     } catch (Exception e) {
 
         e.printStackTrace();
 
-    } finally {
-
-        try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (con != null) con.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
-    return c;
+    return customer;
 }
     public boolean updateCustomer(Customer c) {
 
@@ -631,5 +615,6 @@ c.setKycStatus(rs.getString("kyc_status"));
 
     return c;
 }
+    
 
 }
