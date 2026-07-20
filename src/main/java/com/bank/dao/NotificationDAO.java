@@ -178,4 +178,11 @@ public class NotificationDAO {
 
     return status;
 }
+   public List<Notification> getNotifications(int customerId) {
+    return getNotificationsByCustomer(customerId);
+}
+    
+  
+   
+
 }

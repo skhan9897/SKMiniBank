@@ -326,4 +326,7 @@ public class ServiceRequestDAO {
 
     return list;
 }
+  public List<ServiceRequest> getRequestsByCustomerId(int customerId) {
+    return getCustomerRequests(customerId);
+}
 }

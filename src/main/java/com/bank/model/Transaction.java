@@ -79,4 +79,19 @@ public class Transaction {
     public void setStatus(String status) {
         this.status = status;
     }
+    public int getTransactionId() {
+    return id;
+}
+
+public void setTransactionId(int transactionId) {
+    this.id = transactionId;
+}
+
+public String getDescription() {
+    return "";
+}
+
+public void setDescription(String description) {
+    // Future use
+}
 }
