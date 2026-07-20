@@ -288,4 +288,117 @@ public Account getAccountByNumber(String accountNumber) {
 
     return status;
 }
+    public boolean transferAmount(String fromAccount,
+                              String toAccount,
+                              double amount,
+                              String description) {
+
+    boolean status = false;
+    Connection con = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+        con.setAutoCommit(false);
+
+        // Sender Balance
+        String senderSql =
+                "SELECT balance, status FROM customer WHERE account_number=?";
+
+        PreparedStatement ps1 = con.prepareStatement(senderSql);
+        ps1.setString(1, fromAccount);
+
+        ResultSet rs1 = ps1.executeQuery();
+
+        if (!rs1.next()) {
+            con.rollback();
+            return false;
+        }
+
+        double senderBalance = rs1.getDouble("balance");
+        String senderStatus = rs1.getString("status");
+
+        if (!"ACTIVE".equalsIgnoreCase(senderStatus)) {
+            con.rollback();
+            return false;
+        }
+
+        if (senderBalance < amount) {
+            con.rollback();
+            return false;
+        }
+
+        // Receiver Balance
+        String receiverSql =
+                "SELECT balance, status FROM customer WHERE account_number=?";
+
+        PreparedStatement ps2 = con.prepareStatement(receiverSql);
+        ps2.setString(1, toAccount);
+
+        ResultSet rs2 = ps2.executeQuery();
+
+        if (!rs2.next()) {
+            con.rollback();
+            return false;
+        }
+
+        String receiverStatus = rs2.getString("status");
+
+        if (!"ACTIVE".equalsIgnoreCase(receiverStatus)) {
+            con.rollback();
+            return false;
+        }
+
+        // Debit Sender
+        PreparedStatement debit = con.prepareStatement(
+                "UPDATE customer SET balance = balance - ? WHERE account_number=?");
+
+        debit.setDouble(1, amount);
+        debit.setString(2, fromAccount);
+
+        int d = debit.executeUpdate();
+
+        // Credit Receiver
+        PreparedStatement credit = con.prepareStatement(
+                "UPDATE customer SET balance = balance + ? WHERE account_number=?");
+
+        credit.setDouble(1, amount);
+        credit.setString(2, toAccount);
+
+        int c = credit.executeUpdate();
+
+        if (d > 0 && c > 0) {
+            con.commit();
+            status = true;
+        } else {
+            con.rollback();
+        }
+
+    } catch (Exception e) {
+
+        try {
+            if (con != null) {
+                con.rollback();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (con != null) {
+                con.setAutoCommit(true);
+                con.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    return status;
+}
 }
