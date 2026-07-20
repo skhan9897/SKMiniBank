@@ -1,3 +1,4 @@
+com\bank\api\UpiDetailsApiServlet.class
 com\bank\model\DebitCard.class
 com\bank\controller\LoanRejectServlet.class
 com\bank\api\CustomerProfileApiServlet.class
@@ -35,6 +36,7 @@ com\bank\dao\DashboardDAO.class
 com\bank\model\Transaction.class
 com\bank\dao\NotificationDAO.class
 com\bank\controller\LogoutServlet.class
+com\bank\api\UpiPaymentApiServlet.class
 com\bank\dao\TransactionDAO.class
 com\bank\controller\LoanProfileServlet.class
 com\bank\model\FixedDeposit.class
@@ -59,6 +61,7 @@ com\bank\controller\ATMRequestServlet.class
 com\bank\model\ChequeBookRequest.class
 com\bank\controller\VerifyOTPServlet.class
 com\bank\controller\VerifyEmailOTPServlet.class
+com\bank\dao\UpiDAO.class
 com\bank\controller\LoanDocumentsVerifyServlet.class
 com\bank\dao\MobileBankingDAO.class
 com\bank\api\LogoutApiServlet.class
@@ -74,11 +77,13 @@ com\bank\controller\FreezeAccountServlet.class
 com\bank\controller\ReportServlet.class
 com\bank\controller\CustomerProfileServlet.class
 com\bank\controller\LoanPdfServlet.class
+com\bank\model\Upi.class
 com\bank\controller\DeleteCustomerServlet.class
 com\bank\model\MobileBanking.class
 com\bank\controller\ReceiptPDFServlet.class
 com\bank\model\Account.class
 com\bank\controller\TransactionPDFServlet.class
+com\bank\api\GenerateUpiApiServlet.class
 com\bank\controller\ResendOTPServlet.class
 com\bank\dao\ReportDAO.class
 com\bank\api\NotificationApiServlet.class
@@ -112,7 +117,9 @@ com\bank\dao\ServiceRequestDAO.class
 com\bank\controller\CustomerRequestServlet.class
 com\bank\controller\RejectLoanServlet.class
 com\bank\dao\ChequeBookRequestDAO.class
+com\bank\controller\GenerateUpiServlet.class
 com\bank\dao\LoanDocumentDAO.class
 com\bank\controller\RejectInternetBankingServlet.class
 com\bank\controller\UpdateCustomerServlet.class
+com\bank\api\SetUpiPinApiServlet.class
 com\bank\controller\AdminMobileBankingServlet.class

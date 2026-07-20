@@ -183,6 +183,67 @@ public class NotificationDAO {
 }
     
   
-   
+  public boolean saveUpiTransaction(String accountNumber,
+                                  String customerName,
+                                  String type,
+                                  double amount,
+                                  double balance) {
+
+    boolean status = false;
+
+    Connection con = null;
+    PreparedStatement ps = null;
+
+    try {
+
+        con = DBConnection.getConnection();
+
+        String sql =
+            "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,transaction_date,status) VALUES(?,?,?,?,?,NOW(),?)";
+
+        ps = con.prepareStatement(sql);
+
+        ps.setString(1, accountNumber);
+        ps.setString(2, customerName);
+        ps.setString(3, type);
+        ps.setDouble(4, amount);
+        ps.setDouble(5, balance);
+        ps.setString(6, "SUCCESS");
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+
+    } finally {
+
+        try {
+            if (ps != null) ps.close();
+        } catch (Exception e) {}
+
+        try {
+            if (con != null) con.close();
+        } catch (Exception e) {}
+    }
+
+    return status;
+}
+  public boolean saveNotification(int customerId,
+                                String title,
+                                String message) {
+
+    Notification n = new Notification();
+
+    n.setCustomerId(customerId);
+    n.setTitle(title);
+    n.setMessage(message);
+    n.setNotificationType("UPI");
+    n.setStatus("SUCCESS");
+    n.setIsRead(0);
+    n.setActionUrl("/customer/notification.jsp");
+
+    return addNotification(n);
+}
 
 }

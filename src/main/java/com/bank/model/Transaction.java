@@ -12,6 +12,7 @@ public class Transaction {
     private double balance;
     private Timestamp transactionDate;
     private String status;
+    private String description;
 
     public Transaction() {
     }
@@ -22,6 +23,14 @@ public class Transaction {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getTransactionId() {
+        return id;
+    }
+
+    public void setTransactionId(int transactionId) {
+        this.id = transactionId;
     }
 
     public String getAccountNumber() {
@@ -79,19 +88,12 @@ public class Transaction {
     public void setStatus(String status) {
         this.status = status;
     }
-    public int getTransactionId() {
-    return id;
-}
 
-public void setTransactionId(int transactionId) {
-    this.id = transactionId;
-}
+    public String getDescription() {
+        return description;
+    }
 
-public String getDescription() {
-    return "";
-}
-
-public void setDescription(String description) {
-    // Future use
-}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
