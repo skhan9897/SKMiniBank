@@ -1,87 +1,88 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.bank.api;
+
+import com.bank.dao.TransactionDAO;
+import com.bank.model.Transaction;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Sajid Khan
- */
-@WebServlet(name = "TransactionApiServlet", urlPatterns = {"/TransactionApiServlet"})
+@WebServlet("/api/transactions")
 public class TransactionApiServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet TransactionApiServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet TransactionApiServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+
+        try {
+
+            String accountNumber = request.getParameter("accountNumber");
+
+            if (accountNumber == null || accountNumber.trim().isEmpty()) {
+
+                out.print("{\"status\":\"failed\",\"message\":\"Account Number is required\"}");
+                return;
+            }
+
+            TransactionDAO dao = new TransactionDAO();
+            List<Transaction> list = dao.getTransactionsByAccount(accountNumber);
+
+            StringBuilder json = new StringBuilder();
+
+            json.append("{");
+            json.append("\"status\":\"success\",");
+            json.append("\"transactions\":[");
+
+            for (int i = 0; i < list.size(); i++) {
+
+                Transaction t = list.get(i);
+
+                json.append("{");
+                json.append("\"transactionId\":").append(t.getTransactionId()).append(",");
+                json.append("\"transactionType\":\"").append(t.getTransactionType()).append("\",");
+                json.append("\"amount\":").append(t.getAmount()).append(",");
+                json.append("\"balance\":").append(t.getBalance()).append(",");
+                json.append("\"description\":\"").append(t.getDescription()).append("\",");
+                json.append("\"transactionDate\":\"").append(t.getTransactionDate()).append("\"");
+                json.append("}");
+
+                if (i < list.size() - 1) {
+                    json.append(",");
+                }
+            }
+
+            json.append("]}");
+
+            out.print(json.toString());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            out.print("{\"status\":\"error\",\"message\":\"Server Error\"}");
         }
+
+        out.flush();
+        out.close();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        doGet(request, response);
     }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }
