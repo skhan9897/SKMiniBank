@@ -3,6 +3,10 @@ package com.bank.util;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ *
+ * @author Sajid Khan
+ */
 public class DBConnection {
 
     private static final String URL =
@@ -13,6 +17,10 @@ public class DBConnection {
 
     private static Connection con;
 
+    /**
+     *
+     * @return
+     */
     public static Connection getConnection() {
 
         try {

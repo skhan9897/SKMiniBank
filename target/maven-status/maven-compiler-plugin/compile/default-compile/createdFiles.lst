@@ -144,6 +144,7 @@ com\bank\controller\AdminLogoutServlet.class
 com\bank\dao\ServiceRequestDAO.class
 com\bank\controller\CustomerRequestServlet.class
 com\bank\controller\RejectLoanServlet.class
+com\bank\controller\AdminKYCViewServlet.class
 com\bank\api\NetBankingRequestApiServlet.class
 com\bank\dao\ChequeBookRequestDAO.class
 com\bank\controller\GenerateUpiServlet.class

@@ -6,6 +6,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ *
+ * @author Sajid Khan
+ */
 public class Fast2SMSOTPUtil {
 
     // Fast2SMS API Key
@@ -20,6 +24,12 @@ public class Fast2SMSOTPUtil {
             "https://www.fast2sms.com/dev/otp/verify";
 
     // Send OTP
+
+    /**
+     *
+     * @param mobile
+     * @return
+     */
     public static String sendOTP(String mobile) {
 
         try {
@@ -82,6 +92,13 @@ public class Fast2SMSOTPUtil {
     }
 
     // Verify OTP
+
+    /**
+     *
+     * @param mobile
+     * @param otp
+     * @return
+     */
     public static String verifyOTP(String mobile,String otp){
 
         try{

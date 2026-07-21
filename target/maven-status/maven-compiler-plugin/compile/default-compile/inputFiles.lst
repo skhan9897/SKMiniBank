@@ -34,6 +34,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\Customer.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\model\Upi.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\KYCServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\AdminKYCViewServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\DashboardServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\api\TransferApiServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\LoginServlet.java
@@ -127,6 +128,7 @@ C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\InternetBankingServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\api\AccountApiServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\api\AdminApproveChequeBookApiServlet.java
+C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\AdminKYCActionServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\dao\CustomerDAO.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\controller\ATMStatusServlet.java
 C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\src\main\java\com\bank\api\DashboardApiServlet.java
