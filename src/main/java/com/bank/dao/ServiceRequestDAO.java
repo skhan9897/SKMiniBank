@@ -301,41 +301,7 @@ public boolean deliverRequest(int requestId) {
     return status;
 }
 
-public ServiceRequest getLatestATMRequest(int customerId) {
 
-    ServiceRequest request = null;
-
-    try {
-
-        String sql = "SELECT * FROM service_request "
-                   + "WHERE customer_id=? AND request_type='ATM_CARD' "
-                   + "ORDER BY request_date DESC LIMIT 1";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-        ps.setInt(1, customerId);
-
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-
-            request = new ServiceRequest();
-
-            request.setRequestId(rs.getInt("request_id"));
-            request.setCustomerId(rs.getInt("customer_id"));
-            request.setAccountNumber(rs.getString("account_number"));
-            request.setRequestType(rs.getString("request_type"));
-            request.setRequestDetails(rs.getString("request_details"));
-            request.setStatus(rs.getString("status"));
-            request.setRequestDate(rs.getTimestamp("request_date"));
-
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return request;
-}
 public boolean dispatchRequest(int requestId) {
 
     boolean status = false;
@@ -399,4 +365,49 @@ public ServiceRequest getLatestRequestByType(int customerId, String requestType)
 
     return request;
 }
+
+public ServiceRequest getLatestATMRequest(int customerId) {
+
+    ServiceRequest request = null;
+
+    try {
+
+        String sql = "SELECT * FROM service_request "
+                   + "WHERE customer_id=? AND request_type='ATM_CARD' "
+                   + "ORDER BY request_date DESC LIMIT 1";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, customerId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            request = new ServiceRequest();
+
+            request.setRequestId(rs.getInt("request_id"));
+            request.setCustomerId(rs.getInt("customer_id"));
+            request.setAccountNumber(rs.getString("account_number"));
+            request.setRequestType(rs.getString("request_type"));
+            request.setRequestDetails(rs.getString("request_details"));
+            request.setStatus(rs.getString("status"));
+            request.setRemarks(rs.getString("remarks"));
+            request.setApprovedBy(rs.getString("approved_by"));
+            request.setRequestDate(rs.getTimestamp("request_date"));
+            request.setApprovalDate(rs.getTimestamp("approval_date"));
+            request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
+            request.setDispatchedDate(rs.getDate("dispatched_date"));
+            request.setDeliveredDate(rs.getDate("delivered_date"));
+
+            rs.close();
+            ps.close();
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return request;
+}
+
 }

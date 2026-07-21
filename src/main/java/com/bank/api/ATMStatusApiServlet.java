@@ -28,33 +28,52 @@ public class ATMStatusApiServlet extends HttpServlet {
             String customerIdStr = request.getParameter("customerId");
 
             if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
-
                 response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"Customer ID is required\"}");
+                        "{\"success\":false,\"message\":\"Customer ID is required\"}");
                 return;
             }
 
             int customerId = Integer.parseInt(customerIdStr);
 
             ServiceRequestDAO dao = new ServiceRequestDAO();
-
             ServiceRequest atm = dao.getLatestATMRequest(customerId);
 
             if (atm == null) {
-
                 response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"No ATM request found\"}");
+                        "{\"success\":false,\"message\":\"No ATM request found\"}");
                 return;
             }
 
-            String requestDate = "";
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            if (atm.getRequestDate() != null) {
-                requestDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .format(atm.getRequestDate());
-            }
+            String requestDate = "";
+            String approvalDate = "";
+            String expectedDeliveryDate = "";
+            String dispatchedDate = "";
+            String deliveredDate = "";
+            String remarks = "";
+            String approvedBy = "";
+
+            if (atm.getRequestDate() != null)
+                requestDate = sdf.format(atm.getRequestDate());
+
+            if (atm.getApprovalDate() != null)
+                approvalDate = sdf.format(atm.getApprovalDate());
+
+            if (atm.getExpectedDeliveryDate() != null)
+                expectedDeliveryDate = atm.getExpectedDeliveryDate().toString();
+
+            if (atm.getDispatchedDate() != null)
+                dispatchedDate = atm.getDispatchedDate().toString();
+
+            if (atm.getDeliveredDate() != null)
+                deliveredDate = atm.getDeliveredDate().toString();
+
+            if (atm.getRemarks() != null)
+                remarks = atm.getRemarks();
+
+            if (atm.getApprovedBy() != null)
+                approvedBy = atm.getApprovedBy();
 
             String cardType = atm.getRequestDetails();
 
@@ -63,10 +82,16 @@ public class ATMStatusApiServlet extends HttpServlet {
                     + "\"success\":true,"
                     + "\"message\":\"ATM Request Found\","
                     + "\"requestId\":" + atm.getRequestId() + ","
-                    + "\"accountNumber\":\"" + atm.getAccountNumber() + "\","
-                    + "\"cardType\":\"" + cardType + "\","
-                    + "\"status\":\"" + atm.getStatus() + "\","
-                    + "\"requestDate\":\"" + requestDate + "\""
+                    + "\"accountNumber\":\"" + safe(atm.getAccountNumber()) + "\","
+                    + "\"cardType\":\"" + safe(cardType) + "\","
+                    + "\"status\":\"" + safe(atm.getStatus()) + "\","
+                    + "\"requestDate\":\"" + requestDate + "\","
+                    + "\"approvalDate\":\"" + approvalDate + "\","
+                    + "\"expectedDeliveryDate\":\"" + expectedDeliveryDate + "\","
+                    + "\"dispatchedDate\":\"" + dispatchedDate + "\","
+                    + "\"deliveredDate\":\"" + deliveredDate + "\","
+                    + "\"approvedBy\":\"" + safe(approvedBy) + "\","
+                    + "\"remarks\":\"" + safe(remarks) + "\""
                     + "}";
 
             response.getWriter().print(json);
@@ -76,8 +101,9 @@ public class ATMStatusApiServlet extends HttpServlet {
             e.printStackTrace();
 
             response.getWriter().print(
-                    "{\"success\":false,"
-                    + "\"message\":\"" + e.getMessage().replace("\"", "\\\"") + "\"}");
+                    "{\"success\":false,\"message\":\""
+                    + safe(e.getMessage())
+                    + "\"}");
         }
     }
 
@@ -87,5 +113,13 @@ public class ATMStatusApiServlet extends HttpServlet {
             throws ServletException, IOException {
 
         doGet(request, response);
+    }
+
+    private String safe(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\\", "\\\\")
+                    .replace("\"", "\\\"");
     }
 }
