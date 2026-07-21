@@ -17,7 +17,9 @@ public class LoginDAO {
 
             Connection con = DBConnection.getConnection();
 
-            String sql = "SELECT * FROM customer WHERE account_number=? AND password=?";
+            String sql = "SELECT * FROM customer "
+                    + "WHERE account_number=? "
+                    + "AND password=?";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -38,10 +40,16 @@ public class LoginDAO {
                 customer.setEmail(rs.getString("email"));
                 customer.setMobile(rs.getString("mobile"));
 
+                // New Fields
+                customer.setBranch(rs.getString("branch"));
+                customer.setAccountType(rs.getString("account_type"));
+                customer.setStatus(rs.getString("status"));
+
             }
 
             rs.close();
             ps.close();
+            con.close();
 
         } catch (Exception e) {
             e.printStackTrace();

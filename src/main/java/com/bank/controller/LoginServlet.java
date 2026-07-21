@@ -1,10 +1,9 @@
 package com.bank.controller;
 
-import com.bank.util.DBConnection;
+import com.bank.model.Customer;
+import com.bank.service.LoginService;
+
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,52 +23,32 @@ public class LoginServlet extends HttpServlet {
         String accountNumber = request.getParameter("accountNumber");
         String password = request.getParameter("password");
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
         try {
 
-            con = DBConnection.getConnection();
+            LoginService service = new LoginService();
 
-            String sql = "SELECT * FROM customer "
-                    + "WHERE account_number=? "
-                    + "AND password=?";
+            Customer customer = service.login(accountNumber, password);
 
-            ps = con.prepareStatement(sql);
-
-            ps.setString(1, accountNumber);
-            ps.setString(2, password);
-
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-
-                int customerId = rs.getInt("customer_id");
+            if (customer != null) {
 
                 HttpSession session = request.getSession(true);
 
-                session.setAttribute("customerId", customerId);
-                session.setAttribute("customerCode", rs.getString("customer_code"));
-                session.setAttribute("customerName", rs.getString("full_name"));
-                session.setAttribute("accountNumber", rs.getString("account_number"));
-                session.setAttribute("email", rs.getString("email"));
-                session.setAttribute("mobile", rs.getString("mobile"));
-                session.setAttribute("branch", rs.getString("branch"));
-                session.setAttribute("accountType", rs.getString("account_type"));
-                session.setAttribute("balance", rs.getDouble("balance"));
-
-                // Customer Role
+                session.setAttribute("customerId", customer.getCustomerId());
+                session.setAttribute("customerCode", customer.getCustomerCode());
+                session.setAttribute("customerName", customer.getFullName());
+                session.setAttribute("accountNumber", customer.getAccountNumber());
+                session.setAttribute("email", customer.getEmail());
+                session.setAttribute("mobile", customer.getMobile());
+                session.setAttribute("branch", customer.getBranch());
+                session.setAttribute("accountType", customer.getAccountType());
+                session.setAttribute("balance", customer.getBalance());
+                session.setAttribute("accountStatus", customer.getStatus());
                 session.setAttribute("role", "CUSTOMER");
-
-                // Account Status
-                session.setAttribute("accountStatus",
-                        rs.getString("status"));
 
                 response.sendRedirect(
                         request.getContextPath()
                         + "/CustomerProfileServlet?customerId="
-                        + customerId);
+                        + customer.getCustomerId());
 
             } else {
 
@@ -78,7 +57,6 @@ public class LoginServlet extends HttpServlet {
 
                 request.getRequestDispatcher("/login.jsp")
                         .forward(request, response);
-
             }
 
         } catch (Exception e) {
@@ -90,26 +68,14 @@ public class LoginServlet extends HttpServlet {
 
             request.getRequestDispatcher("/login.jsp")
                     .forward(request, response);
-
-        } finally {
-
-            try {
-                if (rs != null) rs.close();
-            } catch (Exception e) {
-            }
-
-            try {
-                if (ps != null) ps.close();
-            } catch (Exception e) {
-            }
-
-            try {
-                if (con != null) con.close();
-            } catch (Exception e) {
-            }
-
         }
-
     }
 
+    @Override
+    protected void doGet(HttpServletRequest request,
+            HttpServletResponse response)
+            throws ServletException, IOException {
+
+        doPost(request, response);
+    }
 }

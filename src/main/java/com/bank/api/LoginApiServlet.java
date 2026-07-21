@@ -1,7 +1,7 @@
 package com.bank.api;
 
-import com.bank.dao.LoginDAO;
 import com.bank.model.Customer;
+import com.bank.service.LoginService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,9 +30,9 @@ public class LoginApiServlet extends HttpServlet {
             String accountNumber = request.getParameter("accountNumber");
             String password = request.getParameter("password");
 
-            LoginDAO dao = new LoginDAO();
+            LoginService service = new LoginService();
 
-            Customer customer = dao.login(accountNumber, password);
+            Customer customer = service.login(accountNumber, password);
 
             if (customer != null) {
 
@@ -44,7 +44,8 @@ public class LoginApiServlet extends HttpServlet {
                 out.print("\"accountNumber\":\"" + customer.getAccountNumber() + "\",");
                 out.print("\"mobile\":\"" + customer.getMobile() + "\",");
                 out.print("\"email\":\"" + customer.getEmail() + "\",");
-                out.print("\"balance\":" + customer.getBalance());
+                out.print("\"balance\":" + customer.getBalance() + ",");
+                out.print("\"accountStatus\":\"" + customer.getStatus() + "\"");
                 out.print("}");
 
             } else {
@@ -61,7 +62,7 @@ public class LoginApiServlet extends HttpServlet {
 
             out.print("{");
             out.print("\"status\":\"error\",");
-            out.print("\"message\":\"Server Error\"");
+            out.print("\"message\":\"" + e.getMessage().replace("\"", "\\\"") + "\"");
             out.print("}");
         }
 

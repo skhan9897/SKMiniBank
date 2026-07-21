@@ -1,7 +1,6 @@
 package com.bank.api;
 
-import com.bank.dao.ServiceRequestDAO;
-import com.bank.model.ServiceRequest;
+import com.bank.service.ServiceRequestService;
 
 import java.io.IOException;
 
@@ -28,31 +27,28 @@ public class ATMRequestApiServlet extends HttpServlet {
             String accountNumber = request.getParameter("accountNumber");
             String cardType = request.getParameter("cardType");
 
-            if (customerIdStr == null || accountNumber == null || cardType == null
-                    || customerIdStr.isEmpty()
-                    || accountNumber.isEmpty()
-                    || cardType.isEmpty()) {
+            if (customerIdStr == null || customerIdStr.trim().isEmpty()
+                    || accountNumber == null || accountNumber.trim().isEmpty()
+                    || cardType == null || cardType.trim().isEmpty()) {
 
                 response.getWriter().print(
-                        "{\"success\":false,"
+                        "{"
+                        + "\"success\":false,"
                         + "\"status\":\"failed\","
-                        + "\"message\":\"All fields are required\"}");
+                        + "\"message\":\"All fields are required\""
+                        + "}");
                 return;
             }
 
             int customerId = Integer.parseInt(customerIdStr);
 
-            ServiceRequest service = new ServiceRequest();
-            service.setCustomerId(customerId);
-            service.setAccountNumber(accountNumber);
-            service.setRequestType("ATM_CARD");
+            ServiceRequestService service = new ServiceRequestService();
 
-            // फिलहाल Card Type request_details में Store करेंगे
-            service.setRequestDetails(cardType);
-
-            ServiceRequestDAO dao = new ServiceRequestDAO();
-
-            boolean saved = dao.saveRequest(service);
+            boolean saved = service.submitATMRequest(
+                    customerId,
+                    accountNumber,
+                    cardType
+            );
 
             if (saved) {
 
@@ -69,9 +65,18 @@ public class ATMRequestApiServlet extends HttpServlet {
                         "{"
                         + "\"success\":false,"
                         + "\"status\":\"failed\","
-                        + "\"message\":\"Unable to submit ATM request\""
+                        + "\"message\":\"Unable to submit ATM Card request\""
                         + "}");
             }
+
+        } catch (NumberFormatException e) {
+
+            response.getWriter().print(
+                    "{"
+                    + "\"success\":false,"
+                    + "\"status\":\"failed\","
+                    + "\"message\":\"Invalid Customer ID\""
+                    + "}");
 
         } catch (Exception e) {
 
@@ -81,7 +86,9 @@ public class ATMRequestApiServlet extends HttpServlet {
                     "{"
                     + "\"success\":false,"
                     + "\"status\":\"error\","
-                    + "\"message\":\"" + e.getMessage().replace("\"", "\\\"") + "\""
+                    + "\"message\":\""
+                    + e.getMessage().replace("\"", "\\\"")
+                    + "\""
                     + "}");
         }
     }

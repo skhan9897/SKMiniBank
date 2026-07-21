@@ -65,6 +65,7 @@ com\bank\dao\CustomerDAO.class
 com\bank\model\ReceiptPDF.class
 com\bank\api\TransactionApiServlet.class
 com\bank\controller\InternetBankingListServlet.class
+com\bank\controller\ATMRequestServlet.class
 com\bank\model\ChequeBookRequest.class
 com\bank\api\LoanStatusApiServlet.class
 com\bank\api\AdminApproveNetBankingApiServlet.class
@@ -106,6 +107,7 @@ com\bank\controller\AdminLoginServlet.class
 com\bank\model\ATMRequest.class
 com\bank\dao\DebitCardDAO.class
 com\bank\model\Customer.class
+com\bank\service\LoginService.class
 com\bank\controller\WithdrawServlet.class
 com\bank\api\AdminRejectMobileBankingApiServlet.class
 com\bank\dao\LoginDAO.class
@@ -117,6 +119,7 @@ com\bank\api\ATMRequestApiServlet.class
 com\bank\util\PDFGenerator.class
 com\bank\controller\AdminLogoutServlet.class
 com\bank\dao\ServiceRequestDAO.class
+com\bank\service\ServiceRequestService.class
 com\bank\controller\CustomerRequestServlet.class
 com\bank\api\NetBankingRequestApiServlet.class
 com\bank\dao\ChequeBookRequestDAO.class
