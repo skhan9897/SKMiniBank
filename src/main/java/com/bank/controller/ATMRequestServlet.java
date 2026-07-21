@@ -1,11 +1,10 @@
 package com.bank.controller;
 
-import com.bank.dao.CustomerDAO;
-import com.bank.dao.ServiceRequestDAO;
-import com.bank.model.Customer;
-import com.bank.model.ServiceRequest;
+import com.bank.dao.ATMRequestDAO;
+import com.bank.model.ATMRequest;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,41 +23,28 @@ public class ATMRequestServlet extends HttpServlet {
         try {
 
             int customerId = Integer.parseInt(request.getParameter("customerId"));
+            String accountNumber = request.getParameter("accountNumber");
             String cardType = request.getParameter("cardType");
 
-            CustomerDAO customerDAO = new CustomerDAO();
-            Customer customer = customerDAO.getCustomerById(customerId);
+            ATMRequest atm = new ATMRequest();
+            atm.setCustomerId(customerId);
+            atm.setAccountNumber(accountNumber);
+            atm.setCardType(cardType);
+            atm.setRequestDate(LocalDate.now().toString());
+            atm.setStatus("PENDING");
 
-            if (customer == null) {
+            ATMRequestDAO dao = new ATMRequestDAO();
 
-                response.sendRedirect(request.getContextPath()
-                        + "/customer/atm-request.jsp?msg=Customer Not Found");
-                return;
-            }
-
-            // Save ATM Request in Common Service Request Table
-            ServiceRequest sr = new ServiceRequest();
-
-            sr.setCustomerId(customerId);
-            sr.setAccountNumber(customer.getAccountNumber());
-            sr.setRequestType("ATM_CARD");
-            sr.setRequestDetails("ATM Card Type : " + cardType);
-
-            ServiceRequestDAO dao = new ServiceRequestDAO();
-
-            boolean status = dao.saveRequest(sr);
-
-            if (status) {
+            if (dao.applyATM(atm)) {
 
                 response.sendRedirect(request.getContextPath()
-                        + "/CustomerProfileServlet?customerId="
-                        + customerId
-                        + "&msg=ATM Request Submitted Successfully");
+                        + "/customer/atm-request-success.jsp");
 
             } else {
 
                 response.sendRedirect(request.getContextPath()
-                        + "/customer/atm-request.jsp?msg=Request Failed");
+                        + "/customer/atm-request.jsp?error=1");
+
             }
 
         } catch (Exception e) {
@@ -66,7 +52,7 @@ public class ATMRequestServlet extends HttpServlet {
             e.printStackTrace();
 
             response.sendRedirect(request.getContextPath()
-                    + "/customer/atm-request.jsp?msg=Server Error");
+                    + "/customer/atm-request.jsp?error=2");
         }
     }
 }

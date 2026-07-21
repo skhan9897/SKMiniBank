@@ -23,22 +23,18 @@ public class AdminRequestServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath() + "/admin/admin-login.jsp");
+            response.sendRedirect(request.getContextPath()
+                    + "/admin/admin-login.jsp");
             return;
         }
 
         int requestId = Integer.parseInt(request.getParameter("requestId"));
+
         String action = request.getParameter("action");
         String remarks = request.getParameter("remarks");
-Object adminObj = session.getAttribute("admin");
 
-int approvedBy;
-
-if (adminObj instanceof Integer) {
-    approvedBy = (Integer) adminObj;
-} else {
-    approvedBy = Integer.parseInt(adminObj.toString());
-}
+        // Admin Name / ID
+        String approvedBy = session.getAttribute("admin").toString();
 
         ServiceRequestDAO dao = new ServiceRequestDAO();
 
@@ -48,8 +44,9 @@ if (adminObj instanceof Integer) {
 
             case "APPROVE":
 
-                String delivery = request.getParameter("expectedDelivery");
                 Date expectedDelivery = null;
+
+                String delivery = request.getParameter("expectedDelivery");
 
                 if (delivery != null && !delivery.trim().isEmpty()) {
                     expectedDelivery = Date.valueOf(delivery);
@@ -60,6 +57,7 @@ if (adminObj instanceof Integer) {
                         approvedBy,
                         remarks,
                         expectedDelivery);
+
                 break;
 
             case "REJECT":
@@ -68,23 +66,31 @@ if (adminObj instanceof Integer) {
                         requestId,
                         approvedBy,
                         remarks);
+
                 break;
 
             case "DISPATCH":
 
                 status = dao.dispatchRequest(requestId);
+
                 break;
 
             case "DELIVER":
 
                 status = dao.deliverRequest(requestId);
+
                 break;
         }
 
         if (status) {
-            response.sendRedirect(request.getContextPath() + "/AdminAllRequestServlet?msg=success");
+
+            response.sendRedirect(request.getContextPath()
+                    + "/AdminAllRequestServlet?msg=success");
+
         } else {
-            response.sendRedirect(request.getContextPath() + "/AdminAllRequestServlet?msg=error");
+
+            response.sendRedirect(request.getContextPath()
+                    + "/AdminAllRequestServlet?msg=error");
         }
     }
 

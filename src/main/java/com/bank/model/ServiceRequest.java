@@ -12,13 +12,16 @@ public class ServiceRequest {
     private String requestDetails;
     private String status;
     private String remarks;
-    private int approvedBy;
+    private String approvedBy;
+
     private Timestamp requestDate;
     private Timestamp approvalDate;
-    private Date expectedDelivery;
+
+    private Date expectedDeliveryDate;
     private Date dispatchedDate;
     private Date deliveredDate;
 
+    // Default Constructor
     public ServiceRequest() {
     }
 
@@ -78,11 +81,11 @@ public class ServiceRequest {
         this.remarks = remarks;
     }
 
-    public int getApprovedBy() {
+    public String getApprovedBy() {
         return approvedBy;
     }
 
-    public void setApprovedBy(int approvedBy) {
+    public void setApprovedBy(String approvedBy) {
         this.approvedBy = approvedBy;
     }
 
@@ -102,12 +105,12 @@ public class ServiceRequest {
         this.approvalDate = approvalDate;
     }
 
-    public Date getExpectedDelivery() {
-        return expectedDelivery;
+    public Date getExpectedDeliveryDate() {
+        return expectedDeliveryDate;
     }
 
-    public void setExpectedDelivery(Date expectedDelivery) {
-        this.expectedDelivery = expectedDelivery;
+    public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
+        this.expectedDeliveryDate = expectedDeliveryDate;
     }
 
     public Date getDispatchedDate() {

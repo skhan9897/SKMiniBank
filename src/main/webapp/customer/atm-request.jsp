@@ -60,33 +60,25 @@
 
     <div class="card-body">
 
-        <form action="${pageContext.request.contextPath}/ATMRequestServlet"
-      method="post">
+        <form action="${pageContext.request.contextPath}/ATMRequestServlet" method="post">
 
-            <div class="mb-3">
-                <label>Customer ID</label>
-                <input type="number"
-                       name="customerId"
-                       class="form-control"
-                       required>
-            </div>
+    <input type="hidden" name="customerId" value="${sessionScope.customerId}">
 
-            <div class="mb-3">
-                <label>Card Type</label>
+    <label>Account Number</label>
+    <input type="text" name="accountNumber" required>
 
-                <select name="cardType" class="form-control" required>
-                    <option value="">Select Card</option>
-                    <option>RuPay Debit Card</option>
-                    <option>Visa Debit Card</option>
-                    <option>Master Debit Card</option>
-                </select>
-            </div>
+    <label>Card Type</label>
+    <select name="cardType">
+        <option value="RUPAY">RuPay Debit Card</option>
+        <option value="VISA">Visa Debit Card</option>
+        <option value="MASTERCARD">MasterCard</option>
+    </select>
 
-            <button class="btn btn-bank">
-                Apply ATM Card
-            </button>
+    <button type="submit">
+        Apply ATM Card
+    </button>
 
-        </form>
+</form>
 
     </div>
 

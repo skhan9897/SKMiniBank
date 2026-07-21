@@ -17,7 +17,8 @@ public class ServiceRequestDAO {
         con = DBConnection.getConnection();
     }
 
-    // Save Request
+    // ================= SAVE REQUEST =================
+
     public boolean saveRequest(ServiceRequest request) {
 
         boolean status = false;
@@ -26,7 +27,7 @@ public class ServiceRequestDAO {
 
             String sql = "INSERT INTO service_request "
                     + "(customer_id, account_number, request_type, request_details, status, request_date) "
-                    + "VALUES (?, ?, ?, ?, ?, NOW())";
+                    + "VALUES (?,?,?,?,?,NOW())";
 
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -44,210 +45,72 @@ public class ServiceRequestDAO {
 
         return status;
     }
-    
+
+    // ================= CUSTOMER REQUESTS =================
+
     public List<ServiceRequest> getCustomerRequests(int customerId) {
 
-    List<ServiceRequest> list = new ArrayList<>();
+        List<ServiceRequest> list = new ArrayList<>();
 
-    try {
+        try {
 
-        String sql = "SELECT * FROM service_request "
-                   + "WHERE customer_id=? "
-                   + "ORDER BY request_date DESC";
+            String sql = "SELECT * FROM service_request "
+                    + "WHERE customer_id=? "
+                    + "ORDER BY request_date DESC";
 
-        PreparedStatement ps = con.prepareStatement(sql);
+            PreparedStatement ps = con.prepareStatement(sql);
 
-        ps.setInt(1, customerId);
+            ps.setInt(1, customerId);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        while (rs.next()) {
+            while (rs.next()) {
 
-            ServiceRequest request = new ServiceRequest();
+                ServiceRequest request = new ServiceRequest();
 
-            request.setRequestId(rs.getInt("request_id"));
-            request.setCustomerId(rs.getInt("customer_id"));
-            request.setAccountNumber(rs.getString("account_number"));
-            request.setRequestType(rs.getString("request_type"));
-            request.setRequestDetails(rs.getString("request_details"));
-            request.setStatus(rs.getString("status"));
-            request.setRemarks(rs.getString("remarks"));
-            request.setApprovedBy(rs.getInt("approved_by"));
-            request.setRequestDate(rs.getTimestamp("request_date"));
-            request.setApprovalDate(rs.getTimestamp("approval_date"));
-            request.setExpectedDelivery(rs.getDate("expected_delivery"));
-            request.setDispatchedDate(rs.getDate("dispatched_date"));
-            request.setDeliveredDate(rs.getDate("delivered_date"));
+                request.setRequestId(rs.getInt("request_id"));
+                request.setCustomerId(rs.getInt("customer_id"));
+                request.setAccountNumber(rs.getString("account_number"));
+                request.setRequestType(rs.getString("request_type"));
+                request.setRequestDetails(rs.getString("request_details"));
+                request.setStatus(rs.getString("status"));
+                request.setRemarks(rs.getString("remarks"));
 
-            list.add(request);
+                request.setApprovedBy(rs.getString("approved_by"));
+
+                request.setRequestDate(rs.getTimestamp("request_date"));
+                request.setApprovalDate(rs.getTimestamp("approval_date"));
+
+                request.setExpectedDeliveryDate(
+                        rs.getDate("expected_delivery_date"));
+
+                request.setDispatchedDate(
+                        rs.getDate("dispatched_date"));
+
+                request.setDeliveredDate(
+                        rs.getDate("delivered_date"));
+
+                list.add(request);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-
-    return list;
-}
     
-    public List<ServiceRequest> getPendingRequests() {
+    // ================= PENDING REQUESTS =================
+
+public List<ServiceRequest> getPendingRequests() {
 
     List<ServiceRequest> list = new ArrayList<>();
 
     try {
 
         String sql = "SELECT * FROM service_request "
-                   + "WHERE status='PENDING' "
-                   + "ORDER BY request_date ASC";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-
-            ServiceRequest request = new ServiceRequest();
-
-            request.setRequestId(rs.getInt("request_id"));
-            request.setCustomerId(rs.getInt("customer_id"));
-            request.setAccountNumber(rs.getString("account_number"));
-            request.setRequestType(rs.getString("request_type"));
-            request.setRequestDetails(rs.getString("request_details"));
-            request.setStatus(rs.getString("status"));
-            request.setRemarks(rs.getString("remarks"));
-            request.setApprovedBy(rs.getInt("approved_by"));
-            request.setRequestDate(rs.getTimestamp("request_date"));
-            request.setApprovalDate(rs.getTimestamp("approval_date"));
-            request.setExpectedDelivery(rs.getDate("expected_delivery"));
-            request.setDispatchedDate(rs.getDate("dispatched_date"));
-            request.setDeliveredDate(rs.getDate("delivered_date"));
-
-            list.add(request);
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return list;
-}
-    public boolean approveRequest(int requestId,
-                              int approvedBy,
-                              String remarks,
-                              java.sql.Date expectedDelivery) {
-
-    boolean status = false;
-
-    try {
-
-        String sql = "UPDATE service_request "
-                   + "SET status=?, "
-                   + "remarks=?, "
-                   + "approved_by=?, "
-                   + "approval_date=NOW(), "
-                   + "expected_delivery=? "
-                   + "WHERE request_id=?";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ps.setString(1, "APPROVED");
-        ps.setString(2, remarks);
-        ps.setInt(3, approvedBy);
-        ps.setDate(4, expectedDelivery);
-        ps.setInt(5, requestId);
-
-        status = ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-    
-    public boolean rejectRequest(int requestId,
-                             int approvedBy,
-                             String remarks) {
-
-    boolean status = false;
-
-    try {
-
-        String sql = "UPDATE service_request "
-                   + "SET status=?, "
-                   + "remarks=?, "
-                   + "approved_by=?, "
-                   + "approval_date=NOW() "
-                   + "WHERE request_id=?";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ps.setString(1, "REJECTED");
-        ps.setString(2, remarks);
-        ps.setInt(3, approvedBy);
-        ps.setInt(4, requestId);
-
-        status = ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-    
-    public boolean dispatchRequest(int requestId) {
-
-    boolean status = false;
-
-    try {
-
-        String sql = "UPDATE service_request "
-                   + "SET dispatched_date=CURDATE() "
-                   + "WHERE request_id=?";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ps.setInt(1, requestId);
-
-        status = ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-    public boolean deliverRequest(int requestId) {
-
-    boolean status = false;
-
-    try {
-
-        String sql = "UPDATE service_request "
-                   + "SET delivered_date=CURDATE() "
-                   + "WHERE request_id=?";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ps.setInt(1, requestId);
-
-        status = ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-  public List<ServiceRequest> getNetBankingRequests() {
-
-    List<ServiceRequest> list = new ArrayList<>();
-
-    try {
-
-        String sql = "SELECT * FROM service_request "
-                   + "WHERE request_type='NET_BANKING' "
-                   + "ORDER BY request_date DESC";
+                + "WHERE status='PENDING' "
+                + "ORDER BY request_date ASC";
 
         PreparedStatement ps = con.prepareStatement(sql);
 
@@ -264,10 +127,11 @@ public class ServiceRequestDAO {
             request.setRequestDetails(rs.getString("request_details"));
             request.setStatus(rs.getString("status"));
             request.setRemarks(rs.getString("remarks"));
-            request.setApprovedBy(rs.getInt("approved_by"));
+            request.setApprovedBy(rs.getString("approved_by"));
+
             request.setRequestDate(rs.getTimestamp("request_date"));
             request.setApprovalDate(rs.getTimestamp("approval_date"));
-            request.setExpectedDelivery(rs.getDate("expected_delivery"));
+            request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
             request.setDispatchedDate(rs.getDate("dispatched_date"));
             request.setDeliveredDate(rs.getDate("delivered_date"));
 
@@ -280,15 +144,18 @@ public class ServiceRequestDAO {
 
     return list;
 }
-  public List<ServiceRequest> getRequestsByType(String requestType) {
+
+// ================= REQUESTS BY TYPE =================
+
+public List<ServiceRequest> getRequestsByType(String requestType) {
 
     List<ServiceRequest> list = new ArrayList<>();
 
     try {
 
         String sql = "SELECT * FROM service_request "
-                   + "WHERE request_type=? "
-                   + "ORDER BY request_date DESC";
+                + "WHERE request_type=? "
+                + "ORDER BY request_date DESC";
 
         PreparedStatement ps = con.prepareStatement(sql);
 
@@ -307,18 +174,16 @@ public class ServiceRequestDAO {
             request.setRequestDetails(rs.getString("request_details"));
             request.setStatus(rs.getString("status"));
             request.setRemarks(rs.getString("remarks"));
-            request.setApprovedBy(rs.getInt("approved_by"));
+            request.setApprovedBy(rs.getString("approved_by"));
+
             request.setRequestDate(rs.getTimestamp("request_date"));
             request.setApprovalDate(rs.getTimestamp("approval_date"));
-            request.setExpectedDelivery(rs.getDate("expected_delivery"));
+            request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
             request.setDispatchedDate(rs.getDate("dispatched_date"));
             request.setDeliveredDate(rs.getDate("delivered_date"));
 
             list.add(request);
         }
-
-        rs.close();
-        ps.close();
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -326,7 +191,212 @@ public class ServiceRequestDAO {
 
     return list;
 }
-  public List<ServiceRequest> getRequestsByCustomerId(int customerId) {
+
+// ================= NET BANKING REQUESTS =================
+
+public List<ServiceRequest> getNetBankingRequests() {
+    return getRequestsByType("NET_BANKING");
+}
+
+// ================= CUSTOMER REQUESTS ALIAS =================
+
+public List<ServiceRequest> getRequestsByCustomerId(int customerId) {
     return getCustomerRequests(customerId);
+}
+
+// ================= APPROVE REQUEST =================
+
+public boolean approveRequest(int requestId,
+                              String approvedBy,
+                              String remarks,
+                              java.sql.Date expectedDeliveryDate) {
+
+    boolean status = false;
+
+    try {
+
+        String sql = "UPDATE service_request "
+                + "SET status=?, "
+                + "remarks=?, "
+                + "approved_by=?, "
+                + "approval_date=NOW(), "
+                + "expected_delivery_date=? "
+                + "WHERE request_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ps.setString(1, "APPROVED");
+        ps.setString(2, remarks);
+        ps.setString(3, approvedBy);
+        ps.setDate(4, expectedDeliveryDate);
+        ps.setInt(5, requestId);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return status;
+}
+
+// ================= REJECT REQUEST =================
+
+public boolean rejectRequest(int requestId,
+                             String approvedBy,
+                             String remarks) {
+
+    boolean status = false;
+
+    try {
+
+        String sql = "UPDATE service_request "
+                + "SET status=?, "
+                + "remarks=?, "
+                + "approved_by=?, "
+                + "approval_date=NOW() "
+                + "WHERE request_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ps.setString(1, "REJECTED");
+        ps.setString(2, remarks);
+        ps.setString(3, approvedBy);
+        ps.setInt(4, requestId);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return status;
+}
+
+// ================= DISPATCH REQUEST =================
+
+
+// ================= DELIVER REQUEST =================
+
+public boolean deliverRequest(int requestId) {
+
+    boolean status = false;
+
+    try {
+
+        String sql = "UPDATE service_request "
+                   + "SET status='DELIVERED', "
+                   + "delivered_date=NOW() "
+                   + "WHERE request_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, requestId);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return status;
+}
+
+public ServiceRequest getLatestATMRequest(int customerId) {
+
+    ServiceRequest request = null;
+
+    try {
+
+        String sql = "SELECT * FROM service_request "
+                   + "WHERE customer_id=? AND request_type='ATM_CARD' "
+                   + "ORDER BY request_date DESC LIMIT 1";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, customerId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            request = new ServiceRequest();
+
+            request.setRequestId(rs.getInt("request_id"));
+            request.setCustomerId(rs.getInt("customer_id"));
+            request.setAccountNumber(rs.getString("account_number"));
+            request.setRequestType(rs.getString("request_type"));
+            request.setRequestDetails(rs.getString("request_details"));
+            request.setStatus(rs.getString("status"));
+            request.setRequestDate(rs.getTimestamp("request_date"));
+
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return request;
+}
+public boolean dispatchRequest(int requestId) {
+
+    boolean status = false;
+
+    try {
+
+        String sql = "UPDATE service_request "
+                   + "SET status='DISPATCHED', "
+                   + "dispatched_date=NOW() "
+                   + "WHERE request_id=?";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, requestId);
+
+        status = ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return status;
+}
+public ServiceRequest getLatestRequestByType(int customerId, String requestType) {
+
+    ServiceRequest request = null;
+
+    try {
+
+        String sql = "SELECT * FROM service_request "
+                   + "WHERE customer_id=? AND request_type=? "
+                   + "ORDER BY request_date DESC LIMIT 1";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, customerId);
+        ps.setString(2, requestType);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            request = new ServiceRequest();
+
+            request.setRequestId(rs.getInt("request_id"));
+            request.setCustomerId(rs.getInt("customer_id"));
+            request.setAccountNumber(rs.getString("account_number"));
+            request.setRequestType(rs.getString("request_type"));
+            request.setRequestDetails(rs.getString("request_details"));
+            request.setStatus(rs.getString("status"));
+            request.setRemarks(rs.getString("remarks"));
+            request.setApprovedBy(rs.getString("approved_by"));
+            request.setRequestDate(rs.getTimestamp("request_date"));
+            request.setApprovalDate(rs.getTimestamp("approval_date"));
+            request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
+            request.setDispatchedDate(rs.getDate("dispatched_date"));
+            request.setDeliveredDate(rs.getDate("delivered_date"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return request;
 }
 }
