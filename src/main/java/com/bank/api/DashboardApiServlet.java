@@ -27,31 +27,38 @@ public class DashboardApiServlet extends HttpServlet {
 
         try {
 
-            int customerId =
-                    Integer.parseInt(request.getParameter("customerId"));
+            String customerIdStr = request.getParameter("customerId");
+
+            if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
+                out.print("{\"status\":\"failed\",\"message\":\"Customer ID Required\"}");
+                return;
+            }
+
+            int customerId = Integer.parseInt(customerIdStr);
 
             CustomerDAO dao = new CustomerDAO();
-
             Customer c = dao.getCustomerById(customerId);
 
             if (c != null) {
 
                 out.print("{");
                 out.print("\"status\":\"success\",");
-                out.print("\"customerName\":\"" + c.getFullName() + "\",");
-                out.print("\"customerCode\":\"" + c.getCustomerCode() + "\",");
-                out.print("\"accountNumber\":\"" + c.getAccountNumber() + "\",");
-                out.print("\"accountType\":\"" + c.getAccountType() + "\",");
-                out.print("\"branch\":\"" + c.getBranch() + "\",");
+                out.print("\"customerId\":" + c.getCustomerId() + ",");
+                out.print("\"customerName\":\"" + safe(c.getFullName()) + "\",");
+                out.print("\"customerCode\":\"" + safe(c.getCustomerCode()) + "\",");
+                out.print("\"accountNumber\":\"" + safe(c.getAccountNumber()) + "\",");
+                out.print("\"accountType\":\"" + safe(c.getAccountType()) + "\",");
+                out.print("\"branch\":\"" + safe(c.getBranch()) + "\",");
                 out.print("\"balance\":" + c.getBalance() + ",");
-                out.print("\"kycStatus\":\"" + c.getKycStatus() + "\",");
-                out.print("\"upiId\":\"" + c.getUpiId() + "\",");
-                out.print("\"upiStatus\":\"" + c.getUpiStatus() + "\"");
+                out.print("\"accountStatus\":\"" + safe(c.getStatus()) + "\",");
+                out.print("\"kycStatus\":\"" + safe(c.getKycStatus()) + "\",");
+                out.print("\"upiId\":\"" + safe(c.getUpiId()) + "\",");
+                out.print("\"upiStatus\":\"" + safe(c.getUpiStatus()) + "\"");
                 out.print("}");
 
             } else {
 
-                out.print("{\"status\":\"failed\"}");
+                out.print("{\"status\":\"failed\",\"message\":\"Customer Not Found\"}");
 
             }
 
@@ -59,10 +66,11 @@ public class DashboardApiServlet extends HttpServlet {
 
             e.printStackTrace();
 
-            out.print("{\"status\":\"error\"}");
+            out.print("{\"status\":\"error\",\"message\":\"" + safe(e.getMessage()) + "\"}");
 
         }
 
+        out.flush();
         out.close();
     }
 
@@ -72,5 +80,13 @@ public class DashboardApiServlet extends HttpServlet {
             throws ServletException, IOException {
 
         doPost(request, response);
+    }
+
+    private String safe(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\\", "\\\\")
+                    .replace("\"", "\\\"");
     }
 }
