@@ -21,11 +21,12 @@ public class AdminATMRequestServlet extends HttpServlet {
             throws ServletException, IOException {
 
         ServiceRequestDAO dao = new ServiceRequestDAO();
-
+        // Force fully fetch ATM_CARD type requests
         List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
+        
+        System.out.println("DEBUG: ATM Request List Size = " + (requestList != null ? requestList.size() : 0));
 
         request.setAttribute("requestList", requestList);
-
         request.getRequestDispatcher("/admin/service-requests.jsp")
                .forward(request, response);
     }

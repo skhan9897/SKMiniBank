@@ -147,50 +147,37 @@ public List<ServiceRequest> getPendingRequests() {
 
 // ================= REQUESTS BY TYPE =================
 
-public List<ServiceRequest> getRequestsByType(String requestType) {
-
-    List<ServiceRequest> list = new ArrayList<>();
-
-    try {
-
-        String sql = "SELECT * FROM service_request "
-                + "WHERE request_type=? "
-                + "ORDER BY request_date DESC";
-
-        PreparedStatement ps = con.prepareStatement(sql);
-
-        ps.setString(1, requestType);
-
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-
-            ServiceRequest request = new ServiceRequest();
-
-            request.setRequestId(rs.getInt("request_id"));
-            request.setCustomerId(rs.getInt("customer_id"));
-            request.setAccountNumber(rs.getString("account_number"));
-            request.setRequestType(rs.getString("request_type"));
-            request.setRequestDetails(rs.getString("request_details"));
-            request.setStatus(rs.getString("status"));
-            request.setRemarks(rs.getString("remarks"));
-            request.setApprovedBy(rs.getString("approved_by"));
-
-            request.setRequestDate(rs.getTimestamp("request_date"));
-            request.setApprovalDate(rs.getTimestamp("approval_date"));
-            request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
-            request.setDispatchedDate(rs.getDate("dispatched_date"));
-            request.setDeliveredDate(rs.getDate("delivered_date"));
-
-            list.add(request);
+    public List<ServiceRequest> getRequestsByType(String requestType) {
+        List<ServiceRequest> list = new ArrayList<>();
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            String sql = "SELECT * FROM service_request WHERE request_type=? ORDER BY request_date DESC";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, requestType);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ServiceRequest request = new ServiceRequest();
+                request.setRequestId(rs.getInt("request_id"));
+                request.setCustomerId(rs.getInt("customer_id"));
+                request.setAccountNumber(rs.getString("account_number"));
+                request.setRequestType(rs.getString("request_type"));
+                request.setRequestDetails(rs.getString("request_details"));
+                request.setStatus(rs.getString("status"));
+                request.setRemarks(rs.getString("remarks"));
+                request.setApprovedBy(rs.getString("approved_by"));
+                request.setRequestDate(rs.getTimestamp("request_date"));
+                request.setApprovalDate(rs.getTimestamp("approval_date"));
+                request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
+                request.setDispatchedDate(rs.getDate("dispatched_date"));
+                request.setDeliveredDate(rs.getDate("delivered_date"));
+                list.add(request);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return list;
     }
-
-    return list;
-}
 
 // ================= NET BANKING REQUESTS =================
 
