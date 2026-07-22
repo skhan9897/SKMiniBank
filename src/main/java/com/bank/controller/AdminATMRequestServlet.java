@@ -24,22 +24,24 @@ public class AdminATMRequestServlet extends HttpServlet {
 
             ServiceRequestDAO dao = new ServiceRequestDAO();
 
-            // Sirf ATM Card Requests
             List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
+
+            System.out.println("ATM Request Count : " + requestList.size());
 
             request.setAttribute("requestList", requestList);
 
             request.getRequestDispatcher("/admin/service-requests.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
 
         } catch (Exception e) {
+
             e.printStackTrace();
 
-            request.setAttribute("errorMessage",
-                    "Unable to load ATM Card Requests.");
+            request.setAttribute("requestList", null);
+            request.setAttribute("errorMessage", e.getMessage());
 
             request.getRequestDispatcher("/admin/service-requests.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
         }
     }
 
