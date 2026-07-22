@@ -20,29 +20,14 @@ public class AdminATMRequestServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        try {
+        ServiceRequestDAO dao = new ServiceRequestDAO();
 
-            ServiceRequestDAO dao = new ServiceRequestDAO();
+        List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
 
-            List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
+        request.setAttribute("requestList", requestList);
 
-            System.out.println("ATM Request Count : " + requestList.size());
-
-            request.setAttribute("requestList", requestList);
-
-            request.getRequestDispatcher("/admin/service-requests.jsp")
-                    .forward(request, response);
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            request.setAttribute("requestList", null);
-            request.setAttribute("errorMessage", e.getMessage());
-
-            request.getRequestDispatcher("/admin/service-requests.jsp")
-                    .forward(request, response);
-        }
+        request.getRequestDispatcher("/admin/service-requests.jsp")
+               .forward(request, response);
     }
 
     @Override
