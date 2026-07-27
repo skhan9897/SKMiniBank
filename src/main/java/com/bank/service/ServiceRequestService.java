@@ -31,4 +31,47 @@ public class ServiceRequestService {
 
         return dao.saveRequest(request);
     }
+    
+    public boolean submitChequeBookRequest(
+        int customerId,
+        String accountNumber,
+        String chequeType) {
+
+    try {
+
+        if (customerId <= 0) {
+            return false;
+        }
+
+        if (accountNumber == null || accountNumber.trim().isEmpty()) {
+            return false;
+        }
+
+        if (chequeType == null || chequeType.trim().isEmpty()) {
+            return false;
+        }
+
+        ServiceRequest request = new ServiceRequest();
+
+        request.setCustomerId(customerId);
+        request.setAccountNumber(accountNumber.trim());
+
+        // IMPORTANT:
+        // Har jagah exactly same request type use karenge
+        request.setRequestType("CHEQUE_BOOK");
+
+        // ATM me cardType jaise store ho raha tha,
+        // yahan chequeType store hoga
+        request.setRequestDetails(chequeType.trim());
+
+        ServiceRequestDAO dao = new ServiceRequestDAO();
+
+        return dao.saveRequest(request);
+
+    } catch (Exception e) {
+
+        e.printStackTrace();
+        return false;
+    }
+}
 }

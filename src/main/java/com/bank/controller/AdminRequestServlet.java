@@ -17,88 +17,158 @@ public class AdminRequestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
+                          HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
 
+        // =========================
+        // ADMIN LOGIN CHECK
+        // =========================
         if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath()
-                    + "/admin/admin-login.jsp");
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/admin/admin-login.jsp"
+            );
             return;
         }
 
-        int requestId = Integer.parseInt(request.getParameter("requestId"));
+        try {
 
-        String action = request.getParameter("action");
-        String remarks = request.getParameter("remarks");
+            // =========================
+            // GET FORM DATA
+            // =========================
+            String requestIdStr = request.getParameter("requestId");
+            String action = request.getParameter("action");
+            String remarks = request.getParameter("remarks");
 
-        // Admin Name / ID
-        String approvedBy = session.getAttribute("admin").toString();
+            if (requestIdStr == null
+                    || requestIdStr.trim().isEmpty()
+                    || action == null
+                    || action.trim().isEmpty()) {
 
-        ServiceRequestDAO dao = new ServiceRequestDAO();
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/AdminATMRequestServlet?msg=invalid"
+                );
+                return;
+            }
 
-        boolean status = false;
+            int requestId = Integer.parseInt(requestIdStr);
 
-        switch (action.toUpperCase()) {
+            String approvedBy =
+                    session.getAttribute("admin").toString();
 
-            case "APPROVE":
+            ServiceRequestDAO dao =
+                    new ServiceRequestDAO();
 
-                Date expectedDelivery = null;
+            boolean status = false;
 
-                String delivery = request.getParameter("expectedDelivery");
+            // =========================
+            // ACTION
+            // =========================
+            switch (action.toUpperCase()) {
 
-                if (delivery != null && !delivery.trim().isEmpty()) {
-                    expectedDelivery = Date.valueOf(delivery);
-                }
+                case "APPROVE":
 
-                status = dao.approveRequest(
-                        requestId,
-                        approvedBy,
-                        remarks,
-                        expectedDelivery);
+                    Date expectedDelivery = null;
 
-                break;
+                    String delivery =
+                            request.getParameter(
+                                    "expectedDelivery"
+                            );
 
-            case "REJECT":
+                    if (delivery != null
+                            && !delivery.trim().isEmpty()) {
 
-                status = dao.rejectRequest(
-                        requestId,
-                        approvedBy,
-                        remarks);
+                        expectedDelivery =
+                                Date.valueOf(delivery);
+                    }
 
-                break;
+                    status = dao.approveRequest(
+                            requestId,
+                            approvedBy,
+                            remarks,
+                            expectedDelivery
+                    );
 
-            case "DISPATCH":
+                    break;
 
-                status = dao.dispatchRequest(requestId);
+                case "REJECT":
 
-                break;
+                    status = dao.rejectRequest(
+                            requestId,
+                            approvedBy,
+                            remarks
+                    );
 
-            case "DELIVER":
+                    break;
 
-                status = dao.deliverRequest(requestId);
+                case "DISPATCH":
 
-                break;
-        }
+                    status =
+                            dao.dispatchRequest(
+                                    requestId
+                            );
 
-        if (status) {
+                    break;
 
-            response.sendRedirect(request.getContextPath()
-                    + "/AdminAllRequestServlet?msg=success");
+                case "DELIVER":
 
-        } else {
+                    status =
+                            dao.deliverRequest(
+                                    requestId
+                            );
 
-            response.sendRedirect(request.getContextPath()
-                    + "/AdminAllRequestServlet?msg=error");
+                    break;
+
+                default:
+
+                    response.sendRedirect(
+                            request.getContextPath()
+                            + "/AdminATMRequestServlet?msg=invalidAction"
+                    );
+                    return;
+            }
+
+            // =========================
+            // REDIRECT BACK TO ATM LIST
+            // =========================
+            if (status) {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/AdminATMRequestServlet?msg=success"
+                );
+
+            } else {
+
+                response.sendRedirect(
+                        request.getContextPath()
+                        + "/AdminATMRequestServlet?msg=failed"
+                );
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/AdminATMRequestServlet?msg=error"
+            );
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
+                         HttpServletResponse response)
             throws ServletException, IOException {
 
-        doPost(request, response);
+        response.sendRedirect(
+                request.getContextPath()
+                + "/AdminATMRequestServlet"
+        );
     }
 }
