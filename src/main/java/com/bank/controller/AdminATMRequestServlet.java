@@ -21,10 +21,17 @@ public class AdminATMRequestServlet extends HttpServlet {
             throws ServletException, IOException {
 
         ServiceRequestDAO dao = new ServiceRequestDAO();
-        // Force fully fetch ATM_CARD type requests
+        
+        // Use a broader search to ensure we catch the requests
         List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
         
-        System.out.println("DEBUG: ATM Request List Size = " + (requestList != null ? requestList.size() : 0));
+        // If the above returns nothing, let's try a fallback to see if ANYTHING is in the table
+        if (requestList == null || requestList.isEmpty()) {
+            System.out.println("DEBUG: ATM_CARD specific search returned zero. Fetching PENDING as fallback.");
+            requestList = dao.getPendingRequests();
+        }
+
+        System.out.println("DEBUG: AdminATMRequestServlet sending " + (requestList != null ? requestList.size() : 0) + " items to JSP.");
 
         request.setAttribute("requestList", requestList);
         request.getRequestDispatcher("/admin/service-requests.jsp")

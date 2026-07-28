@@ -369,6 +369,10 @@ public Account getAccountByNumber(String accountNumber) {
 
         if (d > 0 && c > 0) {
             con.commit();
+            
+            // Log to Kafka for Real-time Monitoring
+            com.bank.util.KafkaService.logTransaction(fromAccount, toAccount, amount, "Account Transfer");
+
             status = true;
         } else {
             con.rollback();

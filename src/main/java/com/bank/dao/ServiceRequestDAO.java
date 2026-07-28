@@ -149,13 +149,15 @@ public List<ServiceRequest> getPendingRequests() {
 
     public List<ServiceRequest> getRequestsByType(String requestType) {
         List<ServiceRequest> list = new ArrayList<>();
-        Connection con = null;
         try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM service_request WHERE request_type=? ORDER BY request_date DESC";
-            PreparedStatement ps = con.prepareStatement(sql);
+            Connection localCon = DBConnection.getConnection();
+            String sql = "SELECT * FROM service_request WHERE UPPER(request_type)=UPPER(?) ORDER BY request_date DESC";
+            PreparedStatement ps = localCon.prepareStatement(sql);
             ps.setString(1, requestType);
+            
+            System.out.println("DEBUG: Executing query for type: " + requestType);
             ResultSet rs = ps.executeQuery();
+            
             while (rs.next()) {
                 ServiceRequest request = new ServiceRequest();
                 request.setRequestId(rs.getInt("request_id"));
@@ -173,7 +175,9 @@ public List<ServiceRequest> getPendingRequests() {
                 request.setDeliveredDate(rs.getDate("delivered_date"));
                 list.add(request);
             }
+            System.out.println("DEBUG: Found " + list.size() + " requests in DAO.");
         } catch (Exception e) {
+            System.out.println("DEBUG: Error in DAO: " + e.getMessage());
             e.printStackTrace();
         }
         return list;

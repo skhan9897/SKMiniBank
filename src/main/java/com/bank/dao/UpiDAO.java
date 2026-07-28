@@ -208,12 +208,17 @@ public class UpiDAO {
                            double amount) {
 
     AccountDAO accountDAO = new AccountDAO();
-
-    return accountDAO.transferAmount(
+    boolean success = accountDAO.transferAmount(
             fromAccount,
             toAccount,
             amount,
             "UPI Payment");
+
+    if (success) {
+        com.bank.util.KafkaService.logTransaction(fromAccount, toAccount, amount, "UPI Payment");
+    }
+    
+    return success;
 }
     public String getAccountNumberByUpi(String upiId) {
 
