@@ -2,10 +2,8 @@ package com.bank.controller;
 
 import com.bank.dao.ServiceRequestDAO;
 import com.bank.model.ServiceRequest;
-
 import java.io.IOException;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,22 +19,19 @@ public class AdminLoanRequestServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-
             ServiceRequestDAO dao = new ServiceRequestDAO();
+            // Specifically fetch LOAN type requests
+            List<ServiceRequest> requestList = dao.getRequestsByType("LOAN");
 
-            List<ServiceRequest> requestList = dao.getPendingRequests();
+            System.out.println("DEBUG: AdminLoanRequestServlet found " + (requestList != null ? requestList.size() : 0) + " loan requests.");
 
             request.setAttribute("requestList", requestList);
-
             request.getRequestDispatcher("/admin/service-requests.jsp")
                    .forward(request, response);
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            response.sendRedirect(request.getContextPath()
-                    + "/admin/dashboard.jsp?msg=error");
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp?msg=error");
         }
     }
 
@@ -44,7 +39,6 @@ public class AdminLoanRequestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-
         doGet(request, response);
     }
 }

@@ -28,7 +28,16 @@ public class KYCServlet extends HttpServlet {
                 boolean success = dao.updateCustomer(c);
 
                 if (success) {
-                    response.sendRedirect(request.getContextPath() + "/admin/kyc-success.jsp?msg=updated");
+                    request.setAttribute("customerId", c.getCustomerId());
+                    request.setAttribute("customerName", c.getFullName());
+                    request.setAttribute("mobile", c.getMobile());
+                    request.setAttribute("email", c.getEmail());
+                    request.setAttribute("aadhaar", c.getAadhaar());
+                    request.setAttribute("pan", c.getPan());
+                    request.setAttribute("kycStatus", c.getKycStatus());
+                    request.setAttribute("verificationDate", new java.util.Date().toString());
+
+                    request.getRequestDispatcher("/admin/kyc-success.jsp").forward(request, response);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/admin/kyc.jsp?error=update_failed");
                 }

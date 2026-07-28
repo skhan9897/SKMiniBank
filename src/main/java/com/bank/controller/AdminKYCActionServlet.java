@@ -1,6 +1,9 @@
 package com.bank.controller;
 
+import com.bank.dao.CustomerDAO;
 import com.bank.dao.KYCRequestDAO;
+import com.bank.model.Customer;
+import com.bank.model.KYCRequest;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,7 +41,21 @@ public class AdminKYCActionServlet extends HttpServlet {
             }
 
             if (success) {
-                response.sendRedirect(request.getContextPath() + "/admin/kyc-success.jsp?msg=" + action);
+                // Fetch updated KYC and Customer details to show in receipt
+                KYCRequest kyc = dao.getKYCById(kycId);
+                CustomerDAO customerDAO = new CustomerDAO();
+                Customer customer = customerDAO.getCustomerById(kyc.getCustomerId());
+
+                request.setAttribute("customerId", customer.getCustomerId());
+                request.setAttribute("customerName", customer.getFullName());
+                request.setAttribute("mobile", customer.getMobile());
+                request.setAttribute("email", customer.getEmail());
+                request.setAttribute("aadhaar", kyc.getAadhaarNumber());
+                request.setAttribute("pan", kyc.getPanNumber());
+                request.setAttribute("kycStatus", kyc.getStatus());
+                request.setAttribute("verificationDate", kyc.getVerificationDate());
+
+                request.getRequestDispatcher("/admin/kyc-success.jsp").forward(request, response);
             } else {
                 response.sendRedirect(request.getContextPath() + "/admin/kyc.jsp?error=failed");
             }
