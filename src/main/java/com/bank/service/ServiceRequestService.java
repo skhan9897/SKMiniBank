@@ -11,67 +11,64 @@ public class ServiceRequestService {
         dao = new ServiceRequestDAO();
     }
 
-    // Common Method (Website + API)
-    public boolean submitATMRequest(int customerId,
-                                    String accountNumber,
-                                    String cardType) {
-
-        if (customerId <= 0
-                || accountNumber == null || accountNumber.trim().isEmpty()
-                || cardType == null || cardType.trim().isEmpty()) {
-            return false;
-        }
-
+    public boolean submitATMRequest(int customerId, String accountNumber, String cardType) {
+        if (customerId <= 0 || accountNumber == null || accountNumber.trim().isEmpty() || cardType == null) return false;
         ServiceRequest request = new ServiceRequest();
-
         request.setCustomerId(customerId);
         request.setAccountNumber(accountNumber);
         request.setRequestType("ATM_CARD");
         request.setRequestDetails(cardType);
-
         return dao.saveRequest(request);
     }
-    
-    public boolean submitChequeBookRequest(
-        int customerId,
-        String accountNumber,
-        String chequeType) {
 
-    try {
-
-        if (customerId <= 0) {
-            return false;
-        }
-
-        if (accountNumber == null || accountNumber.trim().isEmpty()) {
-            return false;
-        }
-
-        if (chequeType == null || chequeType.trim().isEmpty()) {
-            return false;
-        }
-
+    public boolean submitChequeBookRequest(int customerId, String accountNumber, String chequeType) {
+        if (customerId <= 0 || accountNumber == null || chequeType == null) return false;
         ServiceRequest request = new ServiceRequest();
-
         request.setCustomerId(customerId);
-        request.setAccountNumber(accountNumber.trim());
-
-        // IMPORTANT:
-        // Har jagah exactly same request type use karenge
+        request.setAccountNumber(accountNumber);
         request.setRequestType("CHEQUE_BOOK");
-
-        // ATM me cardType jaise store ho raha tha,
-        // yahan chequeType store hoga
-        request.setRequestDetails(chequeType.trim());
-
-        ServiceRequestDAO dao = new ServiceRequestDAO();
-
+        request.setRequestDetails(chequeType);
         return dao.saveRequest(request);
-
-    } catch (Exception e) {
-
-        e.printStackTrace();
-        return false;
     }
-}
+
+    public boolean submitLoanRequest(int customerId, String accountNumber, String loanType, double amount, int tenure, double income, String purpose) {
+        if (customerId <= 0 || accountNumber == null || loanType == null) return false;
+        ServiceRequest request = new ServiceRequest();
+        request.setCustomerId(customerId);
+        request.setAccountNumber(accountNumber);
+        request.setRequestType("LOAN");
+        request.setRequestDetails(String.format("Type: %s, Amount: %.2f, Tenure: %d months, Income: %.2f, Purpose: %s", 
+                                  loanType, amount, tenure, income, purpose));
+        return dao.saveRequest(request);
+    }
+
+    public boolean submitNetBankingRequest(int customerId, String accountNumber) {
+        if (customerId <= 0 || accountNumber == null) return false;
+        ServiceRequest request = new ServiceRequest();
+        request.setCustomerId(customerId);
+        request.setAccountNumber(accountNumber);
+        request.setRequestType("NET_BANKING");
+        request.setRequestDetails("Internet Banking Activation");
+        return dao.saveRequest(request);
+    }
+
+    public boolean submitMobileBankingRequest(int customerId, String accountNumber) {
+        if (customerId <= 0 || accountNumber == null) return false;
+        ServiceRequest request = new ServiceRequest();
+        request.setCustomerId(customerId);
+        request.setAccountNumber(accountNumber);
+        request.setRequestType("MOBILE_BANKING");
+        request.setRequestDetails("Mobile Banking Activation");
+        return dao.saveRequest(request);
+    }
+
+    public boolean submitKYCRequest(int customerId, String accountNumber, String aadhaar, String pan) {
+        if (customerId <= 0 || accountNumber == null) return false;
+        ServiceRequest request = new ServiceRequest();
+        request.setCustomerId(customerId);
+        request.setAccountNumber(accountNumber);
+        request.setRequestType("KYC_UPDATE");
+        request.setRequestDetails("Aadhaar: " + aadhaar + ", PAN: " + pan);
+        return dao.saveRequest(request);
+    }
 }

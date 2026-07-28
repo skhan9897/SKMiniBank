@@ -37,20 +37,28 @@ public class GenerateUpiApiServlet extends HttpServlet {
                 return;
             }
 
+            UpiDAO dao = new UpiDAO();
+            
+            // If request has 'action=all', generate for everyone
+            String action = request.getParameter("action");
+            if ("all".equalsIgnoreCase(action)) {
+                dao.generateUpiForAll();
+                out.print("{\"status\":\"success\",\"message\":\"UPI IDs generated for all accounts using mobile number\"}");
+                return;
+            }
+
             Upi upi = new Upi();
             upi.setCustomerId(Integer.parseInt(customerId));
             upi.setAccountNumber(accountNumber);
 
-            UpiDAO dao = new UpiDAO();
-
             boolean status = dao.generateUpi(upi);
 
             if (status) {
-
+                Upi generated = dao.getUpiByAccountNumber(accountNumber);
                 out.print("{");
                 out.print("\"status\":\"success\",");
-                out.print("\"upiId\":\"" + accountNumber + "@skbank\",");
-                out.print("\"message\":\"UPI Generated Successfully\"");
+                out.print("\"upiId\":\"" + generated.getUpiHandle() + "\",");
+                out.print("\"message\":\"UPI Generated Successfully using Mobile Number\"");
                 out.print("}");
 
             } else {

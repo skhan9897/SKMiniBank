@@ -2,11 +2,9 @@ package com.bank.api;
 
 import com.bank.dao.NotificationDAO;
 import com.bank.model.Notification;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,8 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 public class NotificationApiServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("application/json");
@@ -27,64 +24,36 @@ public class NotificationApiServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-
             String customerIdStr = request.getParameter("customerId");
-
-            if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
-
-                out.print("{\"status\":\"failed\",\"message\":\"Customer ID is required\"}");
+            if (customerIdStr == null) {
+                out.print("{\"status\":\"failed\",\"message\":\"Customer ID required\"}");
                 return;
             }
 
             int customerId = Integer.parseInt(customerIdStr);
-
             NotificationDAO dao = new NotificationDAO();
-
-            List<Notification> list = dao.getNotifications(customerId);
+            List<Notification> list = dao.getNotificationsByCustomer(customerId);
 
             StringBuilder json = new StringBuilder();
-
-            json.append("{");
-            json.append("\"status\":\"success\",");
-            json.append("\"notifications\":[");
-
+            json.append("{\"status\":\"success\",\"notifications\":[");
             for (int i = 0; i < list.size(); i++) {
-
                 Notification n = list.get(i);
-
                 json.append("{");
-                json.append("\"notificationId\":").append(n.getNotificationId()).append(",");
+                json.append("\"id\":").append(n.getNotificationId()).append(",");
                 json.append("\"title\":\"").append(n.getTitle()).append("\",");
-                json.append("\"message\":\"").append(n.getMessage()).append("\",");
-                json.append("\"status\":\"").append(n.getStatus()).append("\",");
-                json.append("\"createdAt\":\"").append(n.getCreatedAt()).append("\"");
+                json.append("\"message\":\"").append(n.getMessage().replace("\"", "\\\"")).append("\",");
+                json.append("\"date\":\"").append(n.getCreatedAt()).append("\",");
+                json.append("\"isRead\":").append(n.getIsRead());
                 json.append("}");
-
-                if (i < list.size() - 1) {
-                    json.append(",");
-                }
+                if (i < list.size() - 1) json.append(",");
             }
-
             json.append("]}");
-
             out.print(json.toString());
 
         } catch (Exception e) {
-
-            e.printStackTrace();
-
-            out.print("{\"status\":\"error\",\"message\":\"Server Error\"}");
+            out.print("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
+        } finally {
+            out.close();
         }
-
-        out.flush();
-        out.close();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        doGet(request, response);
     }
 }

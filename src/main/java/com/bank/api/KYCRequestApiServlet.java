@@ -1,10 +1,7 @@
 package com.bank.api;
 
-import com.bank.dao.KYCRequestDAO;
-import com.bank.model.KYCRequest;
-
+import com.bank.service.ServiceRequestService;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,87 +12,28 @@ import javax.servlet.http.HttpServletResponse;
 public class KYCRequestApiServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
+            int customerId = Integer.parseInt(request.getParameter("customerId"));
+            String accountNumber = request.getParameter("accountNumber");
+            String aadhaar = request.getParameter("aadhaarNumber");
+            String pan = request.getParameter("panNumber");
 
-            KYCRequest kyc = new KYCRequest();
-
-            kyc.setCustomerId(
-                    Integer.parseInt(request.getParameter("customerId")));
-
-            kyc.setAccountNumber(
-                    request.getParameter("accountNumber"));
-
-            kyc.setAadhaarNumber(
-                    request.getParameter("aadhaarNumber"));
-
-            kyc.setPanNumber(
-                    request.getParameter("panNumber"));
-
-            kyc.setAadhaarFront(
-                    request.getParameter("aadhaarFront"));
-
-            kyc.setAadhaarBack(
-                    request.getParameter("aadhaarBack"));
-
-            kyc.setPanImage(
-                    request.getParameter("panImage"));
-
-            kyc.setCustomerPhoto(
-                    request.getParameter("customerPhoto"));
-
-            kyc.setSignatureImage(
-                    request.getParameter("signatureImage"));
-
-            KYCRequestDAO dao = new KYCRequestDAO();
-
-            boolean success = dao.submitKYC(kyc);
+            ServiceRequestService service = new ServiceRequestService();
+            boolean success = service.submitKYCRequest(customerId, accountNumber, aadhaar, pan);
 
             if (success) {
-
-                response.getWriter().print(
-                        "{"
-                        + "\"success\":true,"
-                        + "\"status\":\"success\","
-                        + "\"message\":\"KYC Submitted Successfully\""
-                        + "}");
-
+                response.getWriter().print("{\"status\":\"success\",\"message\":\"KYC Update Request Submitted\"}");
             } else {
-
-                response.getWriter().print(
-                        "{"
-                        + "\"success\":false,"
-                        + "\"status\":\"failed\","
-                        + "\"message\":\"Unable to Submit KYC\""
-                        + "}");
+                response.getWriter().print("{\"status\":\"failed\",\"message\":\"Unable to submit request\"}");
             }
-
         } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.getWriter().print(
-                    "{"
-                    + "\"success\":false,"
-                    + "\"status\":\"error\","
-                    + "\"message\":\""
-                    + e.getMessage().replace("\"", "\\\"")
-                    + "\""
-                    + "}");
+            response.getWriter().print("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        doPost(request, response);
     }
 }

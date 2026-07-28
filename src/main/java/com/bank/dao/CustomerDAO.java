@@ -576,45 +576,52 @@ c.setKycStatus(rs.getString("kyc_status"));
 
     return status;
 }
-    public Customer getCustomerByAccountNumber(String accountNumber) {
-
-    Customer c = null;
-
-    try {
-
-        con = DBConnection.getConnection();
-
-        String sql = "SELECT * FROM customer WHERE account_number=?";
-
-        ps = con.prepareStatement(sql);
-        ps.setString(1, accountNumber);
-
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-
-            c = new Customer();
-
-            c.setCustomerId(rs.getInt("customer_id"));
-            c.setFullName(rs.getString("full_name"));
-            c.setAccountNumber(rs.getString("account_number"));
-            c.setBalance(rs.getDouble("balance"));
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
+    public boolean resetPassword(String accountNumber, String mobile, String newPassword) {
+        boolean status = false;
         try {
-            if (rs != null) rs.close();
-            if (ps != null) ps.close();
-            if (con != null) con.close();
+            con = DBConnection.getConnection();
+            String sql = "UPDATE customer SET password=? WHERE account_number=? AND mobile=?";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, newPassword);
+            ps.setString(2, accountNumber);
+            ps.setString(3, mobile);
+            status = ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return status;
+    }
+
+    public Customer getCustomerByAccountNumber(String accountNumber) {
+        Customer c = null;
+        try {
+            Connection con = DBConnection.getConnection();
+            String sql = "SELECT customer_id, full_name, account_number, balance FROM customer WHERE account_number=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, accountNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                c = new Customer();
+                c.setCustomerId(rs.getInt("customer_id"));
+                c.setFullName(rs.getString("full_name"));
+                c.setAccountNumber(rs.getString("account_number"));
+                c.setBalance(rs.getDouble("balance"));
+            }
+            rs.close();
+            ps.close();
+            con.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return c;
     }
-
-    return c;
-}
     
 
 }

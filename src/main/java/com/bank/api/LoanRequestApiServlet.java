@@ -1,10 +1,7 @@
 package com.bank.api;
 
-import com.bank.dao.LoanRequestDAO;
-import com.bank.model.LoanRequest;
-
+import com.bank.service.ServiceRequestService;
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,51 +12,31 @@ import javax.servlet.http.HttpServletResponse;
 public class LoanRequestApiServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
+            int customerId = Integer.parseInt(request.getParameter("customerId"));
+            String accountNumber = request.getParameter("accountNumber");
+            String loanType = request.getParameter("loanType");
+            double amount = Double.parseDouble(request.getParameter("loanAmount"));
+            int tenure = Integer.parseInt(request.getParameter("tenureMonths"));
+            double income = Double.parseDouble(request.getParameter("monthlyIncome"));
+            String purpose = request.getParameter("purpose");
 
-            LoanRequest loan = new LoanRequest();
-
-            loan.setCustomerId(Integer.parseInt(request.getParameter("customerId")));
-            loan.setAccountNumber(request.getParameter("accountNumber"));
-            loan.setLoanType(request.getParameter("loanType"));
-            loan.setLoanAmount(Double.parseDouble(request.getParameter("loanAmount")));
-            loan.setTenureMonths(Integer.parseInt(request.getParameter("tenureMonths")));
-            loan.setMonthlyIncome(Double.parseDouble(request.getParameter("monthlyIncome")));
-            loan.setPurpose(request.getParameter("purpose"));
-
-            LoanRequestDAO dao = new LoanRequestDAO();
-
-            boolean success = dao.applyLoan(loan);
+            ServiceRequestService service = new ServiceRequestService();
+            boolean success = service.submitLoanRequest(customerId, accountNumber, loanType, amount, tenure, income, purpose);
 
             if (success) {
-                response.getWriter().print(
-                        "{\"success\":true,\"message\":\"Loan Request Submitted Successfully\"}");
+                response.getWriter().print("{\"status\":\"success\",\"message\":\"Loan Request Submitted Successfully\"}");
             } else {
-                response.getWriter().print(
-                        "{\"success\":false,\"message\":\"Unable to Submit Loan Request\"}");
+                response.getWriter().print("{\"status\":\"failed\",\"message\":\"Unable to Submit Loan Request\"}");
             }
-
         } catch (Exception e) {
-
-            response.getWriter().print(
-                    "{\"success\":false,\"message\":\""
-                    + e.getMessage().replace("\"","\\\"")
-                    + "\"}");
+            response.getWriter().print("{\"status\":\"error\",\"message\":\"" + e.getMessage() + "\"}");
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        doPost(request,response);
     }
 }

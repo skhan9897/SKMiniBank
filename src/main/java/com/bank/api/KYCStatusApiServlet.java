@@ -1,11 +1,9 @@
 package com.bank.api;
 
-import com.bank.dao.KYCRequestDAO;
-import com.bank.model.KYCRequest;
-
+import com.bank.dao.ServiceRequestDAO;
+import com.bank.model.ServiceRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,87 +14,41 @@ import javax.servlet.http.HttpServletResponse;
 public class KYCStatusApiServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
         try {
-
             String customerIdStr = request.getParameter("customerId");
-
-            if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
-
-                response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"Customer ID is required\"}");
+            if (customerIdStr == null) {
+                response.getWriter().print("{\"success\":false,\"message\":\"Customer ID required\"}");
                 return;
             }
 
             int customerId = Integer.parseInt(customerIdStr);
+            ServiceRequestDAO dao = new ServiceRequestDAO();
+            ServiceRequest service = dao.getLatestRequestByType(customerId, "KYC_UPDATE");
 
-            KYCRequestDAO dao = new KYCRequestDAO();
-
-            KYCRequest kyc = dao.getKYCByCustomerId(customerId);
-
-            if (kyc == null) {
-
-                response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"No KYC Request Found\"}");
+            if (service == null) {
+                response.getWriter().print("{\"success\":false,\"message\":\"No KYC Request Found\"}");
                 return;
             }
 
-            SimpleDateFormat sdf =
-                    new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String date = (service.getRequestDate() != null) ? sdf.format(service.getRequestDate()) : "";
 
-            String requestDate = "";
-            String verificationDate = "";
-
-            if (kyc.getRequestDate() != null) {
-                requestDate = sdf.format(kyc.getRequestDate());
-            }
-
-            if (kyc.getVerificationDate() != null) {
-                verificationDate = sdf.format(
-                        kyc.getVerificationDate());
-            }
-
-            String json =
-                    "{"
+            String json = "{"
                     + "\"success\":true,"
-                    + "\"kycId\":" + kyc.getKycId() + ","
-                    + "\"accountNumber\":\"" + kyc.getAccountNumber() + "\","
-                    + "\"aadhaarNumber\":\"" + kyc.getAadhaarNumber() + "\","
-                    + "\"panNumber\":\"" + kyc.getPanNumber() + "\","
-                    + "\"status\":\"" + kyc.getStatus() + "\","
-                    + "\"remarks\":\"" + (kyc.getRemarks() == null ? "" : kyc.getRemarks()) + "\","
-                    + "\"verifiedBy\":\"" + (kyc.getVerifiedBy() == null ? "" : kyc.getVerifiedBy()) + "\","
-                    + "\"requestDate\":\"" + requestDate + "\","
-                    + "\"verificationDate\":\"" + verificationDate + "\""
+                    + "\"status\":\"" + service.getStatus() + "\","
+                    + "\"remarks\":\"" + (service.getRemarks() == null ? "" : service.getRemarks()) + "\","
+                    + "\"requestDate\":\"" + date + "\""
                     + "}";
 
             response.getWriter().print(json);
-
         } catch (Exception e) {
-
-            e.printStackTrace();
-
-            response.getWriter().print(
-                    "{\"success\":false,"
-                    + "\"message\":\""
-                    + e.getMessage().replace("\"", "\\\"")
-                    + "\"}");
+            response.getWriter().print("{\"success\":false,\"message\":\"" + e.getMessage() + "\"}");
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response)
-            throws ServletException, IOException {
-
-        doGet(request, response);
     }
 }

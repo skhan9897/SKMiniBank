@@ -21,7 +21,20 @@ public class UpiDAO {
 
             con = DBConnection.getConnection();
 
-            // Check if UPI already exists
+            // 1. Get mobile number for the customer
+            String mobile = null;
+            PreparedStatement psCust = con.prepareStatement("SELECT mobile FROM customer WHERE customer_id=?");
+            psCust.setInt(1, upi.getCustomerId());
+            ResultSet rsCust = psCust.executeQuery();
+            if (rsCust.next()) {
+                mobile = rsCust.getString("mobile");
+            }
+            
+            if (mobile == null || mobile.isEmpty()) {
+                return false;
+            }
+
+            // 2. Check if UPI already exists
             ps = con.prepareStatement(
                     "SELECT upi_id FROM upi WHERE account_number=?");
             ps.setString(1, upi.getAccountNumber());
@@ -29,10 +42,14 @@ public class UpiDAO {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return false;
+                // If exists, just update it to new mobile-based format
+                ps = con.prepareStatement("UPDATE upi SET upi_handle=? WHERE account_number=?");
+                ps.setString(1, mobile + "@skpay");
+                ps.setString(2, upi.getAccountNumber());
+                return ps.executeUpdate() > 0;
             }
 
-            String upiHandle = upi.getAccountNumber() + "@skbank";
+            String upiHandle = mobile + "@skpay";
 
             ps = con.prepareStatement(
                     "INSERT INTO upi(customer_id,account_number,upi_handle,status) VALUES(?,?,?,?)");
@@ -43,12 +60,67 @@ public class UpiDAO {
             ps.setString(4, "ACTIVE");
 
             status = ps.executeUpdate() > 0;
+            
+            // Also update customer table for consistency
+            if (status) {
+                PreparedStatement psUpdateCust = con.prepareStatement("UPDATE customer SET upi_id=?, upi_status='ACTIVE' WHERE customer_id=?");
+                psUpdateCust.setString(1, upiHandle);
+                psUpdateCust.setInt(2, upi.getCustomerId());
+                psUpdateCust.executeUpdate();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return status;
+    }
+
+    public void generateUpiForAll() {
+        try {
+            con = DBConnection.getConnection();
+            
+            // Get all customers who don't have a valid UPI or need refresh
+            String sql = "SELECT customer_id, account_number, mobile FROM customer";
+            PreparedStatement psAll = con.prepareStatement(sql);
+            ResultSet rsAll = psAll.executeQuery();
+            
+            while (rsAll.next()) {
+                int cid = rsAll.getInt("customer_id");
+                String acc = rsAll.getString("account_number");
+                String mob = rsAll.getString("mobile");
+                
+                if (mob != null && !mob.isEmpty()) {
+                    String handle = mob + "@skpay";
+                    
+                    // Check upi table
+                    PreparedStatement psCheck = con.prepareStatement("SELECT upi_id FROM upi WHERE customer_id=?");
+                    psCheck.setInt(1, cid);
+                    if (psCheck.executeQuery().next()) {
+                        PreparedStatement psUpd = con.prepareStatement("UPDATE upi SET upi_handle=? WHERE customer_id=?");
+                        psUpd.setString(1, handle);
+                        psUpd.setInt(2, cid);
+                        psUpd.executeUpdate();
+                    } else {
+                        PreparedStatement psIns = con.prepareStatement("INSERT INTO upi(customer_id, account_number, upi_handle, status) VALUES(?,?,?,?)");
+                        psIns.setInt(1, cid);
+                        psIns.setString(2, acc);
+                        psIns.setString(3, handle);
+                        psIns.setString(4, "ACTIVE");
+                        psIns.executeUpdate();
+                    }
+                    
+                    // Update customer table
+                    PreparedStatement psUpdCust = con.prepareStatement("UPDATE customer SET upi_id=?, upi_status='ACTIVE' WHERE customer_id=?");
+                    psUpdCust.setString(1, handle);
+                    psUpdCust.setInt(2, cid);
+                    psUpdCust.executeUpdate();
+                }
+            }
+            System.out.println("DEBUG: UPI Generation for all accounts completed.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public Upi getUpiByAccountNumber(String accountNumber) {

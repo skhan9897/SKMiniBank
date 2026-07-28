@@ -91,39 +91,29 @@ if("PENDING".equalsIgnoreCase(r.getStatus())){
 
 <td>
 
-<form action="<%=request.getContextPath()%>/AdminRequestServlet" method="post">
-<input type="hidden" name="requestId"
-value="<%=r.getRequestId()%>">
+<form action="<%=request.getContextPath()%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
+    <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
 
-<textarea
-name="remarks"
-class="form-control mb-2"
-placeholder="Remarks"></textarea>
+    <div class="mb-2">
+        <label class="form-label small fw-bold">Remarks:</label>
+        <textarea name="remarks" class="form-control form-control-sm" placeholder="Add status notes..."></textarea>
+    </div>
 
-<input
-type="date"
-name="expectedDelivery"
-class="form-control mb-2">
+    <div class="mb-2">
+        <label class="form-label small fw-bold">Exp. Delivery Date:</label>
+        <input type="date" name="expectedDelivery" class="form-control form-control-sm">
+    </div>
 
-<div class="d-flex flex-wrap gap-1">
-
-<button type="submit" class="btn btn-success btn-sm" name="action" value="APPROVE">
-    Approve
-</button>
-
-<button type="submit" class="btn btn-danger btn-sm" name="action" value="REJECT">
-    Reject
-</button>
-
-<button type="submit" class="btn btn-primary btn-sm" name="action" value="DISPATCH">
-    Dispatch
-</button>
-
-<button type="submit" class="btn btn-dark btn-sm" name="action" value="DELIVER">
-    Delivered
-</button>
-</div>
-
+    <div class="d-flex flex-wrap gap-1">
+        <% if("PENDING".equalsIgnoreCase(r.getStatus())) { %>
+            <button type="submit" class="btn btn-success btn-sm flex-fill" name="action" value="APPROVE">Approve</button>
+            <button type="submit" class="btn btn-danger btn-sm flex-fill" name="action" value="REJECT">Reject</button>
+        <% } else if("APPROVED".equalsIgnoreCase(r.getStatus())) { %>
+            <button type="submit" class="btn btn-primary btn-sm w-100" name="action" value="DISPATCH">Dispatch Item</button>
+        <% } else if("DISPATCHED".equalsIgnoreCase(r.getStatus())) { %>
+            <button type="submit" class="btn btn-dark btn-sm w-100" name="action" value="DELIVER">Mark Delivered</button>
+        <% } %>
+    </div>
 </form>
 
 </td>
