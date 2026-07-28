@@ -2,7 +2,6 @@ package com.bank.dao;
 
 import com.bank.model.Upi;
 import com.bank.util.DBConnection;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,11 +13,8 @@ public class UpiDAO {
     ResultSet rs = null;
 
     public boolean generateUpi(Upi upi) {
-
         boolean status = false;
-
         try {
-
             con = DBConnection.getConnection();
 
             // 1. Get mobile number for the customer
@@ -30,57 +26,55 @@ public class UpiDAO {
                 mobile = rsCust.getString("mobile");
             }
             
-            if (mobile == null || mobile.isEmpty()) {
+            if (mobile == null || mobile.length() < 4) {
                 return false;
             }
 
-            // 2. Check if UPI already exists
-            ps = con.prepareStatement(
-                    "SELECT upi_id FROM upi WHERE account_number=?");
-            ps.setString(1, upi.getAccountNumber());
+            // 2. Set default PIN as last 4 digits of mobile
+            String defaultPin = mobile.substring(mobile.length() - 4);
 
+            // 3. Check if UPI already exists
+            ps = con.prepareStatement("SELECT upi_id FROM upi WHERE account_number=?");
+            ps.setString(1, upi.getAccountNumber());
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                // If exists, just update it to new mobile-based format
-                ps = con.prepareStatement("UPDATE upi SET upi_handle=? WHERE account_number=?");
+                // If exists, just update it to new mobile-based format and set mobile-based PIN
+                ps = con.prepareStatement("UPDATE upi SET upi_handle=?, upi_pin=? WHERE account_number=?");
                 ps.setString(1, mobile + "@skpay");
-                ps.setString(2, upi.getAccountNumber());
+                ps.setString(2, defaultPin);
+                ps.setString(3, upi.getAccountNumber());
                 return ps.executeUpdate() > 0;
             }
 
             String upiHandle = mobile + "@skpay";
 
             ps = con.prepareStatement(
-                    "INSERT INTO upi(customer_id,account_number,upi_handle,status) VALUES(?,?,?,?)");
+                    "INSERT INTO upi(customer_id,account_number,upi_handle,upi_pin,status) VALUES(?,?,?,?,?)");
 
             ps.setInt(1, upi.getCustomerId());
             ps.setString(2, upi.getAccountNumber());
             ps.setString(3, upiHandle);
-            ps.setString(4, "ACTIVE");
+            ps.setString(4, defaultPin);
+            ps.setString(5, "ACTIVE");
 
             status = ps.executeUpdate() > 0;
             
-            // Also update customer table for consistency
             if (status) {
                 PreparedStatement psUpdateCust = con.prepareStatement("UPDATE customer SET upi_id=?, upi_status='ACTIVE' WHERE customer_id=?");
                 psUpdateCust.setString(1, upiHandle);
                 psUpdateCust.setInt(2, upi.getCustomerId());
                 psUpdateCust.executeUpdate();
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return status;
     }
 
     public void generateUpiForAll() {
         try {
             con = DBConnection.getConnection();
-            
-            // Get all customers who don't have a valid UPI or need refresh
             String sql = "SELECT customer_id, account_number, mobile FROM customer";
             PreparedStatement psAll = con.prepareStatement(sql);
             ResultSet rsAll = psAll.executeQuery();
@@ -90,159 +84,112 @@ public class UpiDAO {
                 String acc = rsAll.getString("account_number");
                 String mob = rsAll.getString("mobile");
                 
-                if (mob != null && !mob.isEmpty()) {
+                if (mob != null && mob.length() >= 4) {
                     String handle = mob + "@skpay";
+                    String pin = mob.substring(mob.length() - 4);
                     
-                    // Check upi table
                     PreparedStatement psCheck = con.prepareStatement("SELECT upi_id FROM upi WHERE customer_id=?");
                     psCheck.setInt(1, cid);
                     if (psCheck.executeQuery().next()) {
-                        PreparedStatement psUpd = con.prepareStatement("UPDATE upi SET upi_handle=? WHERE customer_id=?");
+                        PreparedStatement psUpd = con.prepareStatement("UPDATE upi SET upi_handle=?, upi_pin=? WHERE customer_id=?");
                         psUpd.setString(1, handle);
-                        psUpd.setInt(2, cid);
+                        psUpd.setString(2, pin);
+                        psUpd.setInt(3, cid);
                         psUpd.executeUpdate();
                     } else {
-                        PreparedStatement psIns = con.prepareStatement("INSERT INTO upi(customer_id, account_number, upi_handle, status) VALUES(?,?,?,?)");
+                        PreparedStatement psIns = con.prepareStatement("INSERT INTO upi(customer_id, account_number, upi_handle, upi_pin, status) VALUES(?,?,?,?,?)");
                         psIns.setInt(1, cid);
                         psIns.setString(2, acc);
                         psIns.setString(3, handle);
-                        psIns.setString(4, "ACTIVE");
+                        psIns.setString(4, pin);
+                        psIns.setString(5, "ACTIVE");
                         psIns.executeUpdate();
                     }
                     
-                    // Update customer table
                     PreparedStatement psUpdCust = con.prepareStatement("UPDATE customer SET upi_id=?, upi_status='ACTIVE' WHERE customer_id=?");
                     psUpdCust.setString(1, handle);
                     psUpdCust.setInt(2, cid);
                     psUpdCust.executeUpdate();
                 }
             }
-            System.out.println("DEBUG: UPI Generation for all accounts completed.");
+            System.out.println("DEBUG: UPI PIN and ID generation for all completed.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
     public Upi getUpiByAccountNumber(String accountNumber) {
-
-    Upi upi = null;
-
-    try {
-
-        con = DBConnection.getConnection();
-
-        ps = con.prepareStatement(
-                "SELECT * FROM upi WHERE account_number=?");
-
-        ps.setString(1, accountNumber);
-
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-
-            upi = new Upi();
-
-            upi.setUpiId(rs.getInt("upi_id"));
-            upi.setCustomerId(rs.getInt("customer_id"));
-            upi.setAccountNumber(rs.getString("account_number"));
-            upi.setUpiHandle(rs.getString("upi_handle"));
-            upi.setUpiPin(rs.getString("upi_pin"));
-            upi.setStatus(rs.getString("status"));
-            upi.setCreatedAt(rs.getString("created_at"));
+        Upi upi = null;
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement("SELECT * FROM upi WHERE account_number=?");
+            ps.setString(1, accountNumber);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                upi = new Upi();
+                upi.setUpiId(rs.getInt("upi_id"));
+                upi.setCustomerId(rs.getInt("customer_id"));
+                upi.setAccountNumber(rs.getString("account_number"));
+                upi.setUpiHandle(rs.getString("upi_handle"));
+                upi.setUpiPin(rs.getString("upi_pin"));
+                upi.setStatus(rs.getString("status"));
+                upi.setCreatedAt(rs.getString("created_at"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return upi;
     }
 
-    return upi;
-}
     public boolean setUpiPin(String accountNumber, String upiPin) {
-
-    boolean status = false;
-
-    try {
-
-        con = DBConnection.getConnection();
-
-        ps = con.prepareStatement(
-                "UPDATE upi SET upi_pin=? WHERE account_number=? AND status='ACTIVE'");
-
-        ps.setString(1, upiPin);
-        ps.setString(2, accountNumber);
-
-        status = ps.executeUpdate() > 0;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-    public boolean verifyUpiPin(String accountNumber, String upiPin) {
-
-    boolean status = false;
-
-    try {
-
-        con = DBConnection.getConnection();
-
-        ps = con.prepareStatement(
-            "SELECT upi_id FROM upi WHERE account_number=? AND upi_pin=? AND status='ACTIVE'");
-
-        ps.setString(1, accountNumber);
-        ps.setString(2, upiPin);
-
-        rs = ps.executeQuery();
-
-        status = rs.next();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-
-    return status;
-}
-    public boolean upiTransfer(String fromAccount,
-                           String toAccount,
-                           double amount) {
-
-    AccountDAO accountDAO = new AccountDAO();
-    boolean success = accountDAO.transferAmount(
-            fromAccount,
-            toAccount,
-            amount,
-            "UPI Payment");
-
-    if (success) {
-        com.bank.util.KafkaService.logTransaction(fromAccount, toAccount, amount, "UPI Payment");
-    }
-    
-    return success;
-}
-    public String getAccountNumberByUpi(String upiId) {
-
-    String accountNumber = null;
-
-    try {
-
-        con = DBConnection.getConnection();
-
-        ps = con.prepareStatement(
-            "SELECT account_number FROM upi WHERE upi_handle=? AND status='ACTIVE'");
-
-        ps.setString(1, upiId);
-
-        rs = ps.executeQuery();
-
-        if (rs.next()) {
-            accountNumber = rs.getString("account_number");
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement("UPDATE upi SET upi_pin=? WHERE account_number=? AND status='ACTIVE'");
+            ps.setString(1, upiPin);
+            ps.setString(2, accountNumber);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
     }
 
-    return accountNumber;
-}
+    public boolean verifyUpiPin(String accountNumber, String upiPin) {
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement("SELECT upi_id FROM upi WHERE account_number=? AND upi_pin=? AND status='ACTIVE'");
+            ps.setString(1, accountNumber);
+            ps.setString(2, upiPin);
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean upiTransfer(String fromAccount, String toAccount, double amount) {
+        AccountDAO accountDAO = new AccountDAO();
+        boolean success = accountDAO.transferAmount(fromAccount, toAccount, amount, "UPI Payment");
+        if (success) {
+            com.bank.util.KafkaService.logTransaction(fromAccount, toAccount, amount, "UPI Payment");
+        }
+        return success;
+    }
+
+    public String getAccountNumberByUpi(String upiId) {
+        String accountNumber = null;
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement("SELECT account_number FROM upi WHERE upi_handle=? AND status='ACTIVE'");
+            ps.setString(1, upiId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                accountNumber = rs.getString("account_number");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return accountNumber;
+    }
 }
