@@ -6,154 +6,114 @@ import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import com.bank.util.DBConnection;
 
 public class ReportDAO {
 
     public int getTotalCustomers() {
-        int total = 0;
-        try {
-            Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM customer");
-            ResultSet rs = ps.executeQuery();
-
+        String sql = "SELECT COUNT(*) FROM customer";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getInt(1);
+                return rs.getInt(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0;
     }
 
     public int getTotalAccounts() {
-        int total = 0;
-        try {
-            Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM account");
-            ResultSet rs = ps.executeQuery();
-
+        String sql = "SELECT COUNT(*) FROM customer WHERE account_number IS NOT NULL";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getInt(1);
+                return rs.getInt(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0;
     }
     
     public double getTotalBalance() {
-    double total = 0;
-    try {
-        Connection con = DBConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT SUM(balance) FROM account");
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            total = rs.getDouble(1);
+        String sql = "SELECT SUM(balance) FROM customer";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-
-public double getTotalDeposit() {
-    double total = 0;
-    try {
-        Connection con = DBConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT SUM(amount) FROM transactions WHERE transaction_type='Deposit'");
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            total = rs.getDouble(1);
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-
-public double getTotalWithdraw() {
-    double total = 0;
-    try {
-        Connection con = DBConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT SUM(amount) FROM transactions WHERE transaction_type='Withdraw'");
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            total = rs.getDouble(1);
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-
-public int getTotalTransactions() {
-    int total = 0;
-    try {
-        Connection con = DBConnection.getConnection();
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT COUNT(*) FROM transactions");
-        ResultSet rs = ps.executeQuery();
-
-        if (rs.next()) {
-            total = rs.getInt(1);
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return total;
-}
-
-public List<Customer> getRecentCustomers() {
-
-    List<Customer> list = new ArrayList<>();
-
-    try {
-
-        Connection con = DBConnection.getConnection();
-
-        PreparedStatement ps = con.prepareStatement(
-                "SELECT * FROM customer ORDER BY customer_id DESC LIMIT 10");
-
-        ResultSet rs = ps.executeQuery();
-
-        while (rs.next()) {
-
-            Customer c = new Customer();
-
-            c.setCustomerId(rs.getInt("customer_id"));
-            c.setFullName(rs.getString("full_name"));
-            c.setMobile(rs.getString("mobile"));
-            c.setAccountNumber(rs.getString("account_number"));
-            c.setBalance(rs.getDouble("balance"));
-            c.setStatus(rs.getString("status"));
-
-            list.add(c);
-
-        }
-
-    } catch (Exception e) {
-
-        e.printStackTrace();
-
+        return 0.0;
     }
 
-    return list;
+    public double getTotalDeposit() {
+        String sql = "SELECT SUM(amount) FROM transactions WHERE transaction_type='Deposit'";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
 
-}
+    public double getTotalWithdraw() {
+        String sql = "SELECT SUM(amount) FROM transactions WHERE transaction_type='Withdraw'";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
 
+    public int getTotalTransactions() {
+        String sql = "SELECT COUNT(*) FROM transactions";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 
-
+    public List<Customer> getRecentCustomers() {
+        List<Customer> list = new ArrayList<>();
+        String sql = "SELECT * FROM customer ORDER BY customer_id DESC LIMIT 10";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Customer c = new Customer();
+                c.setCustomerId(rs.getInt("customer_id"));
+                c.setFullName(rs.getString("full_name"));
+                c.setMobile(rs.getString("mobile"));
+                c.setAccountNumber(rs.getString("account_number"));
+                c.setBalance(rs.getDouble("balance"));
+                c.setStatus(rs.getString("status"));
+                list.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

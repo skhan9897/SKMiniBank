@@ -4,82 +4,63 @@ import com.bank.util.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DashboardDAO {
 
-    Connection con = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-
-    // Total Customers
     public int getTotalCustomers() {
-        int total = 0;
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement("SELECT COUNT(*) FROM customer");
-            rs = ps.executeQuery();
-
+        String sql = "SELECT COUNT(*) FROM customer";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getInt(1);
+                return rs.getInt(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0;
     }
 
-    // Total Accounts
     public int getTotalAccounts() {
-        int total = 0;
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement("SELECT COUNT(*) FROM account");
-            rs = ps.executeQuery();
-
+        String sql = "SELECT COUNT(*) FROM customer WHERE account_number IS NOT NULL";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getInt(1);
+                return rs.getInt(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0;
     }
 
-    // Total Balance
     public double getTotalBalance() {
-        double total = 0;
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement("SELECT SUM(balance) FROM account");
-            rs = ps.executeQuery();
-
+        String sql = "SELECT SUM(balance) FROM customer";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getDouble(1);
+                return rs.getDouble(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0.0;
     }
 
-    // Total Transactions
     public int getTotalTransactions() {
-        int total = 0;
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement("SELECT COUNT(*) FROM transactions");
-            rs = ps.executeQuery();
-
+        String sql = "SELECT COUNT(*) FROM transactions";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                total = rs.getInt(1);
+                return rs.getInt(1);
             }
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return total;
+        return 0;
     }
 }
