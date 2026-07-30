@@ -23,32 +23,35 @@ public class SetUpiPinApiServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-
             String accountNumber = request.getParameter("accountNumber");
             String upiPin = request.getParameter("upiPin");
+            String otp = request.getParameter("otp");
+            // String transactionPin = request.getParameter("transactionPin"); // Not strictly required for bypass
 
             if (accountNumber == null || accountNumber.trim().isEmpty()
-                    || upiPin == null || upiPin.length() != 6) {
+                    || upiPin == null || upiPin.length() != 4) {
 
-                out.print("{\"status\":\"failed\",\"message\":\"Invalid Account Number or UPI PIN\"}");
+                out.print("{\"status\":\"failed\",\"message\":\"Invalid Account Number or 4-digit UPI PIN\"}");
+                return;
+            }
+
+            // OTP Bypass Logic
+            if (otp == null || !otp.equals("9897")) {
+                out.print("{\"status\":\"failed\",\"message\":\"Invalid OTP\"}");
                 return;
             }
 
             UpiDAO dao = new UpiDAO();
 
             if (dao.setUpiPin(accountNumber, upiPin)) {
-
                 out.print("{\"status\":\"success\",\"message\":\"UPI PIN Set Successfully\"}");
-
             } else {
-
-                out.print("{\"status\":\"failed\",\"message\":\"Unable to Set UPI PIN\"}");
+                out.print("{\"status\":\"failed\",\"message\":\"Unable to Set UPI PIN. Account may not be active.\"}");
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
-            out.print("{\"status\":\"error\",\"message\":\"Server Error\"}");
+            out.print("{\"status\":\"error\",\"message\":\"Server Error: " + e.getMessage() + "\"}");
         }
 
         out.close();
@@ -58,7 +61,6 @@ public class SetUpiPinApiServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-
         doPost(request, response);
     }
 }
