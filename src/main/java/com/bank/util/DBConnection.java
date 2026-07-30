@@ -22,20 +22,15 @@ public class DBConnection {
      * @return
      */
     public static Connection getConnection() {
-
+        Connection con = null;
         try {
-            if (con == null || con.isClosed()) {
-
-                Class.forName("com.mysql.cj.jdbc.Driver");
-
-                con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-
-                System.out.println("Database Connected Successfully");
-            }
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            System.out.println("Database Connected Successfully");
         } catch (Exception e) {
+            System.err.println("DB Connection Error: " + e.getMessage());
             e.printStackTrace();
         }
-
         return con;
     }
 }
