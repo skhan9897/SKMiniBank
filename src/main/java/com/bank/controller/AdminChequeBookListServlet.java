@@ -1,7 +1,7 @@
 package com.bank.controller;
 
-import com.bank.dao.ChequeBookRequestDAO;
-import com.bank.model.ChequeBookRequest;
+import com.bank.dao.ServiceRequestDAO;
+import com.bank.model.ServiceRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,13 +18,15 @@ public class AdminChequeBookListServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        ChequeBookRequestDAO dao = new ChequeBookRequestDAO();
+        ServiceRequestDAO dao = new ServiceRequestDAO();
 
-        List<ChequeBookRequest> list = dao.getAllPendingRequests();
+        // Fetch unified CHEQUE_BOOK requests
+        List<ServiceRequest> requestList = dao.getRequestsByType("CHEQUE_BOOK");
 
-        request.setAttribute("list", list);
+        request.setAttribute("requestList", requestList);
 
-        request.getRequestDispatcher("/admin/cheque-book-requests.jsp")
+        // Forward to unified results page
+        request.getRequestDispatcher("/admin/service-requests.jsp")
                 .forward(request, response);
 
     }

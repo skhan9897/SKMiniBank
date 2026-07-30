@@ -24,7 +24,8 @@ public class AdminMobileBankingServlet extends HttpServlet {
 
             ServiceRequestDAO dao = new ServiceRequestDAO();
 
-            List<ServiceRequest> requestList = dao.getPendingRequests();
+            // Fetch unified MOBILE_BANKING requests
+            List<ServiceRequest> requestList = dao.getRequestsByType("MOBILE_BANKING");
 
             request.setAttribute("requestList", requestList);
 
@@ -35,7 +36,7 @@ public class AdminMobileBankingServlet extends HttpServlet {
             e.printStackTrace();
 
             response.sendRedirect(request.getContextPath()
-                    + "/admin/dashboard.jsp?msg=error");
+                    + "/admin/SKMiniBank-System.jsp?msg=error");
         }
     }
 

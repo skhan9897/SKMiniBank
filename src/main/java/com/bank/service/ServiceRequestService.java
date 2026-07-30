@@ -37,7 +37,8 @@ public class ServiceRequestService {
         request.setCustomerId(customerId);
         request.setAccountNumber(accountNumber);
         request.setRequestType("LOAN");
-        request.setRequestDetails(String.format("Type: %s, Amount: %.2f, Tenure: %d months, Income: %.2f, Purpose: %s", 
+        // Structured data for easier parsing in Status API
+        request.setRequestDetails(String.format("type:%s|amount:%.2f|tenure:%d|income:%.2f|purpose:%s",
                                   loanType, amount, tenure, income, purpose));
         return dao.saveRequest(request);
     }

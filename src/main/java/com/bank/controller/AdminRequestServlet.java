@@ -133,20 +133,20 @@ public class AdminRequestServlet extends HttpServlet {
             }
 
             // =========================
-            // REDIRECT BACK TO ATM LIST
+            // REDIRECT BACK TO UNIFIED LIST
             // =========================
             if (status) {
 
                 response.sendRedirect(
                         request.getContextPath()
-                        + "/AdminATMRequestServlet?msg=success"
+                        + "/AdminAllRequestServlet?msg=success"
                 );
 
             } else {
 
                 response.sendRedirect(
                         request.getContextPath()
-                        + "/AdminATMRequestServlet?msg=failed"
+                        + "/AdminAllRequestServlet?msg=failed"
                 );
             }
 
@@ -156,7 +156,7 @@ public class AdminRequestServlet extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                    + "/AdminATMRequestServlet?msg=error"
+                    + "/AdminAllRequestServlet?msg=error"
             );
         }
     }
@@ -168,7 +168,7 @@ public class AdminRequestServlet extends HttpServlet {
 
         response.sendRedirect(
                 request.getContextPath()
-                + "/AdminATMRequestServlet"
+                + "/AdminAllRequestServlet"
         );
     }
 }
