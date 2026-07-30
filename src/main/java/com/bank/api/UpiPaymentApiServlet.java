@@ -1,10 +1,12 @@
 package com.bank.api;
 
 import com.bank.dao.AccountDAO;
+import com.bank.dao.CustomerDAO;
 import com.bank.dao.NotificationDAO;
 import com.bank.dao.TransactionDAO;
 import com.bank.dao.UpiDAO;
 import com.bank.model.Account;
+import com.bank.model.Customer;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,7 +50,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
             double amount = Double.parseDouble(amountStr);
 
             if (amount <= 0) {
-
                 out.print("{\"status\":\"failed\",\"message\":\"Invalid Amount\"}");
                 return;
             }
@@ -57,7 +58,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
 
             // Verify Sender UPI PIN
             if (!upiDAO.verifyUpiPin(fromAccount, upiPin)) {
-
                 out.print("{\"status\":\"failed\",\"message\":\"Invalid UPI PIN\"}");
                 return;
             }
@@ -65,14 +65,22 @@ public class UpiPaymentApiServlet extends HttpServlet {
             // Get Receiver Account
             String toAccount = upiDAO.getAccountNumberByUpi(toUpiId);
 
+            // FALLBACK: If UPI ID not found, check if toUpiId is a registered Mobile Number
             if (toAccount == null) {
+                CustomerDAO customerDAO = new CustomerDAO();
+                // Check if it's a mobile number (10 digits) or just try searching anyway
+                Customer receiverCust = customerDAO.searchCustomerByMobile(toUpiId.replace("@skpay", ""));
+                if (receiverCust != null) {
+                    toAccount = receiverCust.getAccountNumber();
+                }
+            }
 
-                out.print("{\"status\":\"failed\",\"message\":\"Receiver UPI ID Not Found\"}");
+            if (toAccount == null) {
+                out.print("{\"status\":\"failed\",\"message\":\"Receiver Not Found (Invalid UPI ID or Mobile)\"}");
                 return;
             }
 
             if (fromAccount.equals(toAccount)) {
-
                 out.print("{\"status\":\"failed\",\"message\":\"Cannot Transfer To Same Account\"}");
                 return;
             }
@@ -83,8 +91,12 @@ public class UpiPaymentApiServlet extends HttpServlet {
             Account receiver = accountDAO.getAccountByNumber(toAccount);
 
             if (sender == null || receiver == null) {
-
                 out.print("{\"status\":\"failed\",\"message\":\"Account Not Found\"}");
+                return;
+            }
+            
+            if (sender.getBalance() < amount) {
+                out.print("{\"status\":\"failed\",\"message\":\"Insufficient Balance\"}");
                 return;
             }
 
@@ -96,7 +108,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
             );
 
             if (!transferStatus) {
-
                 out.print("{\"status\":\"failed\",\"message\":\"Payment Failed\"}");
                 return;
             }
@@ -142,26 +153,13 @@ public class UpiPaymentApiServlet extends HttpServlet {
             out.print("}");
 
         } catch (NumberFormatException e) {
-
-            out.print("{");
-            out.print("\"status\":\"failed\",");
-            out.print("\"message\":\"Invalid Amount\"");
-            out.print("}");
-
+            out.print("{\"status\":\"failed\",\"message\":\"Invalid Amount\"}");
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            out.print("{");
-            out.print("\"status\":\"error\",");
-            out.print("\"message\":\"Server Error\"");
-            out.print("}");
-
+            out.print("{\"status\":\"error\",\"message\":\"Server Error: " + e.getMessage() + "\"}");
         } finally {
-
             out.flush();
             out.close();
-
         }
     }
 
@@ -169,7 +167,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-
         doPost(request, response);
     }
 }
