@@ -2,11 +2,8 @@ package com.bank.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
-/**
- *
- * @author Sajid Khan
- */
 public class DBConnection {
 
     private static final String URL =
@@ -15,22 +12,12 @@ public class DBConnection {
     private static final String USERNAME = "usxiqkn8avl74kyr";
     private static final String PASSWORD = "Gvx0N5WR2lcNVhTLuSbY";
 
-    private static Connection con;
-
-    /**
-     *
-     * @return
-     */
-    public static Connection getConnection() {
-        Connection con = null;
+    public static Connection getConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-            System.out.println("Database Connected Successfully");
-        } catch (Exception e) {
-            System.err.println("DB Connection Error: " + e.getMessage());
-            e.printStackTrace();
+            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("JDBC Driver not found", e);
         }
-        return con;
     }
 }

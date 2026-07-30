@@ -8,16 +8,10 @@ import java.util.List;
 
 public class CustomerDAO {
 
-    private Connection con;
-    private PreparedStatement ps;
-    private ResultSet rs;
-
     public boolean addCustomer(Customer c) {
-        boolean status = false;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?)";
-            ps = con.prepareStatement(sql);
+        String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?)";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getFullName());
             ps.setString(2, c.getFatherName());
             ps.setString(3, c.getMotherName());
@@ -52,51 +46,48 @@ public class CustomerDAO {
             ps.setString(32, c.getKycStatus());
             ps.setString(33, c.getPassword());
             ps.setString(34, c.getTransactionPin());
-            status = ps.executeUpdate() > 0;
-        } catch (Exception e) {
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return status;
     }
 
     public List<Customer> getAllCustomers() {
         List<Customer> list = new ArrayList<>();
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM customer ORDER BY customer_id DESC";
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
+        String sql = "SELECT * FROM customer ORDER BY customer_id DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(mapCustomer(rs));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
 
     public Customer getCustomerById(int customerId) {
-        Customer c = null;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM customer WHERE customer_id=?";
-            ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM customer WHERE customer_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, customerId);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                c = mapCustomer(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapCustomer(rs);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return c;
+        return null;
     }
 
     public boolean updateCustomer(Customer c) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "UPDATE customer SET full_name=?, father_name=?, dob=?, gender=?, mobile=?, email=?, aadhaar=?, pan=?, address=?, city=?, state=?, pincode=?, account_number=?, ifsc_code=?, account_type=?, branch=?, balance=?, status=?, kyc_status=? WHERE customer_id=?";
-            ps = con.prepareStatement(sql);
+        String sql = "UPDATE customer SET full_name=?, father_name=?, dob=?, gender=?, mobile=?, email=?, aadhaar=?, pan=?, address=?, city=?, state=?, pincode=?, account_number=?, ifsc_code=?, account_type=?, branch=?, balance=?, status=?, kyc_status=? WHERE customer_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getFullName());
             ps.setString(2, c.getFatherName());
             ps.setString(3, c.getDob());
@@ -118,44 +109,42 @@ public class CustomerDAO {
             ps.setString(19, c.getKycStatus());
             ps.setInt(20, c.getCustomerId());
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public Customer searchCustomerByMobile(String mobile) {
-        Customer c = null;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM customer WHERE mobile=?";
-            ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM customer WHERE mobile=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, mobile);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                c = mapCustomer(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapCustomer(rs);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return c;
+        return null;
     }
 
     public Customer searchCustomerByEmail(String email) {
-        Customer c = null;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM customer WHERE email=?";
-            ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM customer WHERE email=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, email);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                c = mapCustomer(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapCustomer(rs);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return c;
+        return null;
     }
 
     public Customer searchCustomerById(int customerId) {
@@ -163,78 +152,45 @@ public class CustomerDAO {
     }
 
     public boolean deleteCustomer(int customerId) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "DELETE FROM customer WHERE customer_id=?";
-            ps = con.prepareStatement(sql);
+        String sql = "DELETE FROM customer WHERE customer_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, customerId);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean blockAccount(int customerId) {
-        return updateStatus(customerId, "BLOCKED");
-    }
-
-    public boolean freezeAccount(int customerId) {
-        return updateStatus(customerId, "FREEZE");
-    }
-
-    public boolean unblockAccount(int customerId) {
-        return updateStatus(customerId, "ACTIVE");
-    }
-
-    public boolean unfreezeAccount(int customerId) {
-        return updateStatus(customerId, "ACTIVE");
-    }
-
-    private boolean updateStatus(int customerId, String status) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "UPDATE customer SET status=? WHERE customer_id=?";
-            ps = con.prepareStatement(sql);
-            ps.setString(1, status);
-            ps.setInt(2, customerId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean resetPassword(String accountNumber, String mobile, String newPassword) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "UPDATE customer SET password=? WHERE account_number=? AND mobile=?";
-            ps = con.prepareStatement(sql);
-            ps.setString(1, newPassword);
-            ps.setString(2, accountNumber);
-            ps.setString(3, mobile);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public Customer getCustomerByAccountNumber(String accountNumber) {
-        Customer c = null;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM customer WHERE account_number=?";
-            ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM customer WHERE account_number=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                c = mapCustomer(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapCustomer(rs);
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return c;
+        return null;
+    }
+
+    public boolean resetPassword(String accountNumber, String mobile, String newPassword) {
+        String sql = "UPDATE customer SET password=? WHERE account_number=? AND mobile=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, accountNumber);
+            ps.setString(3, mobile);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private Customer mapCustomer(ResultSet rs) throws SQLException {

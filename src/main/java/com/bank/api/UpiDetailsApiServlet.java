@@ -28,7 +28,6 @@ public class UpiDetailsApiServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-
             String accountNumber = request.getParameter("accountNumber");
 
             if (accountNumber == null || accountNumber.trim().isEmpty()) {
@@ -49,7 +48,6 @@ public class UpiDetailsApiServlet extends HttpServlet {
                 out.print("\"upiStatus\":\"" + upi.getStatus() + "\"");
                 out.print("}");
             } else {
-                // FALLBACK: If UPI not found in 'upi' table, generate a temporary one using mobile number
                 CustomerDAO customerDAO = new CustomerDAO();
                 Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
                 
@@ -72,6 +70,7 @@ public class UpiDetailsApiServlet extends HttpServlet {
             e.printStackTrace();
             out.print("{\"status\":\"error\",\"message\":\"Server Error: " + e.getMessage() + "\"}");
         } finally {
+            out.flush();
             out.close();
         }
     }

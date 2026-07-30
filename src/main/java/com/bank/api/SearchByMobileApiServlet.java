@@ -26,7 +26,6 @@ public class SearchByMobileApiServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-
             String mobile = request.getParameter("mobile");
 
             if (mobile == null || mobile.trim().isEmpty()) {
@@ -38,24 +37,30 @@ public class SearchByMobileApiServlet extends HttpServlet {
             Customer customer = dao.searchCustomerByMobile(mobile);
 
             if (customer != null) {
+                // Ensure we return a valid UPI ID, even if not generated in DB yet
+                String upiId = customer.getUpiId();
+                if (upiId == null || upiId.isEmpty() || upiId.equalsIgnoreCase("null")) {
+                    upiId = customer.getMobile() + "@skpay";
+                }
+
                 out.print("{");
                 out.print("\"status\":\"success\",");
                 out.print("\"customerId\":" + customer.getCustomerId() + ",");
                 out.print("\"customerName\":\"" + customer.getFullName() + "\",");
                 out.print("\"accountNumber\":\"" + customer.getAccountNumber() + "\",");
-                out.print("\"upiId\":\"" + customer.getUpiId() + "\"");
+                out.print("\"upiId\":\"" + upiId + "\"");
                 out.print("}");
             } else {
-                out.print("{\"status\":\"failed\",\"message\":\"Customer not found with this mobile number\"}");
+                out.print("{\"status\":\"failed\",\"message\":\"Receiver not found in SK Bank\"}");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            out.print("{\"status\":\"error\",\"message\":\"Server Error\"}");
+            out.print("{\"status\":\"error\",\"message\":\"Server Error: " + e.getMessage() + "\"}");
+        } finally {
+            out.flush();
+            out.close();
         }
-
-        out.flush();
-        out.close();
     }
 
     @Override

@@ -5,26 +5,17 @@ import com.bank.util.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class MobileBankingDAO {
 
-    private Connection con;
-
-    public MobileBankingDAO() {
-        con = DBConnection.getConnection();
-    }
-
     public boolean saveRequest(MobileBanking mb) {
+        String sql = "INSERT INTO mobile_banking "
+                + "(customer_id, account_number, customer_name, mobile, email, username, password, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        boolean status = false;
-
-        try {
-
-            String sql = "INSERT INTO mobile_banking "
-                    + "(customer_id, account_number, customer_name, mobile, email, username, password, status) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement ps = con.prepareStatement(sql);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, mb.getCustomerId());
             ps.setString(2, mb.getAccountNumber());
@@ -35,12 +26,10 @@ public class MobileBankingDAO {
             ps.setString(7, mb.getPassword());
             ps.setString(8, mb.getStatus());
 
-            status = ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return status;
     }
 }

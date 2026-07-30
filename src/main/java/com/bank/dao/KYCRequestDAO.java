@@ -8,18 +8,10 @@ import java.util.List;
 
 public class KYCRequestDAO {
 
-    private Connection con;
-
-    public KYCRequestDAO() {
-        con = DBConnection.getConnection();
-    }
-
     public boolean submitKYC(KYCRequest kyc) {
-        boolean status = false;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "INSERT INTO kyc_request (customer_id, account_number, aadhaar_number, pan_number, aadhaar_front, aadhaar_back, pan_image, customer_photo, signature_image, status, request_date) VALUES (?,?,?,?,?,?,?,?,?,?,NOW())";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "INSERT INTO kyc_request (customer_id, account_number, aadhaar_number, pan_number, aadhaar_front, aadhaar_back, pan_image, customer_photo, signature_image, status, request_date) VALUES (?,?,?,?,?,?,?,?,?,?,NOW())";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, kyc.getCustomerId());
             ps.setString(2, kyc.getAccountNumber());
             ps.setString(3, kyc.getAadhaarNumber());
@@ -30,40 +22,42 @@ public class KYCRequestDAO {
             ps.setString(8, kyc.getCustomerPhoto());
             ps.setString(9, kyc.getSignatureImage());
             ps.setString(10, "PENDING");
-            status = ps.executeUpdate() > 0;
-        } catch (Exception e) {
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return status;
     }
 
     public KYCRequest getKYCByCustomerId(int customerId) {
-        KYCRequest kyc = null;
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM kyc_request WHERE customer_id=? ORDER BY request_date DESC LIMIT 1";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM kyc_request WHERE customer_id=? ORDER BY request_date DESC LIMIT 1";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, customerId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                kyc = mapRow(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return kyc;
+        return null;
     }
 
     public List<KYCRequest> getAllKYCRequests() {
         List<KYCRequest> list = new ArrayList<>();
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM kyc_request ORDER BY request_date DESC";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        String sql = "SELECT * FROM kyc_request ORDER BY request_date DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(mapRow(rs));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,45 +65,45 @@ public class KYCRequestDAO {
     }
 
     public boolean approveKYC(int kycId, String verifiedBy, String remarks) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "UPDATE kyc_request SET status='VERIFIED', verified_by=?, remarks=?, verification_date=NOW() WHERE kyc_id=?";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "UPDATE kyc_request SET status='VERIFIED', verified_by=?, remarks=?, verification_date=NOW() WHERE kyc_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, verifiedBy);
             ps.setString(2, remarks);
             ps.setInt(3, kycId);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public boolean rejectKYC(int kycId, String verifiedBy, String remarks) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "UPDATE kyc_request SET status='REJECTED', verified_by=?, remarks=?, verification_date=NOW() WHERE kyc_id=?";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "UPDATE kyc_request SET status='REJECTED', verified_by=?, remarks=?, verification_date=NOW() WHERE kyc_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, verifiedBy);
             ps.setString(2, remarks);
             ps.setInt(3, kycId);
             return ps.executeUpdate() > 0;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
     public KYCRequest getKYCById(int kycId) {
-        try {
-            con = DBConnection.getConnection();
-            String sql = "SELECT * FROM kyc_request WHERE kyc_id=?";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "SELECT * FROM kyc_request WHERE kyc_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, kycId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
