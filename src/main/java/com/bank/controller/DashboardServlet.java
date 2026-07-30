@@ -22,7 +22,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("totalBalance", dao.getTotalBalance());
         request.setAttribute("totalTransactions", dao.getTotalTransactions());
 
-        request.getRequestDispatcher("/admin/dashboard.jsp")
+        request.getRequestDispatcher("/admin/SKMiniBank-System.jsp")
                .forward(request, response);
     }
 
