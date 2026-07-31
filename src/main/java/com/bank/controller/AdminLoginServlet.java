@@ -32,7 +32,7 @@ response.sendRedirect(request.getContextPath() + "/DashboardServlet");
         } else {
 
             request.setAttribute("error", "Invalid Admin ID or Password");
-            request.getRequestDispatcher("admin-login.jsp")
+            request.getRequestDispatcher("SKMiniBankadmin-login.jsp")
                    .forward(request, response);
 
         }

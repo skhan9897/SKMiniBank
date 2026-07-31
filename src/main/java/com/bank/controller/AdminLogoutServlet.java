@@ -22,7 +22,7 @@ protected void doGet(HttpServletRequest request,
         session.invalidate();
     }
 
-    response.sendRedirect(request.getContextPath() + "/admin-login.jsp");
+    response.sendRedirect(request.getContextPath() + "/SKMiniBankadmin-login.jsp");
 }
 
     @Override

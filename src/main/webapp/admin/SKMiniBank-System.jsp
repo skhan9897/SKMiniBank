@@ -27,7 +27,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         <p>Admin Panel</p>
     </div>
 
-    <a href="${pageContext.request.contextPath}/admin/dashboard.jsp" class="active">
+    <a href="${pageContext.request.contextPath}/DashboardServlet" class="active">
         🏠 Dashboard
     </a>
 
@@ -139,8 +139,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <!-- Total Accounts -->
     <div class="col-md-3 mb-3">
-       <a href="<%=request.getContextPath()%>/AccountListServlet"
-           style="text-decoration:none;color:white;">
+       <a href="${pageContext.request.contextPath}/AccountListServlet" style="text-decoration:none;color:white;">
             <div class="card bg-success shadow">
                 <div class="card-body text-center">
                     <i class="fas fa-wallet fa-3x mb-3"></i>
@@ -153,8 +152,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <!-- Total Balance -->
     <div class="col-md-3 mb-3">
-        <a href="${pageContext.request.contextPath}/BalanceReportServlet"
-           style="text-decoration:none;color:white;">
+        <a href="${pageContext.request.contextPath}/ReportServlet" style="text-decoration:none;color:white;">
             <div class="card bg-warning shadow">
                 <div class="card-body text-center">
                     <i class="fas fa-money-bill-wave fa-3x mb-3"></i>
@@ -167,10 +165,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
     <!-- Transactions -->
     <div class="col-md-3 mb-3">
-       <a href="<%=request.getContextPath()%>/TransactionListServlet"
-
-
-           style="text-decoration:none;color:white;">
+       <a href="${pageContext.request.contextPath}/TransactionServlet" style="text-decoration:none;color:white;">
             <div class="card bg-danger shadow">
                 <div class="card-body text-center">
                     <i class="fas fa-exchange-alt fa-3x mb-3"></i>
