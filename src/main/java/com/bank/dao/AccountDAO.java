@@ -96,7 +96,12 @@ public class AccountDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, amount);
             ps.setString(2, accountNumber);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                Account a = getAccountByNumber(accountNumber);
+                new TransactionDAO().saveUpiTransaction(accountNumber, a.getCustomerName(), "DEPOSIT", amount, a.getBalance(), "Cash Deposit");
+            }
+            return ok;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -110,72 +115,28 @@ public class AccountDAO {
             ps.setDouble(1, amount);
             ps.setString(2, accountNumber);
             ps.setDouble(3, amount);
-            return ps.executeUpdate() > 0;
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                Account a = getAccountByNumber(accountNumber);
+                new TransactionDAO().saveUpiTransaction(accountNumber, a.getCustomerName(), "WITHDRAWAL", amount, a.getBalance(), "Cash Withdrawal");
+            }
+            return ok;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean transferMoney(String fromAccount, String toAccount, double amount) {
-        try (Connection con = DBConnection.getConnection()) {
-            con.setAutoCommit(false);
-            try (PreparedStatement psCheck = con.prepareStatement("SELECT balance,status FROM customer WHERE account_number=?")) {
-                psCheck.setString(1, fromAccount);
-                try (ResultSet rs = psCheck.executeQuery()) {
-                    if (rs.next()) {
-                        double balance = rs.getDouble("balance");
-                        String accountStatus = rs.getString("status");
-                        if (!"ACTIVE".equalsIgnoreCase(accountStatus) || balance < amount) {
-                            con.rollback();
-                            return false;
-                        }
-                        try (PreparedStatement psDebit = con.prepareStatement("UPDATE customer SET balance=balance-? WHERE account_number=?")) {
-                            psDebit.setDouble(1, amount);
-                            psDebit.setString(2, fromAccount);
-                            psDebit.executeUpdate();
-                        }
-                        try (PreparedStatement psCredit = con.prepareStatement("UPDATE customer SET balance=balance+? WHERE account_number=?")) {
-                            psCredit.setDouble(1, amount);
-                            psCredit.setString(2, toAccount);
-                            psCredit.executeUpdate();
-                        }
-                        con.commit();
-                        return true;
-                    }
-                }
-            }
-            con.rollback();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean transferAmount(String fromAccount, String toAccount, double amount, String description) {
         try (Connection con = DBConnection.getConnection()) {
             con.setAutoCommit(false);
             
-            // Check Sender
-            try (PreparedStatement ps1 = con.prepareStatement("SELECT balance, status FROM customer WHERE account_number=?")) {
-                ps1.setString(1, fromAccount);
-                try (ResultSet rs1 = ps1.executeQuery()) {
-                    if (!rs1.next() || !"ACTIVE".equalsIgnoreCase(rs1.getString("status")) || rs1.getDouble("balance") < amount) {
-                        con.rollback();
-                        return false;
-                    }
-                }
-            }
+            Account sender = getAccountByNumber(fromAccount);
+            Account receiver = getAccountByNumber(toAccount);
 
-            // Check Receiver
-            try (PreparedStatement ps2 = con.prepareStatement("SELECT status FROM customer WHERE account_number=?")) {
-                ps2.setString(1, toAccount);
-                try (ResultSet rs2 = ps2.executeQuery()) {
-                    if (!rs2.next() || !"ACTIVE".equalsIgnoreCase(rs2.getString("status"))) {
-                        con.rollback();
-                        return false;
-                    }
-                }
+            if (sender == null || receiver == null || !"ACTIVE".equalsIgnoreCase(sender.getStatus()) || sender.getBalance() < amount) {
+                con.rollback();
+                return false;
             }
 
             // Execute Transfer
@@ -191,7 +152,15 @@ public class AccountDAO {
             }
 
             con.commit();
-            com.bank.util.KafkaService.logTransaction(fromAccount, toAccount, amount, "Account Transfer");
+            
+            // SAVE TO TRANSACTIONS TABLE
+            TransactionDAO tdao = new TransactionDAO();
+            String senderDesc = (description == null || description.isEmpty()) ? "Sent to " + toAccount : description;
+            tdao.saveUpiTransaction(fromAccount, sender.getCustomerName(), "DEBIT", amount, sender.getBalance() - amount, senderDesc);
+            
+            String receiverDesc = "Received from " + fromAccount;
+            tdao.saveUpiTransaction(toAccount, receiver.getCustomerName(), "CREDIT", amount, receiver.getBalance() + amount, receiverDesc);
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();

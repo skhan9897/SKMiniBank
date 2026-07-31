@@ -61,7 +61,7 @@ public class TransferServlet extends HttpServlet {
         }
 
         // Transfer
-        boolean status = dao.transferMoney(fromAccount, toAccount, amount);
+        boolean status = dao.transferAmount(fromAccount, toAccount, amount, "Transfer");
 
         if (status) {
 

@@ -31,7 +31,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-
             String fromAccount = request.getParameter("fromAccount");
             String toUpiId = request.getParameter("toUpiId");
             String upiPin = request.getParameter("upiPin");
@@ -56,8 +55,8 @@ public class UpiPaymentApiServlet extends HttpServlet {
 
             UpiDAO upiDAO = new UpiDAO();
 
-            // Verify Sender UPI PIN
-            if (!upiDAO.verifyUpiPin(fromAccount, upiPin)) {
+            // Verify Sender UPI PIN (Bypass if "VERIFIED" from Chat activity)
+            if (!"VERIFIED".equals(upiPin) && !upiDAO.verifyUpiPin(fromAccount, upiPin)) {
                 out.print("{\"status\":\"failed\",\"message\":\"Invalid UPI PIN\"}");
                 return;
             }
@@ -68,7 +67,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
             // FALLBACK: If UPI ID not found, check if toUpiId is a registered Mobile Number
             if (toAccount == null) {
                 CustomerDAO customerDAO = new CustomerDAO();
-                // Check if it's a mobile number (10 digits) or just try searching anyway
                 Customer receiverCust = customerDAO.searchCustomerByMobile(toUpiId.replace("@skpay", ""));
                 if (receiverCust != null) {
                     toAccount = receiverCust.getAccountNumber();
@@ -76,7 +74,7 @@ public class UpiPaymentApiServlet extends HttpServlet {
             }
 
             if (toAccount == null) {
-                out.print("{\"status\":\"failed\",\"message\":\"Receiver Not Found (Invalid UPI ID or Mobile)\"}");
+                out.print("{\"status\":\"failed\",\"message\":\"Receiver Not Found\"}");
                 return;
             }
 
@@ -86,7 +84,6 @@ public class UpiPaymentApiServlet extends HttpServlet {
             }
 
             AccountDAO accountDAO = new AccountDAO();
-
             Account sender = accountDAO.getAccountByNumber(fromAccount);
             Account receiver = accountDAO.getAccountByNumber(toAccount);
 
@@ -100,12 +97,7 @@ public class UpiPaymentApiServlet extends HttpServlet {
                 return;
             }
 
-            boolean transferStatus = accountDAO.transferAmount(
-                    fromAccount,
-                    toAccount,
-                    amount,
-                    remarks
-            );
+            boolean transferStatus = accountDAO.transferAmount(fromAccount, toAccount, amount, remarks);
 
             if (!transferStatus) {
                 out.print("{\"status\":\"failed\",\"message\":\"Payment Failed\"}");
@@ -114,35 +106,31 @@ public class UpiPaymentApiServlet extends HttpServlet {
 
             TransactionDAO transactionDAO = new TransactionDAO();
 
+            // SENDER TRANSACTION - Save with 'sent to' description for contact list
+            String senderDesc = "₹" + amount + " sent to " + toUpiId;
             transactionDAO.saveUpiTransaction(
                     fromAccount,
                     sender.getCustomerName(),
                     "UPI DEBIT",
                     amount,
-                    sender.getBalance() - amount
+                    sender.getBalance() - amount,
+                    senderDesc
             );
 
+            // RECEIVER TRANSACTION
+            String receiverDesc = "₹" + amount + " received from " + fromAccount;
             transactionDAO.saveUpiTransaction(
                     toAccount,
                     receiver.getCustomerName(),
                     "UPI CREDIT",
                     amount,
-                    receiver.getBalance() + amount
+                    receiver.getBalance() + amount,
+                    receiverDesc
             );
 
             NotificationDAO notificationDAO = new NotificationDAO();
-
-            notificationDAO.saveNotification(
-                    sender.getCustomerId(),
-                    "UPI Payment",
-                    "₹" + amount + " sent to " + toUpiId
-            );
-
-            notificationDAO.saveNotification(
-                    receiver.getCustomerId(),
-                    "UPI Payment",
-                    "₹" + amount + " received from " + fromAccount
-            );
+            notificationDAO.saveNotification(sender.getCustomerId(), "UPI Payment", senderDesc);
+            notificationDAO.saveNotification(receiver.getCustomerId(), "UPI Payment", receiverDesc);
 
             out.print("{");
             out.print("\"status\":\"success\",");
@@ -152,13 +140,10 @@ public class UpiPaymentApiServlet extends HttpServlet {
             out.print("\"amount\":\"" + amount + "\"");
             out.print("}");
 
-        } catch (NumberFormatException e) {
-            out.print("{\"status\":\"failed\",\"message\":\"Invalid Amount\"}");
         } catch (Exception e) {
             e.printStackTrace();
             out.print("{\"status\":\"error\",\"message\":\"Server Error: " + e.getMessage() + "\"}");
         } finally {
-            out.flush();
             out.close();
         }
     }

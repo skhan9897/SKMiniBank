@@ -33,7 +33,8 @@ public class BillService {
                 customer.getFullName(),
                 billType + " (" + consumerDetails + ")",
                 amount,
-                newBalance
+                newBalance,
+                "Bill Payment - " + consumerDetails
             );
             return true;
         }
