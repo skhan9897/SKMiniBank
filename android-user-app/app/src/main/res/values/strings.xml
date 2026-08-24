@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Sk Mini Payment Bank</string>
+    <string name="app_base_url">https://skminibank-1.onrender.com/login.jsp</string>
+    <string name="app_logo_description">App Logo</string>
+</resources>

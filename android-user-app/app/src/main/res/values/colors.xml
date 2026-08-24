@@ -1,0 +1,11 @@
+<resources>
+    <color name="primary_blue">#0F4C81</color>
+    <color name="primary_dark">#0A2540</color>
+    <color name="primary_light">#5FA8FF</color>
+    <color name="accent_gold">#F1C75B</color>
+    <color name="surface">#F4F8FD</color>
+    <color name="background">#EAF3FF</color>
+    <color name="text_primary">#10273F</color>
+    <color name="text_secondary">#56708E</color>
+    <color name="white">#FFFFFF</color>
+</resources>

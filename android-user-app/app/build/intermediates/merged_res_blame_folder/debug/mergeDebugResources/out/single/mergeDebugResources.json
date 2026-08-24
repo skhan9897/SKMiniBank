@@ -1,0 +1,34 @@
+[
+    {
+        "merged": "com.bank.userapp-debug-32:/drawable_gradient_list.xml.flat",
+        "source": "com.bank.userapp-main-34:/drawable/gradient_list.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/anim_rotate.xml.flat",
+        "source": "com.bank.userapp-main-34:/anim/rotate.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/drawable_bg_splash.xml.flat",
+        "source": "com.bank.userapp-main-34:/drawable/bg_splash.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/layout_activity_main.xml.flat",
+        "source": "com.bank.userapp-main-34:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/xml_network_security_config.xml.flat",
+        "source": "com.bank.userapp-main-34:/xml/network_security_config.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/layout_activity_splash.xml.flat",
+        "source": "com.bank.userapp-main-34:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/drawable_ic_launcher.png.flat",
+        "source": "com.bank.userapp-main-34:/drawable/ic_launcher.png"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/drawable_gradient_splash.xml.flat",
+        "source": "com.bank.userapp-main-34:/drawable/gradient_splash.xml"
+    }
+]
