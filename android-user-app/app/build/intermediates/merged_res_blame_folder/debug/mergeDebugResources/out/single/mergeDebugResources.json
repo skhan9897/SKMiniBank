@@ -16,6 +16,10 @@
         "source": "com.bank.userapp-main-34:/layout/activity_main.xml"
     },
     {
+        "merged": "com.bank.userapp-debug-32:/drawable_splash.png.flat",
+        "source": "com.bank.userapp-main-34:/drawable/splash.png"
+    },
+    {
         "merged": "com.bank.userapp-debug-32:/xml_network_security_config.xml.flat",
         "source": "com.bank.userapp-main-34:/xml/network_security_config.xml"
     },
@@ -30,5 +34,9 @@
     {
         "merged": "com.bank.userapp-debug-32:/drawable_gradient_splash.xml.flat",
         "source": "com.bank.userapp-main-34:/drawable/gradient_splash.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-32:/drawable_android_logo.png.flat",
+        "source": "com.bank.userapp-main-34:/drawable/android_logo.png"
     }
 ]

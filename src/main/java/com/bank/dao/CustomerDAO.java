@@ -225,6 +225,7 @@ public class CustomerDAO {
         c.setKycStatus(rs.getString("kyc_status"));
         c.setUpiId(rs.getString("upi_id"));
         c.setUpiStatus(rs.getString("upi_status"));
+        c.setPassword(rs.getString("password"));
         return c;
     }
 }

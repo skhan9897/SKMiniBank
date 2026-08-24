@@ -25,6 +25,8 @@ public class SendOtpApiServlet extends HttpServlet {
 
         try {
             String mobile = request.getParameter("mobile");
+            String accountNumber = request.getParameter("accountNumber");
+            String password = request.getParameter("password");
 
             if (mobile == null || mobile.trim().length() != 10) {
                 out.print("{\"status\":\"failed\",\"message\":\"Valid Mobile Number Required\"}");
@@ -32,15 +34,36 @@ public class SendOtpApiServlet extends HttpServlet {
             }
 
             CustomerDAO dao = new CustomerDAO();
-            Customer customer = dao.searchCustomerByMobile(mobile);
+            Customer customer = null;
 
-            if (customer != null) {
-                // In a real app, we would use an SMS API here.
-                // For this project, we are using a mock OTP: 9897
-                out.print("{\"status\":\"success\",\"message\":\"OTP sent to +91 " + mobile + "\",\"otp\":\"9897\"}");
+            if (accountNumber != null && !accountNumber.trim().isEmpty()) {
+                customer = dao.getCustomerByAccountNumber(accountNumber.trim());
+                if (customer == null) {
+                    out.print("{\"status\":\"failed\",\"message\":\"Account number not found\"}");
+                    return;
+                }
+                // verify mobile matches
+                if (!mobile.equals(customer.getMobile())) {
+                    out.print("{\"status\":\"failed\",\"message\":\"Mobile number does not match account records\"}");
+                    return;
+                }
+                // verify password if provided
+                if (password == null || password.trim().isEmpty() || !password.equals(customer.getPassword())) {
+                    out.print("{\"status\":\"failed\",\"message\":\"Invalid account password\"}");
+                    return;
+                }
             } else {
-                out.print("{\"status\":\"failed\",\"message\":\"Mobile number not registered with SK Mini Bank\"}");
+                // fallback: search by mobile only
+                customer = dao.searchCustomerByMobile(mobile);
+                if (customer == null) {
+                    out.print("{\"status\":\"failed\",\"message\":\"Mobile number not registered with SK Mini Bank\"}");
+                    return;
+                }
             }
+
+            // At this point, account/mobile/password validated. Send OTP (mock for now)
+            String otp = String.valueOf((int)(Math.random()*900000) + 100000); // 6-digit mock OTP
+            out.print("{\"status\":\"success\",\"message\":\"OTP sent to +91 " + mobile + "\",\"otp\":\"" + otp + "\"}");
 
         } catch (Exception e) {
             e.printStackTrace();

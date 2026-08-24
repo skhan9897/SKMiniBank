@@ -21,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginCard: LinearLayout
     private lateinit var openPortalButton: Button
 
+    private lateinit var headerBar: LinearLayout
+
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         loginCard = findViewById(R.id.loginCard)
         openPortalButton = findViewById(R.id.openPortalButton)
+        headerBar = findViewById(R.id.headerBar)
 
         val refreshButton: Button = findViewById(R.id.refreshButton)
         val loginContinueButton: Button = findViewById(R.id.loginContinueButton)
@@ -44,8 +47,14 @@ class MainActivity : AppCompatActivity() {
         settings.databaseEnabled = true
         settings.allowFileAccess = true
         settings.loadsImagesAutomatically = true
+        settings.useWideViewPort = true
+        settings.loadWithOverviewMode = true
+        settings.supportZoom()
+        settings.builtInZoomControls = true
+        settings.displayZoomControls = false
         settings.cacheMode = WebSettings.LOAD_DEFAULT
-        settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        settings.userAgentString = "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Mobile Safari/537.36"
 
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -69,12 +78,17 @@ class MainActivity : AppCompatActivity() {
         val url = getString(R.string.app_base_url)
         webView.visibility = View.VISIBLE
         loginCard.visibility = View.GONE
+        headerBar.visibility = View.GONE
         webView.loadUrl(url)
     }
 
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack()
+        } else if (webView.visibility == View.VISIBLE) {
+            webView.visibility = View.GONE
+            loginCard.visibility = View.VISIBLE
+            headerBar.visibility = View.VISIBLE
         } else {
             finish()
         }

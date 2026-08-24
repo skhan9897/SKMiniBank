@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,10 @@ import java.lang.String;
 
 public final class ActivityMainBinding implements ViewBinding {
   @NonNull
-  private final LinearLayout rootView;
+  private final RelativeLayout rootView;
+
+  @NonNull
+  public final LinearLayout headerBar;
 
   @NonNull
   public final TextView headerTitle;
@@ -30,6 +34,9 @@ public final class ActivityMainBinding implements ViewBinding {
 
   @NonNull
   public final Button loginContinueButton;
+
+  @NonNull
+  public final LinearLayout mainContent;
 
   @NonNull
   public final Button openPortalButton;
@@ -43,14 +50,17 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final WebView webView;
 
-  private ActivityMainBinding(@NonNull LinearLayout rootView, @NonNull TextView headerTitle,
-      @NonNull LinearLayout loginCard, @NonNull Button loginContinueButton,
+  private ActivityMainBinding(@NonNull RelativeLayout rootView, @NonNull LinearLayout headerBar,
+      @NonNull TextView headerTitle, @NonNull LinearLayout loginCard,
+      @NonNull Button loginContinueButton, @NonNull LinearLayout mainContent,
       @NonNull Button openPortalButton, @NonNull ProgressBar progressBar,
       @NonNull Button refreshButton, @NonNull WebView webView) {
     this.rootView = rootView;
+    this.headerBar = headerBar;
     this.headerTitle = headerTitle;
     this.loginCard = loginCard;
     this.loginContinueButton = loginContinueButton;
+    this.mainContent = mainContent;
     this.openPortalButton = openPortalButton;
     this.progressBar = progressBar;
     this.refreshButton = refreshButton;
@@ -59,7 +69,7 @@ public final class ActivityMainBinding implements ViewBinding {
 
   @Override
   @NonNull
-  public LinearLayout getRoot() {
+  public RelativeLayout getRoot() {
     return rootView;
   }
 
@@ -84,6 +94,12 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.headerBar;
+      LinearLayout headerBar = ViewBindings.findChildViewById(rootView, id);
+      if (headerBar == null) {
+        break missingId;
+      }
+
       id = R.id.headerTitle;
       TextView headerTitle = ViewBindings.findChildViewById(rootView, id);
       if (headerTitle == null) {
@@ -99,6 +115,12 @@ public final class ActivityMainBinding implements ViewBinding {
       id = R.id.loginContinueButton;
       Button loginContinueButton = ViewBindings.findChildViewById(rootView, id);
       if (loginContinueButton == null) {
+        break missingId;
+      }
+
+      id = R.id.mainContent;
+      LinearLayout mainContent = ViewBindings.findChildViewById(rootView, id);
+      if (mainContent == null) {
         break missingId;
       }
 
@@ -126,8 +148,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((LinearLayout) rootView, headerTitle, loginCard,
-          loginContinueButton, openPortalButton, progressBar, refreshButton, webView);
+      return new ActivityMainBinding((RelativeLayout) rootView, headerBar, headerTitle, loginCard,
+          loginContinueButton, mainContent, openPortalButton, progressBar, refreshButton, webView);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

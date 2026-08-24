@@ -80,6 +80,21 @@ SK Mini Bank
 
 <form action="<%=request.getContextPath()%>/RegisterServlet" method="post">
 
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label>Existing Account Number (if registering)</label>
+            <input type="text" name="accountNumber" id="accountNumber" class="form-control" placeholder="Enter Account Number">
+        </div>
+        <div class="col-md-4">
+            <label>Account Password</label>
+            <input type="password" name="accountPassword" id="accountPassword" class="form-control" placeholder="Enter Account Password">
+        </div>
+        <div class="col-md-4 d-grid">
+            <label>&nbsp;</label>
+            <button type="button" class="btn btn-warning" onclick="sendMobileOTP()">Send Registration OTP</button>
+        </div>
+    </div>
+
 <!-- Personal Details -->
 
 <h4 class="section-title">
@@ -265,7 +280,35 @@ Personal Details
 <script>
 
 function sendMobileOTP(){
-    alert("Mobile OTP Sent Successfully");
+    const mobile = document.querySelector('input[name="mobile"]').value;
+    const accountNumber = document.getElementById('accountNumber').value;
+    const accountPassword = document.getElementById('accountPassword').value;
+
+    if (!mobile || !/^\d{10}$/.test(mobile)){
+        alert('Please enter a valid 10 digit mobile number');
+        return;
+    }
+
+    const params = new URLSearchParams();
+    params.append('mobile', mobile);
+    if (accountNumber) params.append('accountNumber', accountNumber);
+    if (accountPassword) params.append('password', accountPassword);
+
+    fetch('<%=request.getContextPath()%>/api/sendOtp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+    }).then(res => res.json())
+      .then(data => {
+          if (data.status === 'success'){
+              alert(data.message + '\n(For testing: OTP='+data.otp+')');
+          } else {
+              alert('Error: ' + data.message);
+          }
+      }).catch(err => {
+          console.error(err);
+          alert('Server error while sending OTP');
+      });
 }
 
 function verifyMobileOTP(){
