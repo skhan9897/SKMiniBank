@@ -23,7 +23,35 @@
         </activity>
 
         <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SKMiniPaymentBank" />
+
+        <activity
             android:name=".MainActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PaymentActivity"
+            android:label="Payment"
+            android:theme="@style/Theme.SKMiniPaymentBank"
+            android:exported="false" />
+
+        <activity
+            android:name=".TransferActivity"
+            android:label="Transfer"
+            android:theme="@style/Theme.SKMiniPaymentBank"
+            android:exported="false" />
+
+        <activity
+            android:name=".SuccessActivity"
+            android:theme="@style/Theme.SKMiniPaymentBank"
+            android:exported="false" />
+
+        <activity
+            android:name=".WebPortalActivity"
+            android:label="Bank Portal"
+            android:theme="@style/Theme.SKMiniPaymentBank"
             android:exported="false" />
     </application>
 

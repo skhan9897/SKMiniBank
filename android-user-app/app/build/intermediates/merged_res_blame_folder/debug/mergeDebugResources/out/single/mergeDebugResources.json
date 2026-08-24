@@ -1,42 +1,82 @@
 [
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_gradient_list.xml.flat",
-        "source": "com.bank.userapp-main-34:/drawable/gradient_list.xml"
+        "merged": "com.bank.userapp-debug-33:/menu_side_menu.xml.flat",
+        "source": "com.bank.userapp-main-35:/menu/side_menu.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/anim_rotate.xml.flat",
-        "source": "com.bank.userapp-main-34:/anim/rotate.xml"
+        "merged": "com.bank.userapp-debug-33:/layout_activity_success.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_success.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_bg_splash.xml.flat",
-        "source": "com.bank.userapp-main-34:/drawable/bg_splash.xml"
+        "merged": "com.bank.userapp-debug-33:/drawable_ic_launcher.png.flat",
+        "source": "com.bank.userapp-main-35:/drawable/ic_launcher.png"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/layout_activity_main.xml.flat",
-        "source": "com.bank.userapp-main-34:/layout/activity_main.xml"
+        "merged": "com.bank.userapp-debug-33:/drawable_gradient_splash.xml.flat",
+        "source": "com.bank.userapp-main-35:/drawable/gradient_splash.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_splash.png.flat",
-        "source": "com.bank.userapp-main-34:/drawable/splash.png"
+        "merged": "com.bank.userapp-debug-33:/layout_nav_header.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/nav_header.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/xml_network_security_config.xml.flat",
-        "source": "com.bank.userapp-main-34:/xml/network_security_config.xml"
+        "merged": "com.bank.userapp-debug-33:/drawable_splash.png.flat",
+        "source": "com.bank.userapp-main-35:/drawable/splash.png"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/layout_activity_splash.xml.flat",
-        "source": "com.bank.userapp-main-34:/layout/activity_splash.xml"
+        "merged": "com.bank.userapp-debug-33:/xml_network_security_config.xml.flat",
+        "source": "com.bank.userapp-main-35:/xml/network_security_config.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_ic_launcher.png.flat",
-        "source": "com.bank.userapp-main-34:/drawable/ic_launcher.png"
+        "merged": "com.bank.userapp-debug-33:/drawable_bg_circle_icon.xml.flat",
+        "source": "com.bank.userapp-main-35:/drawable/bg_circle_icon.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_gradient_splash.xml.flat",
-        "source": "com.bank.userapp-main-34:/drawable/gradient_splash.xml"
+        "merged": "com.bank.userapp-debug-33:/layout_activity_splash.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_splash.xml"
     },
     {
-        "merged": "com.bank.userapp-debug-32:/drawable_android_logo.png.flat",
-        "source": "com.bank.userapp-main-34:/drawable/android_logo.png"
+        "merged": "com.bank.userapp-debug-33:/layout_activity_transfer.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_transfer.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/anim_rotate.xml.flat",
+        "source": "com.bank.userapp-main-35:/anim/rotate.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/layout_activity_main.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/layout_activity_payment.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_payment.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/drawable_bg_splash.xml.flat",
+        "source": "com.bank.userapp-main-35:/drawable/bg_splash.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/layout_item_recent_transfer.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/item_recent_transfer.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/drawable_wave_background.xml.flat",
+        "source": "com.bank.userapp-main-35:/drawable/wave_background.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/layout_activity_webview.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_webview.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/layout_activity_login.xml.flat",
+        "source": "com.bank.userapp-main-35:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/drawable_gradient_list.xml.flat",
+        "source": "com.bank.userapp-main-35:/drawable/gradient_list.xml"
+    },
+    {
+        "merged": "com.bank.userapp-debug-33:/drawable_android_logo.png.flat",
+        "source": "com.bank.userapp-main-35:/drawable/android_logo.png"
     }
 ]

@@ -31,20 +31,14 @@ class SplashActivity : AppCompatActivity() {
         val handler = Handler(Looper.getMainLooper())
         var progressStatus = 0
         
-        Thread {
-            while (progressStatus < 100) {
-                progressStatus += 1
-                handler.post {
-                    progressBar.progress = progressStatus
-                }
-                try {
-                    Thread.sleep(30) // 30ms * 100 = 3 seconds
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
+        Handler(Looper.getMainLooper()).postDelayed({
+            val session = UserSession(this)
+            if (session.isLoggedIn()) {
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                startActivity(Intent(this, LoginActivity::class.java))
             }
-            startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }.start()
+        }, 3000)
     }
 }

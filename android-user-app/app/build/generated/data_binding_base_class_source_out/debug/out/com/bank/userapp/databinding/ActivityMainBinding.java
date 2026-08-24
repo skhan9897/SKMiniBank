@@ -5,71 +5,52 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.bank.userapp.R;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class ActivityMainBinding implements ViewBinding {
   @NonNull
-  private final RelativeLayout rootView;
+  private final DrawerLayout rootView;
 
   @NonNull
-  public final LinearLayout headerBar;
+  public final DrawerLayout drawerLayout;
 
   @NonNull
-  public final TextView headerTitle;
-
-  @NonNull
-  public final LinearLayout loginCard;
-
-  @NonNull
-  public final Button loginContinueButton;
-
-  @NonNull
-  public final LinearLayout mainContent;
-
-  @NonNull
-  public final Button openPortalButton;
+  public final NavigationView navigationView;
 
   @NonNull
   public final ProgressBar progressBar;
 
   @NonNull
-  public final Button refreshButton;
+  public final MaterialToolbar toolbar;
 
   @NonNull
   public final WebView webView;
 
-  private ActivityMainBinding(@NonNull RelativeLayout rootView, @NonNull LinearLayout headerBar,
-      @NonNull TextView headerTitle, @NonNull LinearLayout loginCard,
-      @NonNull Button loginContinueButton, @NonNull LinearLayout mainContent,
-      @NonNull Button openPortalButton, @NonNull ProgressBar progressBar,
-      @NonNull Button refreshButton, @NonNull WebView webView) {
+  private ActivityMainBinding(@NonNull DrawerLayout rootView, @NonNull DrawerLayout drawerLayout,
+      @NonNull NavigationView navigationView, @NonNull ProgressBar progressBar,
+      @NonNull MaterialToolbar toolbar, @NonNull WebView webView) {
     this.rootView = rootView;
-    this.headerBar = headerBar;
-    this.headerTitle = headerTitle;
-    this.loginCard = loginCard;
-    this.loginContinueButton = loginContinueButton;
-    this.mainContent = mainContent;
-    this.openPortalButton = openPortalButton;
+    this.drawerLayout = drawerLayout;
+    this.navigationView = navigationView;
     this.progressBar = progressBar;
-    this.refreshButton = refreshButton;
+    this.toolbar = toolbar;
     this.webView = webView;
   }
 
   @Override
   @NonNull
-  public RelativeLayout getRoot() {
+  public DrawerLayout getRoot() {
     return rootView;
   }
 
@@ -94,39 +75,11 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.headerBar;
-      LinearLayout headerBar = ViewBindings.findChildViewById(rootView, id);
-      if (headerBar == null) {
-        break missingId;
-      }
+      DrawerLayout drawerLayout = (DrawerLayout) rootView;
 
-      id = R.id.headerTitle;
-      TextView headerTitle = ViewBindings.findChildViewById(rootView, id);
-      if (headerTitle == null) {
-        break missingId;
-      }
-
-      id = R.id.loginCard;
-      LinearLayout loginCard = ViewBindings.findChildViewById(rootView, id);
-      if (loginCard == null) {
-        break missingId;
-      }
-
-      id = R.id.loginContinueButton;
-      Button loginContinueButton = ViewBindings.findChildViewById(rootView, id);
-      if (loginContinueButton == null) {
-        break missingId;
-      }
-
-      id = R.id.mainContent;
-      LinearLayout mainContent = ViewBindings.findChildViewById(rootView, id);
-      if (mainContent == null) {
-        break missingId;
-      }
-
-      id = R.id.openPortalButton;
-      Button openPortalButton = ViewBindings.findChildViewById(rootView, id);
-      if (openPortalButton == null) {
+      id = R.id.navigationView;
+      NavigationView navigationView = ViewBindings.findChildViewById(rootView, id);
+      if (navigationView == null) {
         break missingId;
       }
 
@@ -136,9 +89,9 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.refreshButton;
-      Button refreshButton = ViewBindings.findChildViewById(rootView, id);
-      if (refreshButton == null) {
+      id = R.id.toolbar;
+      MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
         break missingId;
       }
 
@@ -148,8 +101,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((RelativeLayout) rootView, headerBar, headerTitle, loginCard,
-          loginContinueButton, mainContent, openPortalButton, progressBar, refreshButton, webView);
+      return new ActivityMainBinding((DrawerLayout) rootView, drawerLayout, navigationView,
+          progressBar, toolbar, webView);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

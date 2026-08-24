@@ -1,46 +1,63 @@
 package com.bank.userapp
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
-    private lateinit var loginCard: LinearLayout
-    private lateinit var openPortalButton: Button
-
-    private lateinit var headerBar: LinearLayout
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var session: UserSession
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        session = UserSession(this)
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progressBar)
-        loginCard = findViewById(R.id.loginCard)
-        openPortalButton = findViewById(R.id.openPortalButton)
-        headerBar = findViewById(R.id.headerBar)
+        drawerLayout = findViewById(R.id.drawerLayout)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
 
-        val refreshButton: Button = findViewById(R.id.refreshButton)
-        val loginContinueButton: Button = findViewById(R.id.loginContinueButton)
+        toolbar.setNavigationOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
 
-        refreshButton.setOnClickListener { webView.reload() }
-        openPortalButton.setOnClickListener { openPortal() }
-        loginContinueButton.setOnClickListener { openPortal() }
+        val navView = findViewById<NavigationView>(R.id.navigationView)
+        navView.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_logout -> {
+                    session.setLoggedIn(false)
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
+                R.id.nav_home -> webView.loadUrl(getString(R.string.app_base_url))
+            }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
+        setupWebView()
+        webView.loadUrl(getString(R.string.app_base_url))
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView() {
         val settings: WebSettings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
@@ -70,35 +87,13 @@ class MainActivity : AppCompatActivity() {
                 progressBar.visibility = if (newProgress < 100) View.VISIBLE else View.GONE
             }
         }
-
-        webView.visibility = View.GONE
-    }
-
-    private fun openPortal() {
-        val url = getString(R.string.app_base_url)
-        webView.visibility = View.VISIBLE
-        loginCard.visibility = View.GONE
-        headerBar.visibility = View.GONE
-        webView.loadUrl(url)
     }
 
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack()
-        } else if (webView.visibility == View.VISIBLE) {
-            webView.visibility = View.GONE
-            loginCard.visibility = View.VISIBLE
-            headerBar.visibility = View.VISIBLE
         } else {
-            finish()
+            super.onBackPressed()
         }
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack()
-            return true
-        }
-        return super.onKeyDown(keyCode, event)
     }
 }

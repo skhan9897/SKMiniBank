@@ -5,136 +5,192 @@
 5    android:versionName="1.0" >
 6
 7    <uses-sdk
+7-->INJECTED
 8        android:minSdkVersion="24"
+8-->INJECTED
 9        android:targetSdkVersion="34" />
+9-->INJECTED
 10
 11    <uses-permission android:name="android.permission.INTERNET" />
 11-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:4:5-67
 11-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:4:22-64
-12
-13    <permission
-13-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
-14        android:name="com.bank.userapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-14-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
-15        android:protectionLevel="signature" />
-15-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
-16
-17    <uses-permission android:name="com.bank.userapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-17-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
-17-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+12    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- suppress DeprecatedClassUsageInspection -->
+12-->[androidx.biometric:biometric:1.2.0-alpha05] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2b9edb0316fa1149c2f4b72f964771e5\transformed\biometric-1.2.0-alpha05\AndroidManifest.xml:22:5-72
+12-->[androidx.biometric:biometric:1.2.0-alpha05] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2b9edb0316fa1149c2f4b72f964771e5\transformed\biometric-1.2.0-alpha05\AndroidManifest.xml:22:22-69
+13    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+13-->[androidx.biometric:biometric:1.2.0-alpha05] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2b9edb0316fa1149c2f4b72f964771e5\transformed\biometric-1.2.0-alpha05\AndroidManifest.xml:25:5-74
+13-->[androidx.biometric:biometric:1.2.0-alpha05] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2b9edb0316fa1149c2f4b72f964771e5\transformed\biometric-1.2.0-alpha05\AndroidManifest.xml:25:22-71
+14
+15    <permission
+15-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+16        android:name="com.bank.userapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
 18
-19    <application
-19-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:6:5-28:19
-20        android:allowBackup="true"
-20-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:7:9-35
-21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-21-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\229b7d522d520e87a7521fda7fbb9e52\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
-22        android:debuggable="true"
-23        android:extractNativeLibs="false"
-24        android:icon="@drawable/android_logo"
-24-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:8:9-46
-25        android:label="@string/app_name"
-25-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:10:9-41
-26        android:networkSecurityConfig="@xml/network_security_config"
-26-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:14:9-69
-27        android:roundIcon="@drawable/android_logo"
-27-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:9:9-51
-28        android:supportsRtl="true"
-28-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:11:9-35
-29        android:testOnly="true"
-30        android:theme="@style/Theme.SKMiniPaymentBank"
-30-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:12:9-55
-31        android:usesCleartextTraffic="true" >
-31-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:13:9-44
-32        <activity
-32-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:16:9-23:20
-33            android:name="com.bank.userapp.SplashActivity"
-33-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:17:13-43
-34            android:exported="true" >
-34-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:18:13-36
-35            <intent-filter>
-35-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:19:13-22:29
-36                <action android:name="android.intent.action.MAIN" />
-36-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:20:17-69
-36-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:20:25-66
-37
-38                <category android:name="android.intent.category.LAUNCHER" />
-38-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:21:17-77
-38-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:21:27-74
-39            </intent-filter>
-40        </activity>
-41        <activity
-41-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:25:9-27:40
-42            android:name="com.bank.userapp.MainActivity"
-42-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:26:13-41
-43            android:exported="false" />
-43-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:27:13-37
-44
-45        <provider
-45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
-46            android:name="androidx.startup.InitializationProvider"
-46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
-47            android:authorities="com.bank.userapp.androidx-startup"
-47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
-48            android:exported="false" >
-48-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
-49            <meta-data
-49-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
-50                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-50-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
-51                android:value="androidx.startup" />
-51-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\fc0aba72516ba3efa8de71123a647755\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
-52            <meta-data
-52-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\57018e67b2833076927226d0878e2f01\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
-53                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-53-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\57018e67b2833076927226d0878e2f01\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
-54                android:value="androidx.startup" />
-54-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\57018e67b2833076927226d0878e2f01\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
-55            <meta-data
-55-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
-56                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-56-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
-57                android:value="androidx.startup" />
-57-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
-58        </provider>
-59
-60        <receiver
-60-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
-61            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-61-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
-62            android:directBootAware="false"
-62-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
-63            android:enabled="true"
-63-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
-64            android:exported="true"
-64-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
-65            android:permission="android.permission.DUMP" >
-65-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
-66            <intent-filter>
-66-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
-67                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
-68            </intent-filter>
-69            <intent-filter>
-69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
-70                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
-71            </intent-filter>
-72            <intent-filter>
-72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
-73                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-73-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-73-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
-74            </intent-filter>
-75            <intent-filter>
-75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
-76                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-76-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-76-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.0.0\transforms\6f9a81bd511287917ba7314238b2e88a\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
-77            </intent-filter>
-78        </receiver>
-79    </application>
-80
-81</manifest>
+19    <uses-permission android:name="com.bank.userapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:6:5-56:19
+22        android:allowBackup="true"
+22-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:7:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.13.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\2ef973cdc3ef9b18f253895900f023a3\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+24        android:debuggable="true"
+25        android:extractNativeLibs="false"
+25-->INJECTED
+26        android:icon="@drawable/android_logo"
+26-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:8:9-46
+27        android:label="@string/app_name"
+27-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:10:9-41
+28        android:networkSecurityConfig="@xml/network_security_config"
+28-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:14:9-69
+29        android:roundIcon="@drawable/android_logo"
+29-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:9:9-51
+30        android:supportsRtl="true"
+30-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:11:9-35
+31        android:testOnly="true"
+32        android:theme="@style/Theme.SKMiniPaymentBank"
+32-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:12:9-55
+33        android:usesCleartextTraffic="true" >
+33-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:13:9-44
+34        <activity
+34-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:16:9-23:20
+35            android:name="com.bank.userapp.SplashActivity"
+35-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:17:13-43
+36            android:exported="true" >
+36-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:18:13-36
+37            <intent-filter>
+37-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:19:13-22:29
+38                <action android:name="android.intent.action.MAIN" />
+38-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:20:17-69
+38-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:20:25-66
+39
+40                <category android:name="android.intent.category.LAUNCHER" />
+40-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:21:17-77
+40-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:21:27-74
+41            </intent-filter>
+42        </activity>
+43        <activity
+43-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:25:9-28:62
+44            android:name="com.bank.userapp.LoginActivity"
+44-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:26:13-42
+45            android:exported="false"
+45-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:27:13-37
+46            android:theme="@style/Theme.SKMiniPaymentBank" />
+46-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:28:13-59
+47        <activity
+47-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:30:9-32:40
+48            android:name="com.bank.userapp.MainActivity"
+48-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:31:13-41
+49            android:exported="false" />
+49-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:32:13-37
+50        <activity
+50-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:34:9-38:40
+51            android:name="com.bank.userapp.PaymentActivity"
+51-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:35:13-44
+52            android:exported="false"
+52-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:38:13-37
+53            android:label="Payment"
+53-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:36:13-36
+54            android:theme="@style/Theme.SKMiniPaymentBank" />
+54-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:37:13-59
+55        <activity
+55-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:40:9-44:40
+56            android:name="com.bank.userapp.TransferActivity"
+56-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:41:13-45
+57            android:exported="false"
+57-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:44:13-37
+58            android:label="Transfer"
+58-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:42:13-37
+59            android:theme="@style/Theme.SKMiniPaymentBank" />
+59-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:43:13-59
+60        <activity
+60-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:46:9-49:40
+61            android:name="com.bank.userapp.SuccessActivity"
+61-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:47:13-44
+62            android:exported="false"
+62-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:49:13-37
+63            android:theme="@style/Theme.SKMiniPaymentBank" />
+63-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:48:13-59
+64        <activity
+64-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:51:9-55:40
+65            android:name="com.bank.userapp.WebPortalActivity"
+65-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:52:13-46
+66            android:exported="false"
+66-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:55:13-37
+67            android:label="Bank Portal"
+67-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:53:13-40
+68            android:theme="@style/Theme.SKMiniPaymentBank" />
+68-->C:\Users\Sajid Khan\OneDrive\Documents\NetBeansProjects\skminibank\android-user-app\app\src\main\AndroidManifest.xml:54:13-59
+69
+70        <provider
+70-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+71            android:name="androidx.startup.InitializationProvider"
+71-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
+72            android:authorities="com.bank.userapp.androidx-startup"
+72-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
+73            android:exported="false" >
+73-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
+74            <meta-data
+74-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+75                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+75-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+76                android:value="androidx.startup" />
+76-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\d3bd7ebfb1571eb0434c176573ecff66\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+77            <meta-data
+77-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\091401226626dc8234f7914f8b6c8846\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+78-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\091401226626dc8234f7914f8b6c8846\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+79                android:value="androidx.startup" />
+79-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\091401226626dc8234f7914f8b6c8846\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+81                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+82                android:value="androidx.startup" />
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+83        </provider>
+84
+85        <receiver
+85-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+86            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+87            android:directBootAware="false"
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+88            android:enabled="true"
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+89            android:exported="true"
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+90            android:permission="android.permission.DUMP" >
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+91            <intent-filter>
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+92                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+93            </intent-filter>
+94            <intent-filter>
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+95                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+96            </intent-filter>
+97            <intent-filter>
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+98                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+99            </intent-filter>
+100            <intent-filter>
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+101                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Sajid Khan\.gradle\caches\9.4.1\transforms\7676b469296c2b1bd233fedb52c4d685\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+102            </intent-filter>
+103        </receiver>
+104    </application>
+105
+106</manifest>

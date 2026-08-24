@@ -79,8 +79,18 @@ public class CustomerProfileServlet extends HttpServlet {
             request.setAttribute("card", card);
             request.setAttribute("fd", fd);
 
-            request.getRequestDispatcher("/admin/customer-profile.jsp")
-                    .forward(request, response);
+            // If logged-in user is a CUSTOMER, send to customer dashboard
+            String role = null;
+            if (session != null && session.getAttribute("role") != null) {
+                role = session.getAttribute("role").toString();
+            }
+
+            if ("CUSTOMER".equalsIgnoreCase(role)) {
+                request.getRequestDispatcher("/customer/dashboard.jsp").forward(request, response);
+            } else {
+                // default to admin customer profile
+                request.getRequestDispatcher("/admin/customer-profile.jsp").forward(request, response);
+            }
 
         } catch (Exception e) {
 
