@@ -117,7 +117,7 @@ REJECTED
 
 <td>
 
-<a href="<%=request.getContextPath()%>/AdminKYCViewServlet?customerId=<%=k.getCustomerId()%>"
+<a href="<%=request.getContextPath()%>/AdminKYCDetailsServlet?kycId=<%=k.getKycId()%>"
    class="btn btn-primary btn-sm">
     View
 </a>

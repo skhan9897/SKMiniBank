@@ -3,6 +3,7 @@ package com.bank.skminibank.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -32,6 +33,8 @@ public class SplashActivity extends AppCompatActivity {
         View root = findViewById(android.R.id.content);
         ImageView ivRotatingStar = findViewById(R.id.ivRotatingStar);
         ProgressBar progressBar = findViewById(R.id.splashProgress);
+
+        startWaveAnimation();
 
         // 1. Initial State
         logoContainer.setAlpha(0f);
@@ -117,5 +120,15 @@ public class SplashActivity extends AppCompatActivity {
                 .start();
         }, 3500); // 3 seconds for progress + 0.5 for transition
 
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.splashRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 }

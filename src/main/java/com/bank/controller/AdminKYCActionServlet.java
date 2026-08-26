@@ -36,8 +36,22 @@ public class AdminKYCActionServlet extends HttpServlet {
 
             if ("approve".equalsIgnoreCase(action)) {
                 success = dao.approveKYC(kycId, verifiedBy, remarks);
+                if (success) {
+                    KYCRequest kyc = dao.getKYCById(kycId);
+                    CustomerDAO customerDAO = new CustomerDAO();
+                    Customer customer = customerDAO.getCustomerById(kyc.getCustomerId());
+                    customer.setKycStatus("VERIFIED");
+                    customerDAO.updateCustomer(customer);
+                }
             } else if ("reject".equalsIgnoreCase(action)) {
                 success = dao.rejectKYC(kycId, verifiedBy, remarks);
+                if (success) {
+                    KYCRequest kyc = dao.getKYCById(kycId);
+                    CustomerDAO customerDAO = new CustomerDAO();
+                    Customer customer = customerDAO.getCustomerById(kyc.getCustomerId());
+                    customer.setKycStatus("REJECTED");
+                    customerDAO.updateCustomer(customer);
+                }
             }
 
             if (success) {

@@ -1,6 +1,7 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         btnAction = findViewById(R.id.btnLogin);
         layoutFingerprint = findViewById(R.id.layoutFingerprint);
 
+        startWaveAnimation();
+
         // Sub login flow: If user already performed OTP once, skip it
         if (sessionManager.isLoggedInOnce()) {
             loginStep = 3; // Direct to password
@@ -79,6 +82,16 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         setupBiometrics();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.loginRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     private void handleLoginFlow() {

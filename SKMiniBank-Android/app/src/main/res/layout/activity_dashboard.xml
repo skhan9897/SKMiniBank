@@ -122,7 +122,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#40FFFFFF"
+            android:background="@android:color/transparent"
             android:scrollbars="none">
 
             <LinearLayout
@@ -145,20 +145,30 @@
                         android:background="@drawable/premium_card_bg"
                         android:padding="20dp">
 
+                        <ImageView
+                            android:id="@+id/ivSmallLogo"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/sk_logo"
+                            android:alpha="0.8"/>
+
                         <TextView
                             android:id="@+id/tvBalLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Available Balance"
-                            android:textColor="@color/text_dark_secondary"
-                            android:textSize="12sp"
+                            android:text="TOTAL AVAILABLE BALANCE"
+                            android:textColor="#B3FFFFFF"
+                            android:textSize="10sp"
+                            android:letterSpacing="0.1"
                             android:textStyle="bold"/>
 
                         <LinearLayout
+                            android:id="@+id/llBalance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/tvBalLabel"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="4dp"
                             android:orientation="horizontal"
                             android:gravity="center_vertical">
 
@@ -167,47 +177,66 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="₹ 12,458.50"
-                                android:textColor="@color/premium_gold_accent"
-                                android:textSize="28sp"
-                                android:textStyle="bold"/>
+                                android:textColor="@color/white"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:shadowColor="#40000000"
+                                android:shadowDx="1"
+                                android:shadowDy="1"
+                                android:shadowRadius="1"/>
 
                             <ImageView
                                 android:id="@+id/btnToggleBalance"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
                                 android:src="@android:drawable/ic_menu_view"
                                 android:scaleType="centerInside"
-                                android:layout_marginStart="16dp"
+                                android:layout_marginStart="12dp"
                                 android:padding="8dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                app:tint="@color/premium_gold_accent"/>
+                                app:tint="@color/white"
+                                android:alpha="0.7"/>
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/dashChip"
+                            android:layout_width="35dp"
+                            android:layout_height="28dp"
+                            android:layout_below="@id/llBalance"
+                            android:layout_marginTop="16dp"
+                            android:background="@drawable/card_chip"
+                            android:alpha="0.9"/>
 
                         <TextView
                             android:id="@+id/tvAccNo"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/tvBalLabel"
-                            android:text="Account No. XXXX XXXX 1234"
-                            android:textColor="@color/text_dark_secondary"
-                            android:textSize="12sp"
-                            android:layout_marginTop="56dp"/>
+                            android:layout_below="@id/llBalance"
+                            android:layout_toEndOf="@id/dashChip"
+                            android:layout_marginStart="16dp"
+                            android:text="AC XXXX XXXX 1234"
+                            android:textColor="#CCFFFFFF"
+                            android:textSize="13sp"
+                            android:letterSpacing="0.05"
+                            android:layout_marginTop="22dp"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnBalanceInquiry"
-                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:layout_below="@id/tvBalLabel"
-                            android:text="Balance Inquiry >"
-                            android:textSize="11sp"
-                            android:textColor="@color/premium_gold_accent"
-                            app:strokeColor="@color/premium_gold_accent"
-                            app:cornerRadius="8dp"
-                            android:layout_marginTop="56dp"/>
+                            android:layout_alignBottom="@id/tvAccNo"
+                            android:text="DETAILS >"
+                            android:textSize="10sp"
+                            android:textColor="@color/premium_gold"
+                            android:textStyle="bold"
+                            android:padding="0dp"
+                            android:minWidth="0dp"
+                            android:minHeight="0dp"/>
 
                     </RelativeLayout>
+
                 </androidx.cardview.widget.CardView>
 
                 <!-- Services Grid -->
@@ -216,7 +245,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="3"
-                    android:paddingHorizontal="12dp">
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp">
 
                     <include android:id="@+id/cardFundTransfer" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
                     <include android:id="@+id/cardToMobile" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />

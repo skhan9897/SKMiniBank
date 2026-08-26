@@ -21,7 +21,7 @@ public class AdminKYCServlet extends HttpServlet {
         List<KYCRequest> kycList = dao.getAllKYCRequests();
 
         request.setAttribute("kycList", kycList);
-        request.getRequestDispatcher("/admin/kyc.jsp").forward(request, response);
+        request.getRequestDispatcher("/admin/kyc/list.jsp").forward(request, response);
     }
 
     @Override

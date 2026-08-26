@@ -3,48 +3,51 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="6dp"
     android:clickable="true"
     android:focusable="true"
     app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
-    app:cardBackgroundColor="@color/premium_gold_light"
-    app:cardMaxElevation="10dp">
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="20dp"
-        android:background="?attr/selectableItemBackground">
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="16dp"
+        android:background="@drawable/premium_service_card_bg">
 
         <FrameLayout
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:background="@drawable/bg_circle_fino"
-            android:gravity="center">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/service_icon_bg"/>
 
             <ImageView
                 android:id="@+id/ivIcon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center"
                 android:src="@android:drawable/ic_menu_help"
                 android:scaleType="centerInside"
-                app:tint="@color/premium_gold_accent"
+                app:tint="@color/primary_blue"
                 android:contentDescription="@string/service_icon" />
         </FrameLayout>
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Service"
             android:textColor="@color/text_dark_primary"
             android:textSize="12sp"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end" />

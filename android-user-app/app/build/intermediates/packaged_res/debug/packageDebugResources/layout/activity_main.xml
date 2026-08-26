@@ -22,12 +22,16 @@
                 android:padding="16dp">
 
                 <TextView
+                    android:id="@+id/toolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🏦 SK Mini Bank"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -36,7 +40,7 @@
                     android:textColor="@color/text_muted"
                     android:textSize="14sp" />
 
-                <!-- Navigation Links Section -->
+                <!-- Navigation Links Row 1 -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -49,14 +53,14 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/btnHistory"
+                            android:id="@+id/nav_link_dashboard"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🏠 Dashboard" />
 
                         <TextView
-                            android:id="@+id/btnRecharge"
+                            android:id="@+id/nav_link_service"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -64,6 +68,7 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
+                <!-- Navigation Links Row 2 -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,24 +81,28 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/nav_link_atm"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="💳 ATM Card Requests" />
 
                         <TextView
+                            android:id="@+id/nav_link_cheque"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="📒 Cheque Book Requests" />
 
                         <TextView
+                            android:id="@+id/nav_link_net"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🌐 Net Banking Requests" />
 
                         <TextView
+                            android:id="@+id/nav_link_mobile"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -101,6 +110,7 @@
                     </LinearLayout>
                 </HorizontalScrollView>
 
+                <!-- Navigation Links Row 3 -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,31 +124,46 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/nav_link_customers"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="👥 Customers" />
 
                         <TextView
-                            android:id="@+id/btnMore"
+                            android:id="@+id/nav_link_add_cust"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="➕ Add Customer" />
 
                         <TextView
+                            android:id="@+id/nav_link_open_acc"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="🏦 Open Account" />
 
                         <TextView
+                            android:id="@+id/nav_link_deposit"
                             style="@style/DashLink"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="💰 Deposit" />
                     </LinearLayout>
                 </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/tvKycStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="KYC Status: PENDING"
+                    android:textColor="@color/danger_red"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:background="#10FF0000"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -157,26 +182,24 @@
 
                     <!-- Blue Card -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardCustomers"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
                         app:cardBackgroundColor="@color/primary_blue"
                         app:cardCornerRadius="8dp">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp">
-
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@android:drawable/ic_menu_myplaces"
                                 app:tint="@color/white" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -184,7 +207,6 @@
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -196,26 +218,24 @@
 
                     <!-- Green Card -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardAccounts"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
                         app:cardBackgroundColor="@color/success_green"
                         app:cardCornerRadius="8dp">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp">
-
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@android:drawable/ic_menu_save"
                                 app:tint="@color/white" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -223,7 +243,6 @@
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -235,35 +254,32 @@
 
                     <!-- Yellow Card -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBalance"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
                         app:cardBackgroundColor="@color/warning_yellow"
                         app:cardCornerRadius="8dp">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp">
-
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@android:drawable/ic_menu_gallery"
                                 app:tint="@color/black" />
-
                             <TextView
                                 android:id="@+id/tvBalance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="₹ 9584150.0"
+                                android:text="₹ 0.00"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -275,27 +291,24 @@
 
                     <!-- Red Card -->
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnPay"
+                        android:id="@+id/cardTransactions"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="4dp"
                         app:cardBackgroundColor="@color/danger_red"
                         app:cardCornerRadius="8dp">
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp">
-
                             <ImageView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@android:drawable/ic_menu_share"
                                 app:tint="@color/white" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -303,7 +316,6 @@
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -321,7 +333,6 @@
                     android:layout_marginTop="16dp"
                     app:cardCornerRadius="12dp"
                     app:cardElevation="2dp">
-
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

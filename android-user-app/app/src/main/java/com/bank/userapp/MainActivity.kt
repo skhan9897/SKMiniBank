@@ -3,13 +3,10 @@ package com.bank.userapp
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.navigation.NavigationView
 import java.util.Locale
 
@@ -17,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var session: UserSession
     private lateinit var tvBalance: TextView
+    private lateinit var tvKycStatus: TextView
     private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,10 +24,11 @@ class MainActivity : AppCompatActivity() {
         session = UserSession(this)
         
         drawerLayout = findViewById(R.id.drawerLayout)
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        val toolbar = findViewById<View>(R.id.toolbar)
         tvBalance = findViewById(R.id.tvBalance)
+        tvKycStatus = findViewById(R.id.tvKycStatus)
 
-        toolbar.setNavigationOnClickListener {
+        toolbar?.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
@@ -52,27 +51,35 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        // Native Card click to transfer
-        findViewById<MaterialCardView>(R.id.btnPay).setOnClickListener {
+        // New Navigation Link Click Listeners
+        findViewById<View>(R.id.nav_link_dashboard)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_service)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_atm)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_cheque)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_net)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_mobile)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_customers)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_add_cust)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_open_acc)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_deposit)?.setOnClickListener { openWebPortal() }
+        
+        // KYC Portal Link
+        findViewById<View>(R.id.tvKycStatus)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/kyc.jsp")
+            startActivity(intent)
+        }
+
+        // Summary Cards
+        findViewById<View>(R.id.cardCustomers)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.cardAccounts)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.cardBalance)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.cardTransactions)?.setOnClickListener {
             startActivity(Intent(this, TransferActivity::class.java))
         }
 
-        // History Card opens the Bank Portal (Old Flow Integration)
-        findViewById<MaterialCardView>(R.id.btnHistory).setOnClickListener {
-            openWebPortal()
-        }
-
-        // Recharge opens the Bank Portal
-        findViewById<LinearLayout>(R.id.btnRecharge).setOnClickListener {
-            openWebPortal()
-        }
-
-        // More opens the Bank Portal
-        findViewById<LinearLayout>(R.id.btnMore).setOnClickListener {
-            openWebPortal()
-        }
-
         updateBalanceDisplay()
+        updateKycStatusDisplay()
     }
 
     private fun openWebPortal() {
@@ -84,9 +91,26 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateBalanceDisplay()
+        updateKycStatusDisplay()
     }
 
     private fun updateBalanceDisplay() {
         tvBalance.text = String.format(Locale.getDefault(), "₹ %.2f", session.getBalance())
+    }
+
+    private fun updateKycStatusDisplay() {
+        val status = session.getKycStatus()
+        tvKycStatus.text = "KYC Status: $status"
+        
+        if (status.equals("VERIFIED", ignoreCase = true)) {
+            tvKycStatus.setTextColor(android.graphics.Color.parseColor("#198754"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#1000FF00"))
+        } else if (status.equals("REJECTED", ignoreCase = true)) {
+            tvKycStatus.setTextColor(android.graphics.Color.parseColor("#dc3545"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10FF0000"))
+        } else {
+            tvKycStatus.setTextColor(android.graphics.Color.parseColor("#ffc107"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10FFFF00"))
+        }
     }
 }

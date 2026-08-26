@@ -101,6 +101,18 @@ public class LoanRequestDAO {
         }
     }
 
+    public boolean deleteLoan(int loanId) {
+        String sql = "DELETE FROM loan_request WHERE loan_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, loanId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private LoanRequest mapRow(ResultSet rs) throws Exception {
         LoanRequest loan = new LoanRequest();
         loan.setLoanId(rs.getInt("loan_id"));

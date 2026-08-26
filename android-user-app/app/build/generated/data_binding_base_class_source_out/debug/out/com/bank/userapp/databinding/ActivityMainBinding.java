@@ -22,38 +22,92 @@ public final class ActivityMainBinding implements ViewBinding {
   private final DrawerLayout rootView;
 
   @NonNull
-  public final TextView btnHistory;
+  public final MaterialCardView cardAccounts;
 
   @NonNull
-  public final TextView btnMore;
+  public final MaterialCardView cardBalance;
 
   @NonNull
-  public final MaterialCardView btnPay;
+  public final MaterialCardView cardCustomers;
 
   @NonNull
-  public final TextView btnRecharge;
+  public final MaterialCardView cardTransactions;
 
   @NonNull
   public final DrawerLayout drawerLayout;
 
   @NonNull
+  public final TextView navLinkAddCust;
+
+  @NonNull
+  public final TextView navLinkAtm;
+
+  @NonNull
+  public final TextView navLinkCheque;
+
+  @NonNull
+  public final TextView navLinkCustomers;
+
+  @NonNull
+  public final TextView navLinkDashboard;
+
+  @NonNull
+  public final TextView navLinkDeposit;
+
+  @NonNull
+  public final TextView navLinkMobile;
+
+  @NonNull
+  public final TextView navLinkNet;
+
+  @NonNull
+  public final TextView navLinkOpenAcc;
+
+  @NonNull
+  public final TextView navLinkService;
+
+  @NonNull
   public final NavigationView navigationView;
+
+  @NonNull
+  public final TextView toolbar;
 
   @NonNull
   public final TextView tvBalance;
 
-  private ActivityMainBinding(@NonNull DrawerLayout rootView, @NonNull TextView btnHistory,
-      @NonNull TextView btnMore, @NonNull MaterialCardView btnPay, @NonNull TextView btnRecharge,
-      @NonNull DrawerLayout drawerLayout, @NonNull NavigationView navigationView,
-      @NonNull TextView tvBalance) {
+  @NonNull
+  public final TextView tvKycStatus;
+
+  private ActivityMainBinding(@NonNull DrawerLayout rootView,
+      @NonNull MaterialCardView cardAccounts, @NonNull MaterialCardView cardBalance,
+      @NonNull MaterialCardView cardCustomers, @NonNull MaterialCardView cardTransactions,
+      @NonNull DrawerLayout drawerLayout, @NonNull TextView navLinkAddCust,
+      @NonNull TextView navLinkAtm, @NonNull TextView navLinkCheque,
+      @NonNull TextView navLinkCustomers, @NonNull TextView navLinkDashboard,
+      @NonNull TextView navLinkDeposit, @NonNull TextView navLinkMobile,
+      @NonNull TextView navLinkNet, @NonNull TextView navLinkOpenAcc,
+      @NonNull TextView navLinkService, @NonNull NavigationView navigationView,
+      @NonNull TextView toolbar, @NonNull TextView tvBalance, @NonNull TextView tvKycStatus) {
     this.rootView = rootView;
-    this.btnHistory = btnHistory;
-    this.btnMore = btnMore;
-    this.btnPay = btnPay;
-    this.btnRecharge = btnRecharge;
+    this.cardAccounts = cardAccounts;
+    this.cardBalance = cardBalance;
+    this.cardCustomers = cardCustomers;
+    this.cardTransactions = cardTransactions;
     this.drawerLayout = drawerLayout;
+    this.navLinkAddCust = navLinkAddCust;
+    this.navLinkAtm = navLinkAtm;
+    this.navLinkCheque = navLinkCheque;
+    this.navLinkCustomers = navLinkCustomers;
+    this.navLinkDashboard = navLinkDashboard;
+    this.navLinkDeposit = navLinkDeposit;
+    this.navLinkMobile = navLinkMobile;
+    this.navLinkNet = navLinkNet;
+    this.navLinkOpenAcc = navLinkOpenAcc;
+    this.navLinkService = navLinkService;
     this.navigationView = navigationView;
+    this.toolbar = toolbar;
     this.tvBalance = tvBalance;
+    this.tvKycStatus = tvKycStatus;
   }
 
   @Override
@@ -83,35 +137,101 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
-      id = R.id.btnHistory;
-      TextView btnHistory = ViewBindings.findChildViewById(rootView, id);
-      if (btnHistory == null) {
+      id = R.id.cardAccounts;
+      MaterialCardView cardAccounts = ViewBindings.findChildViewById(rootView, id);
+      if (cardAccounts == null) {
         break missingId;
       }
 
-      id = R.id.btnMore;
-      TextView btnMore = ViewBindings.findChildViewById(rootView, id);
-      if (btnMore == null) {
+      id = R.id.cardBalance;
+      MaterialCardView cardBalance = ViewBindings.findChildViewById(rootView, id);
+      if (cardBalance == null) {
         break missingId;
       }
 
-      id = R.id.btnPay;
-      MaterialCardView btnPay = ViewBindings.findChildViewById(rootView, id);
-      if (btnPay == null) {
+      id = R.id.cardCustomers;
+      MaterialCardView cardCustomers = ViewBindings.findChildViewById(rootView, id);
+      if (cardCustomers == null) {
         break missingId;
       }
 
-      id = R.id.btnRecharge;
-      TextView btnRecharge = ViewBindings.findChildViewById(rootView, id);
-      if (btnRecharge == null) {
+      id = R.id.cardTransactions;
+      MaterialCardView cardTransactions = ViewBindings.findChildViewById(rootView, id);
+      if (cardTransactions == null) {
         break missingId;
       }
 
       DrawerLayout drawerLayout = (DrawerLayout) rootView;
 
+      id = R.id.nav_link_add_cust;
+      TextView navLinkAddCust = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkAddCust == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_atm;
+      TextView navLinkAtm = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkAtm == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_cheque;
+      TextView navLinkCheque = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkCheque == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_customers;
+      TextView navLinkCustomers = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkCustomers == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_dashboard;
+      TextView navLinkDashboard = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkDashboard == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_deposit;
+      TextView navLinkDeposit = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkDeposit == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_mobile;
+      TextView navLinkMobile = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkMobile == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_net;
+      TextView navLinkNet = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkNet == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_open_acc;
+      TextView navLinkOpenAcc = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkOpenAcc == null) {
+        break missingId;
+      }
+
+      id = R.id.nav_link_service;
+      TextView navLinkService = ViewBindings.findChildViewById(rootView, id);
+      if (navLinkService == null) {
+        break missingId;
+      }
+
       id = R.id.navigationView;
       NavigationView navigationView = ViewBindings.findChildViewById(rootView, id);
       if (navigationView == null) {
+        break missingId;
+      }
+
+      id = R.id.toolbar;
+      TextView toolbar = ViewBindings.findChildViewById(rootView, id);
+      if (toolbar == null) {
         break missingId;
       }
 
@@ -121,8 +241,16 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((DrawerLayout) rootView, btnHistory, btnMore, btnPay,
-          btnRecharge, drawerLayout, navigationView, tvBalance);
+      id = R.id.tvKycStatus;
+      TextView tvKycStatus = ViewBindings.findChildViewById(rootView, id);
+      if (tvKycStatus == null) {
+        break missingId;
+      }
+
+      return new ActivityMainBinding((DrawerLayout) rootView, cardAccounts, cardBalance,
+          cardCustomers, cardTransactions, drawerLayout, navLinkAddCust, navLinkAtm, navLinkCheque,
+          navLinkCustomers, navLinkDashboard, navLinkDeposit, navLinkMobile, navLinkNet,
+          navLinkOpenAcc, navLinkService, navigationView, toolbar, tvBalance, tvKycStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));
