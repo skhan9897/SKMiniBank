@@ -1,0 +1,56 @@
+package com.bank.skminibank.model;
+
+public class LoginResponse {
+
+    private String status;
+    private String message;
+
+    private int customerId;
+
+    private String customerCode;
+    private String customerName;
+    private String accountNumber;
+    private String mobile;
+    private String email;
+
+    private double balance;
+
+    public LoginResponse() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public String getCustomerCode() {
+        return customerCode;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/fino_background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/fino_primary"
+        app:title="All Services"
+        app:titleTextColor="@color/white"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Category: Banking -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Banking Services"
+                android:textColor="@color/fino_text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="4"
+                    android:padding="8dp">
+
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcLoan" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcAtm" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcCheque" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcNetBanking" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcMobileBanking" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcKyc" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcStatement" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFd" />
+
+                </GridLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Category: Recharge & Bills -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recharge &amp; Bill Payments"
+                android:textColor="@color/fino_text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="24dp">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="4"
+                    android:padding="8dp">
+
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcRecharge" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcDth" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcElectricity" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcCreditCard" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcGas" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcWater" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcInsurance" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFastag" />
+
+                </GridLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Category: Travel & Others -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Travel &amp; Others"
+                android:textColor="@color/fino_text_primary"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="40dp">
+
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="4"
+                    android:padding="8dp">
+
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFlights" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcBus" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcTrains" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcHotels" />
+
+                </GridLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

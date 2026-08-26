@@ -4,15 +4,14 @@ package com.bank.userapp.databinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.bank.userapp.R;
-import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.navigation.NavigationView;
 import java.lang.NullPointerException;
 import java.lang.Override;
@@ -23,29 +22,38 @@ public final class ActivityMainBinding implements ViewBinding {
   private final DrawerLayout rootView;
 
   @NonNull
+  public final TextView btnHistory;
+
+  @NonNull
+  public final TextView btnMore;
+
+  @NonNull
+  public final MaterialCardView btnPay;
+
+  @NonNull
+  public final TextView btnRecharge;
+
+  @NonNull
   public final DrawerLayout drawerLayout;
 
   @NonNull
   public final NavigationView navigationView;
 
   @NonNull
-  public final ProgressBar progressBar;
+  public final TextView tvBalance;
 
-  @NonNull
-  public final MaterialToolbar toolbar;
-
-  @NonNull
-  public final WebView webView;
-
-  private ActivityMainBinding(@NonNull DrawerLayout rootView, @NonNull DrawerLayout drawerLayout,
-      @NonNull NavigationView navigationView, @NonNull ProgressBar progressBar,
-      @NonNull MaterialToolbar toolbar, @NonNull WebView webView) {
+  private ActivityMainBinding(@NonNull DrawerLayout rootView, @NonNull TextView btnHistory,
+      @NonNull TextView btnMore, @NonNull MaterialCardView btnPay, @NonNull TextView btnRecharge,
+      @NonNull DrawerLayout drawerLayout, @NonNull NavigationView navigationView,
+      @NonNull TextView tvBalance) {
     this.rootView = rootView;
+    this.btnHistory = btnHistory;
+    this.btnMore = btnMore;
+    this.btnPay = btnPay;
+    this.btnRecharge = btnRecharge;
     this.drawerLayout = drawerLayout;
     this.navigationView = navigationView;
-    this.progressBar = progressBar;
-    this.toolbar = toolbar;
-    this.webView = webView;
+    this.tvBalance = tvBalance;
   }
 
   @Override
@@ -75,6 +83,30 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnHistory;
+      TextView btnHistory = ViewBindings.findChildViewById(rootView, id);
+      if (btnHistory == null) {
+        break missingId;
+      }
+
+      id = R.id.btnMore;
+      TextView btnMore = ViewBindings.findChildViewById(rootView, id);
+      if (btnMore == null) {
+        break missingId;
+      }
+
+      id = R.id.btnPay;
+      MaterialCardView btnPay = ViewBindings.findChildViewById(rootView, id);
+      if (btnPay == null) {
+        break missingId;
+      }
+
+      id = R.id.btnRecharge;
+      TextView btnRecharge = ViewBindings.findChildViewById(rootView, id);
+      if (btnRecharge == null) {
+        break missingId;
+      }
+
       DrawerLayout drawerLayout = (DrawerLayout) rootView;
 
       id = R.id.navigationView;
@@ -83,26 +115,14 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.progressBar;
-      ProgressBar progressBar = ViewBindings.findChildViewById(rootView, id);
-      if (progressBar == null) {
+      id = R.id.tvBalance;
+      TextView tvBalance = ViewBindings.findChildViewById(rootView, id);
+      if (tvBalance == null) {
         break missingId;
       }
 
-      id = R.id.toolbar;
-      MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
-      if (toolbar == null) {
-        break missingId;
-      }
-
-      id = R.id.webView;
-      WebView webView = ViewBindings.findChildViewById(rootView, id);
-      if (webView == null) {
-        break missingId;
-      }
-
-      return new ActivityMainBinding((DrawerLayout) rootView, drawerLayout, navigationView,
-          progressBar, toolbar, webView);
+      return new ActivityMainBinding((DrawerLayout) rootView, btnHistory, btnMore, btnPay,
+          btnRecharge, drawerLayout, navigationView, tvBalance);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

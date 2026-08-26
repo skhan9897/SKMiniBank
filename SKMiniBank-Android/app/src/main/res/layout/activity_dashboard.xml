@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_background">
+
+    <!-- Header Section -->
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_blue"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="@color/white"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/ivBankLogo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/sk_logo"
+            android:layout_toEndOf="@id/btnMenu"
+            android:layout_marginStart="12dp"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toEndOf="@id/ivBankLogo"
+            android:layout_marginStart="8dp"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SK MINI"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PAYMENT BANK"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivNotifications"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@android:drawable/ic_popup_reminder"
+            app:tint="@color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <!-- User Welcome Section -->
+    <RelativeLayout
+        android:id="@+id/welcomeSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerLayout"
+        android:background="@color/primary_blue"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp">
+
+        <TextView
+            android:id="@+id/tvWelcomeUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello, Sajid Khan"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvWelcomeUser"
+            android:text="Welcome back to SK Mini Payment Bank"
+            android:textColor="#B3FFFFFF"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnProfile"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="My Profile"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            app:icon="@android:drawable/ic_menu_myplaces"
+            app:iconSize="16dp"
+            app:iconTint="@color/white"
+            android:backgroundTint="#20FFFFFF"
+            app:cornerRadius="8dp"/>
+
+    </RelativeLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/welcomeSection"
+        android:layout_marginTop="-16dp"
+        android:layout_above="@id/bottomNav">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
+
+                <!-- Balance Inquiry Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="@color/premium_gold_light">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp">
+
+                        <TextView
+                            android:id="@+id/tvBalLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Available Balance"
+                            android:textColor="@color/text_dark_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvBalLabel"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tvBalanceAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="₹ 12,458.50"
+                                android:textColor="@color/premium_gold_accent"
+                                android:textSize="28sp"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:id="@+id/btnToggleBalance"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@android:drawable/ic_menu_view"
+                                android:scaleType="centerInside"
+                                android:layout_marginStart="16dp"
+                                android:padding="8dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                app:tint="@color/premium_gold_accent"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAccNo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvBalLabel"
+                            android:text="Account No. XXXX XXXX 1234"
+                            android:textColor="@color/text_dark_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginTop="56dp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBalanceInquiry"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_below="@id/tvBalLabel"
+                            android:text="Balance Inquiry >"
+                            android:textSize="11sp"
+                            android:textColor="@color/premium_gold_accent"
+                            app:strokeColor="@color/premium_gold_accent"
+                            app:cornerRadius="8dp"
+                            android:layout_marginTop="56dp"/>
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Services Grid -->
+                <GridLayout
+                    android:id="@+id/gridServices"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:paddingHorizontal="12dp">
+
+                    <include android:id="@+id/cardFundTransfer" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardToMobile" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardToWallet" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+
+                    <include android:id="@+id/cardBalanceInq" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardWithdrawal" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardPassbook" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+
+                    <include android:id="@+id/cardFixedDeposit" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardUpiPayment" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardScanPay" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+
+                    <include android:id="@+id/cardBeneficiary" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardAtm" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardMiniStatement" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+
+                    <include android:id="@+id/cardRequests" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardOffers" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardMore" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+
+                </GridLayout>
+
+                <!-- Promotional Banner -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/primary_blue">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@android:drawable/ic_dialog_info"
+                            app:tint="@color/white"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Banking that is"
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="12sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Secure, Simple &amp; Reliable"
+                                android:textColor="@color/white"
+                                android:textStyle="bold"
+                                android:textSize="16sp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Your money is 100% safe with us."
+                                android:textColor="#B3FFFFFF"
+                                android:textSize="10sp"
+                                android:layout_marginTop="2dp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Recent Transactions -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="8dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recent Transactions"
+                        android:textColor="@color/text_dark_primary"
+                        android:textStyle="bold"
+                        android:textSize="14sp"/>
+                    <TextView
+                        android:id="@+id/btnViewAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="View All >"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="12sp"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvRecentTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:nestedScrollingEnabled="false"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        app:menu="@menu/bottom_nav_menu_v2"
+        app:itemIconTint="@color/primary_blue"
+        app:itemTextColor="@color/text_dark_secondary"
+        app:labelVisibilityMode="labeled"
+        app:elevation="16dp" />
+
+</RelativeLayout>
