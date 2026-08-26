@@ -1,6 +1,7 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -88,6 +89,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvAccNo = findViewById(R.id.tvAccNo);
         btnToggleBalance = findViewById(R.id.btnToggleBalance);
 
+        startWaveAnimation();
         setupTTS();
         setupServiceGrid();
         setupBottomNav();
@@ -113,6 +115,16 @@ public class DashboardActivity extends AppCompatActivity {
                 isBalanceVisible = !isBalanceVisible;
                 updateBalanceVisibility();
             });
+        }
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.mainDashboardRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
         }
     }
 
