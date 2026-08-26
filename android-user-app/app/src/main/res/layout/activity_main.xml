@@ -46,25 +46,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:scrollbars="none">
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/nav_link_dashboard"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🏠 Dashboard" />
-
-                        <TextView
-                            android:id="@+id/nav_link_service"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📋 Service Requests" />
+                        <TextView android:id="@+id/nav_link_dashboard" style="@style/DashLink" android:text="🏠 Dashboard" />
+                        <TextView android:id="@+id/nav_link_service" style="@style/DashLink" android:text="📋 Service Requests" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -74,39 +61,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:scrollbars="none">
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/nav_link_atm"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="💳 ATM Card Requests" />
-
-                        <TextView
-                            android:id="@+id/nav_link_cheque"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📒 Cheque Book Requests" />
-
-                        <TextView
-                            android:id="@+id/nav_link_net"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🌐 Net Banking Requests" />
-
-                        <TextView
-                            android:id="@+id/nav_link_mobile"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📱 Mobile Banking Requests" />
+                        <TextView android:id="@+id/nav_link_atm" style="@style/DashLink" android:text="💳 ATM Card Requests" />
+                        <TextView android:id="@+id/nav_link_cheque" style="@style/DashLink" android:text="📒 Cheque Book Requests" />
+                        <TextView android:id="@+id/nav_link_net" style="@style/DashLink" android:text="🌐 Net Banking Requests" />
+                        <TextView android:id="@+id/nav_link_mobile" style="@style/DashLink" android:text="📱 Mobile Banking Requests" />
+                        <TextView android:id="@+id/nav_link_loan_req" style="@style/DashLink" android:text="🏦 Loan Requests" />
+                        <TextView android:id="@+id/nav_link_all_req" style="@style/DashLink" android:text="📋 All Service Requests" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -117,39 +81,22 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="16dp"
                     android:scrollbars="none">
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/nav_link_customers"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="👥 Customers" />
-
-                        <TextView
-                            android:id="@+id/nav_link_add_cust"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="➕ Add Customer" />
-
-                        <TextView
-                            android:id="@+id/nav_link_open_acc"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="🏦 Open Account" />
-
-                        <TextView
-                            android:id="@+id/nav_link_deposit"
-                            style="@style/DashLink"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="💰 Deposit" />
+                        <TextView android:id="@+id/nav_link_customers" style="@style/DashLink" android:text="👥 Customers" />
+                        <TextView android:id="@+id/nav_link_add_cust" style="@style/DashLink" android:text="➕ Add Customer" />
+                        <TextView android:id="@+id/nav_link_open_acc" style="@style/DashLink" android:text="🏦 Open Account" />
+                        <TextView android:id="@+id/nav_link_deposit" style="@style/DashLink" android:text="💰 Deposit" />
+                        <TextView android:id="@+id/nav_link_withdraw" style="@style/DashLink" android:text="💵 Withdraw" />
+                        <TextView android:id="@+id/nav_link_transfer" style="@style/DashLink" android:text="🔄 Fund Transfer" />
+                        <TextView android:id="@+id/nav_link_fd" style="@style/DashLink" android:text="📦 Fixed Deposit" />
+                        <TextView android:id="@+id/nav_link_loan" style="@style/DashLink" android:text="🏠 Loan" />
+                        <TextView android:id="@+id/nav_link_kyc" style="@style/DashLink" android:text="🪪 KYC Verification" />
+                        <TextView android:id="@+id/nav_link_notify" style="@style/DashLink" android:text="🔔 Notifications" />
+                        <TextView android:id="@+id/nav_link_reports" style="@style/DashLink" android:text="📊 Reports" />
+                        <TextView android:id="@+id/nav_link_logout" style="@style/DashLink" android:text="🚪 Logout" />
                     </LinearLayout>
                 </HorizontalScrollView>
 

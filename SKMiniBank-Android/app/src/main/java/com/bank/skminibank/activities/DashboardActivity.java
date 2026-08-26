@@ -130,26 +130,26 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupServiceGrid() {
         // Quick Actions
-        setupServiceCard(R.id.cardFundTransfer, "Fund Transfer", android.R.drawable.ic_menu_send, v -> startActivity(new Intent(this, SendMoneyActivity.class)));
+        setupServiceCard(R.id.cardFundTransfer, "Fund Transfer", android.R.drawable.ic_menu_send, v -> startActivity(new Intent(this, TransferActivity.class)));
         setupServiceCard(R.id.cardToMobile, "To Mobile & UPI", android.R.drawable.ic_menu_call, v -> startActivity(new Intent(this, SendMoneyActivity.class)));
-        setupServiceCard(R.id.cardToWallet, "To Wallet", android.R.drawable.ic_menu_save, v -> showPlaceholder("To Wallet"));
+        setupServiceCard(R.id.cardToWallet, "To Wallet", android.R.drawable.ic_menu_save, v -> startActivity(new Intent(this, RazorpayActivity.class)));
         
         // Main Services
         setupServiceCard(R.id.cardBalanceInq, "Balance Inquiry", android.R.drawable.ic_menu_info_details, v -> startPinActivity());
-        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> showPlaceholder("Withdrawal"));
+        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> startActivity(new Intent(this, AllServicesActivity.class)));
         setupServiceCard(R.id.cardPassbook, "Passbook", android.R.drawable.ic_menu_agenda, v -> startActivity(new Intent(this, TransactionsActivity.class)));
         
-        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> showPlaceholder("Fixed Deposit"));
+        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> startActivity(new Intent(this, AllServicesActivity.class)));
         setupServiceCard(R.id.cardUpiPayment, "UPI Payment", android.R.drawable.ic_menu_camera, v -> startActivity(new Intent(this, UpiActivity.class)));
         setupServiceCard(R.id.cardScanPay, "Scan & Pay", android.R.drawable.ic_menu_camera, v -> startScanner());
         
-        setupServiceCard(R.id.cardBeneficiary, "View Beneficiary", android.R.drawable.ic_menu_mylocation, v -> showPlaceholder("Beneficiaries"));
-        setupServiceCard(R.id.cardAtm, "ATM Card", android.R.drawable.ic_lock_lock, v -> startActivity(new Intent(this, AtmApplyActivity.class)));
+        setupServiceCard(R.id.cardBeneficiary, "View Beneficiary", android.R.drawable.ic_menu_mylocation, v -> startActivity(new Intent(this, AddBankActivity.class)));
+        setupServiceCard(R.id.cardAtm, "ATM Card", android.R.drawable.ic_lock_lock, v -> startActivity(new Intent(this, ManageCardActivity.class)));
         setupServiceCard(R.id.cardMiniStatement, "Mini Statement", android.R.drawable.ic_menu_recent_history, v -> startActivity(new Intent(this, MiniStatementActivity.class)));
 
         setupServiceCard(R.id.cardRequests, "Requests", android.R.drawable.ic_menu_edit, v -> startActivity(new Intent(this, MyRequestsActivity.class)));
-        setupServiceCard(R.id.cardOffers, "Offers", android.R.drawable.ic_menu_gallery, v -> showPlaceholder("Offers"));
-        setupServiceCard(R.id.cardMore, "More", android.R.drawable.ic_menu_more, v -> showPlaceholder("More"));
+        setupServiceCard(R.id.cardOffers, "Others", android.R.drawable.ic_menu_gallery, v -> startActivity(new Intent(this, AllServicesActivity.class)));
+        setupServiceCard(R.id.cardMore, "More", android.R.drawable.ic_menu_more, v -> startActivity(new Intent(this, AllServicesActivity.class)));
     }
 
     private void setupBottomNav() {
