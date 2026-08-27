@@ -27,11 +27,19 @@ public class CashWithdrawalActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        // Add RGB background to root if needed, but the XML has its own background.
-        // Let's make it consistent with the wave animation if requested.
-
-        findViewById(R.id.toolbar).setOnClickListener(v -> finish());
+        startWaveAnimation();
     }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.withdrawalRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

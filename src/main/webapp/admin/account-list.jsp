@@ -153,12 +153,13 @@ for(Account a : accountList){
 
 %>
 
+<% String ctx = request.getContextPath(); if("/".equals(ctx)) ctx = ""; %>
 <tr>
 
-<td><%=a.getAccountId() != 0 ? a.getAccountId() : a.getCustomerId() %></td>
+<td><%= a.getCustomerId() %></td>
 
 <td>
-    <a href="../CustomerProfileServlet?customerId=<%=a.getCustomerId()%>" class="text-decoration-none fw-bold">
+    <a href="<%=ctx%>/CustomerProfileServlet?customerId=<%=a.getCustomerId()%>" class="text-decoration-none fw-bold">
         <%=a.getAccountNumber()%>
     </a>
 </td>
@@ -180,7 +181,7 @@ for(Account a : accountList){
 </td>
 
 <td class="text-center">
-    <a href="../CustomerProfileServlet?customerId=<%=a.getCustomerId()%>" class="btn btn-sm btn-primary">
+    <a href="<%=ctx%>/CustomerProfileServlet?customerId=<%=a.getCustomerId()%>" class="btn btn-sm btn-primary">
         <i class="fa fa-user"></i> Profile
     </a>
 </td>

@@ -93,13 +93,14 @@ for(Customer c : list){
 
 %>
 
+<% String ctx = request.getContextPath(); if("/".equals(ctx)) ctx = ""; %>
 <tr>
 
 <td><%=c.getCustomerId()%></td>
 
 <td class="text-center">
-    <img src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
-         onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
+    <img src="<%=ctx%>/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+         onerror="this.src='<%=ctx%>/images/default_user.png'"
          class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
 </td>
 
@@ -119,17 +120,17 @@ for(Customer c : list){
 
 <td>
 
-<a href="edit-customer.jsp?id=<%=c.getCustomerId()%>"
+<a href="<%=ctx%>/admin/edit-customer.jsp?id=<%=c.getCustomerId()%>"
    class="btn btn-warning btn-sm">
     <i class="fa-solid fa-pen"></i>
 </a>
 
-<a href="../CustomerProfileServlet?customerId=<%=c.getCustomerId()%>"
+<a href="<%=ctx%>/CustomerProfileServlet?customerId=<%=c.getCustomerId()%>"
    class="btn btn-info btn-sm">
     <i class="fa-solid fa-eye"></i>
 </a>
 
-<a href="../DeleteCustomerServlet?id=<%=c.getCustomerId()%>"
+<a href="<%=ctx%>/DeleteCustomerServlet?id=<%=c.getCustomerId()%>"
    class="btn btn-danger btn-sm"
    onclick="return confirm('Delete this customer?');">
     <i class="fa-solid fa-trash"></i>

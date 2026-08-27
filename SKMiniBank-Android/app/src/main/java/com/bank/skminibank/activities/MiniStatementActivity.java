@@ -93,16 +93,12 @@ public class MiniStatementActivity extends AppCompatActivity {
                         List<Transaction> allTransactions = response.body().getTransactions();
                         if (allTransactions != null && !allTransactions.isEmpty()) {
                             transactionList.clear();
-                            // Sort and get last 5
+                            // Show all transactions till today as requested
                             List<Transaction> reversedList = new ArrayList<>(allTransactions);
                             Collections.reverse(reversedList);
-                            
-                            int count = 0;
-                            for (int i = 0; i < reversedList.size() && count < 5; i++) {
-                                transactionList.add(reversedList.get(i));
-                                count++;
-                            }
+                            transactionList.addAll(reversedList);
                             adapter.notifyDataSetChanged();
+
                         } else {
                             Toast.makeText(MiniStatementActivity.this, "No transactions found", Toast.LENGTH_SHORT).show();
                         }

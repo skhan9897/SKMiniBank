@@ -237,7 +237,14 @@ public class CustomerDAO {
         c.setUpiId(rs.getString("upi_id"));
         c.setUpiStatus(rs.getString("upi_status"));
         c.setPassword(rs.getString("password"));
-        c.setPhoto(rs.getString("photo"));
+        
+        try {
+            c.setPhoto(rs.getString("photo"));
+        } catch (Exception e) {
+            // photo column might be missing
+            c.setPhoto(null);
+        }
+
         return c;
     }
 }

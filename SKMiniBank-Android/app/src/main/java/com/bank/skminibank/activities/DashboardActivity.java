@@ -146,20 +146,11 @@ public class DashboardActivity extends AppCompatActivity {
         
         // Main Services
         setupServiceCard(R.id.cardBalanceInq, "Balance Inquiry", android.R.drawable.ic_menu_info_details, v -> startPinActivity());
-        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> {
-            Intent intent = new Intent(this, WebPortalActivity.class);
-            intent.putExtra("url", "https://skminibank.onrender.com/admin/withdraw.jsp");
-            intent.putExtra("title", "Cash Withdrawal");
-            startActivity(intent);
-        });
+        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> startActivity(new Intent(this, CashWithdrawalActivity.class)));
         setupServiceCard(R.id.cardPassbook, "Passbook", android.R.drawable.ic_menu_agenda, v -> startActivity(new Intent(this, TransactionsActivity.class)));
         
-        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> {
-            Intent intent = new Intent(this, WebPortalActivity.class);
-            intent.putExtra("url", "https://skminibank.onrender.com/admin/fixed-deposit.jsp");
-            intent.putExtra("title", "Fixed Deposit");
-            startActivity(intent);
-        });
+        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> startActivity(new Intent(this, FixedDepositActivity.class)));
+
         setupServiceCard(R.id.cardUpiPayment, "UPI Payment", android.R.drawable.ic_menu_camera, v -> startActivity(new Intent(this, UpiActivity.class)));
         setupServiceCard(R.id.cardScanPay, "Scan & Pay", android.R.drawable.ic_menu_camera, v -> startScanner());
         
@@ -168,8 +159,8 @@ public class DashboardActivity extends AppCompatActivity {
         setupServiceCard(R.id.cardMiniStatement, "Mini Statement", android.R.drawable.ic_menu_recent_history, v -> startActivity(new Intent(this, MiniStatementActivity.class)));
 
         setupServiceCard(R.id.cardRequests, "Requests", android.R.drawable.ic_menu_edit, v -> startActivity(new Intent(this, MyRequestsActivity.class)));
-        setupServiceCard(R.id.cardOffers, "Others", android.R.drawable.ic_menu_gallery, v -> startActivity(new Intent(this, AllServicesActivity.class)));
-        setupServiceCard(R.id.cardMore, "More", android.R.drawable.ic_menu_more, v -> startActivity(new Intent(this, AllServicesActivity.class)));
+        setupServiceCard(R.id.cardOffers, "Offers", android.R.drawable.ic_menu_gallery, v -> startActivity(new Intent(this, ReferEarnActivity.class)));
+        setupServiceCard(R.id.cardMore, "All Services", android.R.drawable.ic_menu_more, v -> startActivity(new Intent(this, AllServicesActivity.class)));
     }
 
     private void setupBottomNav() {

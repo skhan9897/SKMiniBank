@@ -7,809 +7,257 @@
 <%@page import="com.bank.model.DebitCard"%>
 <%
 String idParam = request.getParameter("customerId");
-
 if (idParam == null || idParam.trim().isEmpty()) {
     out.println("Customer ID Missing");
     return;
 }
-
 int id = Integer.parseInt(idParam);
-
 CustomerDAO dao = new CustomerDAO();
 Customer c = dao.getCustomerById(id);
-
 if (c == null) {
     out.println("Customer Not Found");
     return;
 }
-
 FixedDepositDAO fdDao = new FixedDepositDAO();
 FixedDeposit fd = fdDao.getFDByCustomerId(c.getCustomerId());
-
 DebitCardDAO cardDAO = new DebitCardDAO();
 DebitCard card = cardDAO.getCardByCustomerId(c.getCustomerId());
-
-String status = c.getStatus();
-String kycStatus = c.getKycStatus();
-
-if (status == null) status = "ACTIVE";
-if (kycStatus == null) kycStatus = "Pending";
+String status = c.getStatus() != null ? c.getStatus() : "ACTIVE";
+String kycStatus = c.getKycStatus() != null ? c.getKycStatus() : "Pending";
+String role = (String) session.getAttribute("role");
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>SK MINI BANK | Customer Profile</title>
-
+<title><%= c.getFullName() %> | Premium Profile</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet"
-href="${pageContext.request.contextPath}/css/dashboard.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 <style>
+    :root { --primary: #003366; --accent: #00d2ff; --glass: rgba(255, 255, 255, 0.9); }
+    body { background: #f0f2f5; font-family: 'Inter', sans-serif; margin: 0; }
+    
+    /* Sidebar */
+    .sidebar { width: 260px; height: 100vh; background: var(--primary); position: fixed; color: white; padding: 20px; transition: 0.3s; }
+    .sidebar h3 { font-size: 1.2rem; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px; }
+    .sidebar a { display: flex; align-items: center; padding: 12px 15px; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: 10px; margin-bottom: 5px; font-size: 0.9rem; }
+    .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
+    .sidebar i { width: 25px; margin-right: 10px; }
 
-body{
-    background:#eef3f8;
-    font-family:'Segoe UI',sans-serif;
-}
+    /* Main Content */
+    .main-content { margin-left: 260px; padding: 40px; }
+    
+    /* Profile Header Card */
+    .profile-header { background: linear-gradient(135deg, #003366, #00509d); border-radius: 24px; padding: 40px; color: white; position: relative; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,51,102,0.2); }
+    .profile-header::after { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: rgba(255,255,255,0.05); border-radius: 50%; }
 
-.sidebar{
-    position:fixed;
-    left:0;
-    top:0;
-    width:250px;
-    height:100vh;
-    background:#003366;
-    color:white;
-    padding-top:20px;
-    box-shadow:0 0 20px rgba(0,0,0,.25);
-}
-
-.sidebar h3{
-    text-align:center;
-    font-weight:bold;
-    margin-bottom:30px;
-}
-
-.sidebar a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    padding:15px 25px;
-    transition:.3s;
-}
-
-.sidebar a:hover{
-    background:#0d6efd;
-    padding-left:35px;
-}
-
-.main{
-    margin-left:260px;
-    padding:30px;
-}
-
-.topbar{
-    background:white;
-    padding:18px;
-    border-radius:15px;
-    box-shadow:0 4px 15px rgba(0,0,0,.1);
-    margin-bottom:25px;
-}
-
-.info-card{
-    background:white;
-    border-radius:18px;
-    padding:20px;
-    box-shadow:0 5px 18px rgba(0,0,0,.12);
-}
-
-.summary{
-    border-radius:15px;
-    color:white;
-    padding:20px;
-}
-
-.bg1{
-    background:linear-gradient(135deg,#0052D4,#4364F7);
-}
-
-.bg2{
-    background:linear-gradient(135deg,#11998e,#38ef7d);
-}
-
-.bg3{
-    background:linear-gradient(135deg,#f7971e,#ffd200);
-    color:black;
-}
-
-.bg4{
-    background:linear-gradient(135deg,#8E2DE2,#4A00E0);
-}
-
-.bank-card{
-    margin-top:20px;
-    border-radius:22px;
-    padding:28px;
-    color:white;
-    background:linear-gradient(135deg,#005bea,#00c6fb);
-    box-shadow:0 15px 30px rgba(0,0,0,.25);
-}
-
-.action-btn{
-    width:100%;
-    margin-bottom:10px;
-}
-
+    .avatar-wrapper { position: relative; width: 140px; height: 140px; }
+    .avatar-img { width: 100%; height: 100%; border-radius: 35px; object-fit: cover; border: 4px solid rgba(255,255,255,0.2); }
+    .status-dot { position: absolute; bottom: 5px; right: 5px; width: 20px; height: 20px; background: #2ecc71; border: 4px solid #003366; border-radius: 50%; }
+    
+    .premium-card { background: white; border: none; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); transition: 0.3s; }
+    .premium-card:hover { transform: translateY(-5px); }
+    .card-label { font-size: 0.75rem; font-weight: 700; color: #95a5a6; text-transform: uppercase; letter-spacing: 1px; }
+    .card-value { font-size: 1.1rem; font-weight: 600; color: #2c3e50; }
+    
+    /* Bank Card */
+    .bank-card { width: 350px; height: 220px; background: linear-gradient(135deg, #2c3e50, #000000); border-radius: 20px; padding: 25px; color: white; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+    .card-chip { width: 50px; height: 40px; background: linear-gradient(135deg, #f1c40f, #f39c12); border-radius: 8px; margin-bottom: 20px; }
+    .card-no { font-size: 1.4rem; letter-spacing: 3px; font-family: 'Courier New', monospace; margin-bottom: 20px; }
+    .card-holder { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; opacity: 0.8; }
+    
+    .btn-action { border-radius: 12px; padding: 10px 20px; font-weight: 600; transition: 0.2s; }
+    .badge-premium { padding: 8px 16px; border-radius: 30px; font-weight: 700; font-size: 0.7rem; letter-spacing: 1px; }
 </style>
-
 </head>
-
 <body>
 
-    
-    
 <div class="sidebar">
-
-<h3 class="text-white fw-bold">
-    <i class="fa-solid fa-building-columns me-2"></i>
-    SK MINI BANK
-</h3>
-
-
-<a href="#" id="serviceBtn">
-    <i class="fa fa-building-columns"></i> Services
-    <i class="fa fa-chevron-down float-end"></i>
-</a>
-
-
-<a href="${pageContext.request.contextPath}/admin/withdraw.jsp">
-    <i class="fa fa-wallet"></i> Withdraw
-</a>
-
-<a href="${pageContext.request.contextPath}/admin/transfer.jsp">
-    <i class="fa fa-right-left"></i> Transfer
-</a>
-
-
-<a href="${pageContext.request.contextPath}/TransactionServlet?customerId=${customer.customerId}">
-    Transactions
-</a>
-       
-    <li class="nav-item">
-
-    <a class="nav-link" data-bs-toggle="collapse" href="#serviceRequestMenu">
-
-        <i class="fas fa-tasks"></i>
-
-        Service Requests
-
-    </a>
-
-    <div class="collapse" id="serviceRequestMenu">
-
-        <a class="nav-link ms-3"
-           href="../AdminAllRequestServlet">
-
-            All Requests
-
-        </a>
-
-        <a class="nav-link ms-3"
-           href="../AdminATMRequestServlet">
-
-            ATM Requests
-
-        </a>
-
-        <a class="nav-link ms-3"
-           href="../AdminChequeBookListServlet">
-
-            Cheque Book
-
-        </a>
-
-        <a class="nav-link ms-3"
-           href="../AdminLoanRequestServlet">
-
-            Loan
-
-        </a>
-
-        <a class="nav-link ms-3"
-           href="../AdminNetBankingServlet">
-
-            Net Banking
-
-        </a>
-
-    </div>
-
-</li>
-    
-    
- <div id="serviceMenu" style="display:none;">
-
-    <a href="<%=request.getContextPath()%>/admin/atm-request.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-credit-card"></i> Apply ATM Card
-    </a>
-
-    <a href="<%=request.getContextPath()%>/admin/cheque-book-request.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-book"></i> Apply Cheque Book
-    </a>
-
-    <a href="<%=request.getContextPath()%>/admin/internet-banking.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-globe"></i> Internet Banking
-    </a>
-
-    <a href="<%=request.getContextPath()%>/admin/mobile-banking.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-mobile"></i> Mobile Banking
-    </a>
-
-    <a href="<%=request.getContextPath()%>/admin/fixed-deposit.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-piggy-bank"></i> Fixed Deposit
-    </a>
-
-    <a href="<%=request.getContextPath()%>/admin/loan-dashboard.jsp?customerId=<%=c.getCustomerId()%>">
-        <i class="fa fa-hand-holding-dollar"></i> Loan
-    </a>
-
-</div>
-        
-        
-   
-    
-<a href="${pageContext.request.contextPath}/LogoutServlet">
-    <i class="fa fa-right-from-bracket"></i> Logout
-</a>
+    <h3>🏦 SK MINI BANK</h3>
+    <a href="<%=request.getContextPath()%>/DashboardServlet"><i class="fa fa-th-large"></i> Dashboard</a>
+    <a href="<%=request.getContextPath()%>/admin/customer-list.jsp"><i class="fa fa-users"></i> Customers</a>
+    <a href="<%=request.getContextPath()%>/TransactionServlet?accountNumber=<%=c.getAccountNumber()%>"><i class="fa fa-exchange-alt"></i> Transactions</a>
+    <a href="<%=request.getContextPath()%>/AdminLoanRequestServlet"><i class="fa fa-hand-holding-usd"></i> Loan Apps</a>
+    <a href="<%=request.getContextPath()%>/AdminAllRequestServlet"><i class="fa fa-tasks"></i> Service Requests</a>
+    <hr style="opacity: 0.1">
+    <a href="<%=request.getContextPath()%>/admin/withdraw.jsp"><i class="fa fa-minus-circle"></i> Cash Withdraw</a>
+    <a href="<%=request.getContextPath()%>/admin/deposit.jsp"><i class="fa fa-plus-circle"></i> Cash Deposit</a>
+    <a href="<%=request.getContextPath()%>/LogoutServlet" style="color: #ff7675; margin-top: 20px;"><i class="fa fa-power-off"></i> Sign Out</a>
 </div>
 
-<div class="main">
-    
-    <div class="container-fluid">
+<div class="main-content">
 
-<div class="row">
-
-<div class="col-lg-14">
-    
-
-<div class="topbar d-flex justify-content-between">
-
-<div>
-
-<h3>Customer Banking Profile</h3>
-
-Welcome,
-<b><%=c.getFullName()%></b>
-
-</div>
-
-<div>
-
-<span class="badge bg-success p-3">
-<%=status%>
-</span>
-
-</div>
-
-</div>
-
-
-<%
-String msg = request.getParameter("msg");
-
-if("blocked".equalsIgnoreCase(msg)){
-%>
-
-<div class="alert alert-danger mt-3">
-    <b>? Account Blocked Successfully.</b>
-</div>
-
-<%
-}else if("freeze".equalsIgnoreCase(msg)){
-%>
-
-<div class="alert alert-warning mt-3">
-    <b>? Account Frozen Successfully.</b>
-</div>
-
-<%
-}else if("unblocked".equalsIgnoreCase(msg)){
-%>
-
-<div class="alert alert-success mt-3">
-    <b>? Account Unblocked Successfully.</b>
-</div>
-
-<%
-}else if("unfreeze".equalsIgnoreCase(msg)){
-%>
-
-<div class="alert alert-success mt-3">
-    <b>? Account Unfrozen Successfully.</b>
-</div>
-
-<%
-}else if("photo_success".equalsIgnoreCase(msg)){
-%>
-<div class="alert alert-success mt-3">
-    <b>📸 Photo Updated Successfully!</b>
-</div>
-<%
-}
-%>
-
-
-
-<%
-String accountStatus = c.getStatus();
-
-if(accountStatus == null){
-    accountStatus = "ACTIVE";
-}
-%>
-
-<div class="row mt-4">
-    <!-- Profile Photo Section -->
-    <div class="col-lg-3">
-        <div class="card shadow border-0 rounded-4 text-center p-4">
-            <div class="position-relative d-inline-block mx-auto mb-3">
-                <img src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
-                     onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
-                     class="rounded-circle border border-4 border-white shadow-sm"
-                     style="width: 150px; height: 150px; object-fit: cover;">
-
-                <button class="btn btn-primary btn-sm position-absolute bottom-0 end-0 rounded-circle"
-                        data-bs-toggle="modal" data-bs-target="#photoModal">
-                    <i class="fa fa-camera"></i>
-                </button>
-            </div>
-            <h5 class="fw-bold mb-1"><%= c.getFullName() %></h5>
-            <p class="text-muted small"><%= c.getAccountNumber() %></p>
-            <div class="mt-2">
-                <span class="badge bg-info text-white"><%= c.getAccountType() %></span>
-            </div>
+    <!-- Profile Header -->
+    <div class="profile-header d-flex align-items-center">
+        <div class="avatar-wrapper me-4">
+            <img src="<%=request.getContextPath()%>/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+                 onerror="this.src='<%=request.getContextPath()%>/images/default_user.png'" class="avatar-img shadow">
+            <div class="status-dot"></div>
         </div>
-
-        <!-- Alerts for this user -->
-        <%
-        if("BLOCKED".equalsIgnoreCase(accountStatus)){
-        %>
-        <div class="alert alert-danger mt-3">
-            <h5><i class="fa fa-ban"></i> Account Blocked</h5>
-            Please Contact Home Branch.
-        </div>
-        <%
-        }else if("FREEZE".equalsIgnoreCase(accountStatus)){
-        %>
-        <div class="alert alert-warning mt-3">
-            <h5><i class="fa fa-lock"></i> Account Frozen</h5>
-            Please Visit Home Branch.
-        </div>
-        <%
-        }else{
-        %>
-        <div class="alert alert-success mt-3">
-            <i class="fa fa-circle-check"></i> Account Active
-        </div>
-        <%
-        }
-        %>
-    </div>
-
-    <!-- Details Section -->
-    <div class="col-lg-9">
-        <div class="row">
-            <!-- Account Summary -->
-            <div class="col-lg-5">
-                <div class="card shadow border-0 rounded-4 mb-4">
-                    <div class="card-header bg-success text-white py-3">
-                        <h5 class="mb-0"><i class="fa-solid fa-wallet"></i> Account Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-sm table-borderless">
-                            <tr><th>ID</th><td><%= c.getCustomerId() %></td></tr>
-                            <tr><th>Account</th><td><%=c.getAccountNumber()%></td></tr>
-                            <tr><th>IFSC</th><td><%=c.getIfscCode()%></td></tr>
-                            <tr><th>Type</th><td><%=c.getAccountType()%></td></tr>
-                            <tr><th>Balance</th><td class="fw-bold text-success">&#8377; <%=c.getBalance()%></td></tr>
-                            <tr><th>KYC</th><td><span class="badge bg-success"><%=kycStatus%></span></td></tr>
-                            <tr><th>Status</th><td><span class="badge bg-primary"><%=status%></span></td></tr>
-                        </table>
-                        <hr>
-                        <div class="d-grid gap-2">
-                           <% if ("ADMIN".equals(role)) { %>
-                            <a href="${pageContext.request.contextPath}/BlockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i> Block</a>
-                            <a href="${pageContext.request.contextPath}/FreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-warning btn-sm"><i class="fa fa-lock"></i> Freeze</a>
-                            <a href="${pageContext.request.contextPath}/UnblockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-success btn-sm"><i class="fa fa-unlock"></i> Unblock</a>
-                            <a href="${pageContext.request.contextPath}/UnfreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-primary btn-sm"><i class="fa fa-lock-open"></i> Unfreeze</a>
-                           <% } %>
-                        </div>
-                    </div>
+        <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="fw-bold mb-1"><%= c.getFullName() %></h1>
+                    <p class="mb-0 opacity-75"><i class="fa fa-map-marker-alt me-2"></i> <%= c.getCity() %>, <%= c.getState() %></p>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-light text-primary badge-premium mb-2"><%= status.toUpperCase() %> ACCOUNT</span><br>
+                    <span class="badge bg-warning text-dark badge-premium">KYC: <%= kycStatus.toUpperCase() %></span>
                 </div>
             </div>
-
-            <!-- Personal Details -->
-            <div class="col-lg-7">
-                <div class="card shadow border-0 rounded-4 mb-4">
-                    <div class="card-header bg-primary text-white py-3">
-                        <h5 class="mb-0"><i class="fa-user fa"></i> Personal Details</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <small class="text-muted">Father Name</small>
-                                <p class="fw-bold"><%=c.getFatherName()%></p>
-                            </div>
-                            <div class="col-6">
-                                <small class="text-muted">Mobile</small>
-                                <p class="fw-bold"><%=c.getMobile()%></p>
-                            </div>
-                            <div class="col-12">
-                                <small class="text-muted">Email</small>
-                                <p class="fw-bold"><%=c.getEmail()%></p>
-                            </div>
-                            <div class="col-6">
-                                <small class="text-muted">DOB</small>
-                                <p class="fw-bold"><%=c.getDob()%></p>
-                            </div>
-                            <div class="col-6">
-                                <small class="text-muted">Gender</small>
-                                <p class="fw-bold"><%=c.getGender()%></p>
-                            </div>
-                            <div class="col-12">
-                                <small class="text-muted">Address</small>
-                                <p class="small"><%=c.getAddress()%>, <%=c.getCity()%>, <%=c.getState()%> - <%=c.getPincode()%></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Virtual Card -->
-            <div class="col-12">
-                <% if(card != null){ %>
-                    <div class="bank-card mx-auto" style="max-width: 400px;">
-                        <div class="chip"></div>
-                        <div class="contactless"><i class="fa fa-wifi"></i></div>
-                        <div class="bank-name">SK MINI BANK</div>
-                        <div class="card-number"><%= card.getCardNumber() %></div>
-                        <div class="card-footer">
-                            <div><small>VALID THRU</small><br><b><%= card.getExpiryDate() %></b></div>
-                            <div><small>CVV</small><br><b><%= card.getCvv() %></b></div>
-                        </div>
-                        <div class="holder"><%= card.getCustomerName() %></div>
-                        <div class="visa">VISA</div>
-                    </div>
-                <% } else { %>
-                    <div class="alert alert-warning text-center">Debit Card Not Available</div>
+            <div class="mt-4 d-flex gap-3">
+                <% if ("ADMIN".equals(role)) { %>
+                    <a href="<%=request.getContextPath()%>/BlockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-danger btn-action btn-sm"><i class="fa fa-ban me-1"></i> Block</a>
+                    <a href="<%=request.getContextPath()%>/FreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-warning btn-action btn-sm text-dark"><i class="fa fa-lock me-1"></i> Freeze</a>
+                    <a href="<%=request.getContextPath()%>/UnblockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-success btn-action btn-sm"><i class="fa fa-unlock me-1"></i> Unblock</a>
+                    <a href="<%=request.getContextPath()%>/UnfreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-light btn-action btn-sm"><i class="fa fa-lock-open me-1"></i> Unfreeze</a>
                 <% } %>
             </div>
         </div>
     </div>
-</div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-               <div class="container-fluid mt-3">
 
     <div class="row">
-
-        <!-- LEFT SIDE -->
-        <div class="col-lg-4">
-    
-  <div class="card shadow-lg border-0 rounded-4 mb-4">
-
-    <div class="card-header bg-success text-white py-3">
-
-        <h5 class="mb-0">
-            <i class="fa-solid fa-wallet"></i>
-            Account Summary
-        </h5>
-
-    </div>
-
-    <div class="card-body">
-
-        <table class="table table-borderless">
-            
-            <tr>
-    <th>Customer ID</th>
-    <td><%= c.getCustomerId() %></td>
-</tr>
-
-            <tr>
-                <th>Account Number</th>
-                <td><%=c.getAccountNumber()%></td>
-            </tr>
-
-            <tr>
-                <th>IFSC Code</th>
-                <td><%=c.getIfscCode()%></td>
-            </tr>
-
-            <tr>
-                <th>Account Type</th>
-                <td><%=c.getAccountType()%></td>
-            </tr>
-
-            <tr>
-                <th>Branch</th>
-                <td><%=c.getBranch()%></td>
-            </tr>
-
-            <tr>
-                <th>Current Balance</th>
-                <td class="fw-bold text-success">
-                    &#8377; <%=c.getBalance()%>
-                </td>
-            </tr>
-
-            <tr>
-                <th>KYC Status</th>
-                <td>
-                    <span class="badge bg-success">
-                        <%=kycStatus%>
-                    </span>
-                </td>
-            </tr>
-
-            <tr>
-                <th>Account Status</th>
-                <td>
-                    <span class="badge bg-primary">
-                        <%=status%>
-                    </span>
-                </td>
-            </tr>
-
-        </table>
-
-        <hr>
-
-        <h6 class="mb-3">
-            <i class="fa-solid fa-gears"></i>
-            Account Controls
-        </h6>
-
-        <div class="d-grid gap-2">
-
-           <%
-String role = (String) session.getAttribute("role");
-
-if ("ADMIN".equals(role)) {
-%>
-
-<a href="${pageContext.request.contextPath}/BlockAccountServlet?customerId=<%=c.getCustomerId()%>"
-               class="btn btn-danger">
-                <i class="fa fa-ban"></i> Block Account
-            </a>
-
-            <a href="${pageContext.request.contextPath}/FreezeAccountServlet?customerId=<%=c.getCustomerId()%>"
-               class="btn btn-warning">
-                <i class="fa fa-lock"></i> Freeze Account
-            </a>
-
-            <a href="${pageContext.request.contextPath}/UnblockAccountServlet?customerId=<%=c.getCustomerId()%>"
-               class="btn btn-success">
-                <i class="fa fa-unlock"></i> Unblock Account
-            </a>
-
-            <a href="${pageContext.request.contextPath}/UnfreezeAccountServlet?customerId=<%=c.getCustomerId()%>"
-               class="btn btn-primary">
-                <i class="fa fa-lock-open"></i> Unfreeze Account
-            </a>
-
-<%
-}
-%>
-
-        </div>
-
-    </div>
-
-</div>  
-    
-</div>
-            <!-- Account Summary -->
-            
-
-        <!-- RIGHT SIDE -->
+        <!-- Financial Overview -->
         <div class="col-lg-8">
-
-<div class="row">            
-
-                <!-- Personal Details -->
+            <div class="row g-4 mb-4">
                 <div class="col-md-6">
-
-                    <div class="card shadow mb-4">
-
-                        <div class="card-header bg-primary text-white">
-                            <i class="fa fa-user"></i> Personal Details
+                    <div class="card premium-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="card-label">Available Balance</span>
+                            <i class="fa fa-wallet text-success fs-4"></i>
                         </div>
-
-                        <div class="card-body">
-
-                            <table class="table table-borderless">
-
-                                <tr>
-                                    <th>Name</th>
-                                    <td><%=c.getFullName()%></td>
-                                </tr>
-
-                                <tr>
-                                    <th>Father</th>
-                                    <td><%=c.getFatherName()%></td>
-                                </tr>
-
-                                <tr>
-                                    <th>Mobile</th>
-                                    <td><%=c.getMobile()%></td>
-                                </tr>
-
-                                <tr>
-                                    <th>Email</th>
-                                    <td><%=c.getEmail()%></td>
-                                </tr>
-
-                                <tr>
-                                    <th>DOB</th>
-                                    <td><%=c.getDob()%></td>
-                                </tr>
-
-                                <tr>
-                                    <th>Gender</th>
-                                    <td><%=c.getGender()%></td>
-                                </tr>
-
-                            </table>
-
+                        <h2 class="fw-bold text-dark">&#8377; <%= String.format("%,.2f", c.getBalance()) %></h2>
+                        <p class="small text-muted mb-0">Total liquid assets in savings</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card premium-card p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="card-label">Fixed Deposits</span>
+                            <i class="fa fa-piggy-bank text-primary fs-4"></i>
                         </div>
-
+                        <h2 class="fw-bold text-dark">&#8377; <%= fd != null ? String.format("%,.2f", fd.getFdAmount()) : "0.00" %></h2>
+                        <p class="small text-muted mb-0"><%= fd != null ? "Maturing on " + fd.getMaturityDate() : "No active FDs found" %></p>
                     </div>
-
                 </div>
-                               
-                                    
-                                    <!-- Virtual Debit Card -->
-    <div class="col-lg-4">
-
-    <div class="card shadow">
-
-        <div class="card-header bg-primary text-white">
-            <i class="fa fa-credit-card"></i> Virtual Debit Card
-        </div>
-
-        <div class="card-body text-center">
-
-        <%
-        if(card != null){
-        %>
-
-            <div class="bank-card">
-
-                <div class="chip"></div>
-
-                <div class="contactless">
-                    <i class="fa fa-wifi"></i>
-                </div>
-
-                <div class="bank-name">
-                    SK MINI BANK
-                </div>
-
-                <div class="card-number">
-                    <%= card.getCardNumber() %>
-                </div>
-
-                <div class="card-footer">
-
-                    <div>
-                        <small>VALID THRU</small><br>
-                        <b><%= card.getExpiryDate() %></b>
-                    </div>
-
-                    <div>
-                        <small>CVV</small><br>
-                        <b><%= card.getCvv() %></b>
-                    </div>
-
-                </div>
-
-                <div class="holder">
-                    <%= card.getCustomerName() %>
-                </div>
-
-                <div class="visa">
-                    VISA
-                </div>
-
             </div>
 
-        <%
-        }else{
-        %>
-
-            <div class="alert alert-warning">
-                Debit Card Not Available
+            <div class="card premium-card p-4 mb-4">
+                <h5 class="fw-bold mb-4">Identity & Banking Details</h5>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card-label">Account Number</div>
+                        <div class="card-value"><%= c.getAccountNumber() %></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-label">IFSC Code</div>
+                        <div class="card-value"><%= c.getIfscCode() %></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-label">Customer ID</div>
+                        <div class="card-value">#<%= c.getCustomerId() %></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-label">Aadhaar Number</div>
+                        <div class="card-value"><%= c.getAadhaar() %></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-label">PAN Number</div>
+                        <div class="card-value"><%= c.getPan() %></div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card-label">Account Type</div>
+                        <div class="card-value text-primary"><%= c.getAccountType() %></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="card-label">Email Address</div>
+                        <div class="card-value"><%= c.getEmail() %></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-label">Mobile Number</div>
+                        <div class="card-value">+91 <%= c.getMobile() %></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-label">Father's Name</div>
+                        <div class="card-value"><%= c.getFatherName() %></div>
+                    </div>
+                </div>
             </div>
-
-        <%
-        }
-        %>
-
         </div>
 
+        <!-- Right Side: Virtual Card & Actions -->
+        <div class="col-lg-4">
+            <div class="mb-4">
+                <h5 class="fw-bold mb-3">Active Debit Card</h5>
+                <% if(card != null) { %>
+                <div class="bank-card shadow-lg">
+                    <div class="d-flex justify-content-between">
+                        <div class="card-chip"></div>
+                        <i class="fa fa-wifi fs-4 opacity-50"></i>
+                    </div>
+                    <div class="card-no"><%= card.getCardNumber().replaceAll(".{4}", "$0 ") %></div>
+                    <div class="d-flex justify-content-between align-items-end">
+                        <div>
+                            <div class="card-holder"><%= card.getCustomerName() %></div>
+                            <div class="small opacity-50">EXP: <%= card.getExpiryDate() %></div>
+                        </div>
+                        <h4 class="mb-0">VISA</h4>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="alert alert-light border p-4 rounded-4 text-center">
+                        <i class="fa fa-credit-card fs-1 opacity-20 mb-2"></i><br>
+                        No active card found
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="card premium-card p-4">
+                <h5 class="fw-bold mb-3">Quick Actions</h5>
+                <button class="btn btn-outline-primary btn-action w-100 mb-2" data-bs-toggle="modal" data-bs-target="#photoModal">
+                    <i class="fa fa-camera me-2"></i> Update Photo
+                </button>
+                <a href="<%=request.getContextPath()%>/admin/edit-customer.jsp?id=<%=c.getCustomerId()%>" class="btn btn-outline-dark btn-action w-100 mb-2">
+                    <i class="fa fa-edit me-2"></i> Edit Profile
+                </a>
+                <a href="<%=request.getContextPath()%>/TransactionPDFServlet?accountNumber=<%=c.getAccountNumber()%>" class="btn btn-outline-danger btn-action w-100">
+                    <i class="fa fa-file-pdf me-2"></i> Statement PDF
+                </a>
+            </div>
+        </div>
     </div>
 
-</div>
-        <c:if test="${fd != null}">
-<div class="card shadow">
-    <div class="card-header bg-success text-white">
-        Fixed Deposit
-    </div>
-
-    <div class="card-body">
-        <p><b>FD ID :</b> ${fd.fdId}</p>
-<p><b>Account Number :</b> ${fd.accountNumber}</p>
-<p><b>Customer Name :</b> ${fd.customerName}</p>
-<p><b>FD Amount :</b> &#8377;${fd.fdAmount}</p>
-<p><b>Interest Rate :</b> ${fd.interestRate}%</p>
-<p><b>Duration :</b> ${fd.durationYear} Year</p>
-<p><b>Maturity Amount :</b>&#8377;${fd.maturityAmount}</p>
-<p><b>Open Date :</b> ${fd.openDate}</p>
-<p><b>Maturity Date :</b> ${fd.maturityDate}</p>
-<p><b>Status :</b> ${fd.status}</p>
-    </div>
-</div>
-</c:if>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Photo Upload Modal -->
+    <!-- Photo Modal -->
     <div class="modal fade" id="photoModal" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Update Customer Photo</h5>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">Update Photo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <form action="${pageContext.request.contextPath}/UpdateCustomerPhotoServlet" method="post" enctype="multipart/form-data">
-              <div class="modal-body text-center">
+          <form action="<%=request.getContextPath()%>/UpdateCustomerPhotoServlet" method="post" enctype="multipart/form-data">
+              <div class="modal-body text-center p-4">
                   <input type="hidden" name="customerId" value="<%= c.getCustomerId() %>">
-                  <input type="hidden" name="accountNumber" value="<%= c.getAccountNumber() %>">
-
-                  <div class="mb-3">
-                      <img id="modalPreview" src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
-                           onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
-                           style="width: 200px; height: 200px; object-fit: cover;" class="rounded border">
+                  <div class="mb-4">
+                      <img id="modalPreview" src="<%=request.getContextPath()%>/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+                           onerror="this.src='<%=request.getContextPath()%>/images/default_user.png'"
+                           style="width: 180px; height: 180px; object-fit: cover;" class="rounded-4 border shadow-sm">
                   </div>
-
                   <input type="file" name="photo" class="form-control" accept="image/*" required onchange="document.getElementById('modalPreview').src = window.URL.createObjectURL(this.files[0])">
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Upload Photo</button>
+              <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-primary btn-action w-100">Upload New Photo</button>
               </div>
           </form>
         </div>
       </div>
     </div>
 
-    <script>
-document.getElementById("serviceBtn").onclick=function(e){
+    <footer class="mt-5 pt-4 text-muted border-top text-center">
+        &copy; 2026 SK Mini Bank Management System | v2.0 Premium Interface
+    </footer>
+</div>
 
-    e.preventDefault();
-
-    var x=document.getElementById("serviceMenu");
-
-    if(x.style.display==="block"){
-        x.style.display="none";
-    }else{
-        x.style.display="block";
-    }
-
-};
-</script>
-    </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
