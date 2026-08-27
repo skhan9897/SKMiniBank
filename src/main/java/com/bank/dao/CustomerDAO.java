@@ -9,7 +9,7 @@ import java.util.List;
 public class CustomerDAO {
 
     public boolean addCustomer(Customer c) {
-        String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?)";
+        String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin,photo) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?)";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, c.getFullName());
@@ -46,6 +46,20 @@ public class CustomerDAO {
             ps.setString(32, c.getKycStatus());
             ps.setString(33, c.getPassword());
             ps.setString(34, c.getTransactionPin());
+            ps.setString(35, c.getPhoto());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePhoto(int customerId, String photoPath) {
+        String sql = "UPDATE customer SET photo=? WHERE customer_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, photoPath);
+            ps.setInt(2, customerId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -226,6 +240,7 @@ public class CustomerDAO {
         c.setUpiId(rs.getString("upi_id"));
         c.setUpiStatus(rs.getString("upi_status"));
         c.setPassword(rs.getString("password"));
+        c.setPhoto(rs.getString("photo"));
         return c;
     }
 }

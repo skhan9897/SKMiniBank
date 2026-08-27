@@ -36,7 +36,12 @@ public class AdminATMRequestServlet extends HttpServlet {
         request.setAttribute("requestList", requestList);
         request.getRequestDispatcher("/admin/service-requests.jsp")
                .forward(request, response);
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("errorMessage", "Error loading ATM requests: " + e.getMessage());
+        request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
     }
+}
 
     @Override
     protected void doPost(HttpServletRequest request,

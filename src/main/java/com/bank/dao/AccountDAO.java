@@ -32,20 +32,19 @@ public class AccountDAO {
 
     public List<Account> getAllAccounts() {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM account";
+        // Fetch from customer table as it seems to be the primary store for account info in this app
+        String sql = "SELECT customer_id, account_number, account_type, balance, status, full_name FROM customer WHERE account_number IS NOT NULL";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Account a = new Account();
-                a.setAccountId(rs.getInt("account_id"));
                 a.setCustomerId(rs.getInt("customer_id"));
                 a.setAccountNumber(rs.getString("account_number"));
                 a.setAccountType(rs.getString("account_type"));
-                a.setBranchId(rs.getInt("branch_id"));
+                a.setCustomerName(rs.getString("full_name"));
                 a.setBalance(rs.getDouble("balance"));
                 a.setStatus(rs.getString("status"));
-                a.setOpeningDate(rs.getString("opening_date"));
                 list.add(a);
             }
         } catch (SQLException e) {

@@ -24,6 +24,7 @@
 
         <!-- Main Banking App Activities -->
         <activity android:name=".activities.MiniStatementActivity" android:exported="false" />
+        <activity android:name=".activities.InstantAccountActivity" android:exported="false" />
         <activity android:name=".activities.VerticalCaptureActivity" android:exported="false" />
         <activity android:name=".activities.OpenAccountActivity" android:exported="false" />
         <activity android:name=".activities.SetPinActivity" android:exported="false" />

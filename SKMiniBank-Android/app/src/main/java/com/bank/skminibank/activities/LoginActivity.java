@@ -77,8 +77,8 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this, ResetPasswordActivity.class));
         });
 
-        findViewById(R.id.btnOpenAccount).setOnClickListener(v -> {
-            startActivity(new Intent(this, OpenAccountActivity.class));
+        findViewById<View>(R.id.btnOpenAccount).setOnClickListener(v -> {
+            startActivity(new Intent(this, InstantAccountActivity.class));
         });
 
         setupBiometrics();

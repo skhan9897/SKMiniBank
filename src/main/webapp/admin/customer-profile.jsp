@@ -330,6 +330,12 @@ if("blocked".equalsIgnoreCase(msg)){
 </div>
 
 <%
+}else if("photo_success".equalsIgnoreCase(msg)){
+%>
+<div class="alert alert-success mt-3">
+    <b>📸 Photo Updated Successfully!</b>
+</div>
+<%
 }
 %>
 
@@ -341,42 +347,149 @@ String accountStatus = c.getStatus();
 if(accountStatus == null){
     accountStatus = "ACTIVE";
 }
-
-if("BLOCKED".equalsIgnoreCase(accountStatus)){
 %>
 
-<div class="alert alert-danger mt-3">
-    <h5><i class="fa fa-ban"></i> Account Blocked</h5>
-    Credit Transaction Allowed.<br>
-    Withdraw Not Allowed.<br>
-    Transfer Not Allowed.<br><br>
-    Please Contact Your Home Branch.
+<div class="row mt-4">
+    <!-- Profile Photo Section -->
+    <div class="col-lg-3">
+        <div class="card shadow border-0 rounded-4 text-center p-4">
+            <div class="position-relative d-inline-block mx-auto mb-3">
+                <img src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+                     onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
+                     class="rounded-circle border border-4 border-white shadow-sm"
+                     style="width: 150px; height: 150px; object-fit: cover;">
+
+                <button class="btn btn-primary btn-sm position-absolute bottom-0 end-0 rounded-circle"
+                        data-bs-toggle="modal" data-bs-target="#photoModal">
+                    <i class="fa fa-camera"></i>
+                </button>
+            </div>
+            <h5 class="fw-bold mb-1"><%= c.getFullName() %></h5>
+            <p class="text-muted small"><%= c.getAccountNumber() %></p>
+            <div class="mt-2">
+                <span class="badge bg-info text-white"><%= c.getAccountType() %></span>
+            </div>
+        </div>
+
+        <!-- Alerts for this user -->
+        <%
+        if("BLOCKED".equalsIgnoreCase(accountStatus)){
+        %>
+        <div class="alert alert-danger mt-3">
+            <h5><i class="fa fa-ban"></i> Account Blocked</h5>
+            Please Contact Home Branch.
+        </div>
+        <%
+        }else if("FREEZE".equalsIgnoreCase(accountStatus)){
+        %>
+        <div class="alert alert-warning mt-3">
+            <h5><i class="fa fa-lock"></i> Account Frozen</h5>
+            Please Visit Home Branch.
+        </div>
+        <%
+        }else{
+        %>
+        <div class="alert alert-success mt-3">
+            <i class="fa fa-circle-check"></i> Account Active
+        </div>
+        <%
+        }
+        %>
+    </div>
+
+    <!-- Details Section -->
+    <div class="col-lg-9">
+        <div class="row">
+            <!-- Account Summary -->
+            <div class="col-lg-5">
+                <div class="card shadow border-0 rounded-4 mb-4">
+                    <div class="card-header bg-success text-white py-3">
+                        <h5 class="mb-0"><i class="fa-solid fa-wallet"></i> Account Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-borderless">
+                            <tr><th>ID</th><td><%= c.getCustomerId() %></td></tr>
+                            <tr><th>Account</th><td><%=c.getAccountNumber()%></td></tr>
+                            <tr><th>IFSC</th><td><%=c.getIfscCode()%></td></tr>
+                            <tr><th>Type</th><td><%=c.getAccountType()%></td></tr>
+                            <tr><th>Balance</th><td class="fw-bold text-success">&#8377; <%=c.getBalance()%></td></tr>
+                            <tr><th>KYC</th><td><span class="badge bg-success"><%=kycStatus%></span></td></tr>
+                            <tr><th>Status</th><td><span class="badge bg-primary"><%=status%></span></td></tr>
+                        </table>
+                        <hr>
+                        <div class="d-grid gap-2">
+                           <% if ("ADMIN".equals(role)) { %>
+                            <a href="${pageContext.request.contextPath}/BlockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i> Block</a>
+                            <a href="${pageContext.request.contextPath}/FreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-warning btn-sm"><i class="fa fa-lock"></i> Freeze</a>
+                            <a href="${pageContext.request.contextPath}/UnblockAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-success btn-sm"><i class="fa fa-unlock"></i> Unblock</a>
+                            <a href="${pageContext.request.contextPath}/UnfreezeAccountServlet?customerId=<%=c.getCustomerId()%>" class="btn btn-primary btn-sm"><i class="fa fa-lock-open"></i> Unfreeze</a>
+                           <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Details -->
+            <div class="col-lg-7">
+                <div class="card shadow border-0 rounded-4 mb-4">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0"><i class="fa-user fa"></i> Personal Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted">Father Name</small>
+                                <p class="fw-bold"><%=c.getFatherName()%></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Mobile</small>
+                                <p class="fw-bold"><%=c.getMobile()%></p>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted">Email</small>
+                                <p class="fw-bold"><%=c.getEmail()%></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">DOB</small>
+                                <p class="fw-bold"><%=c.getDob()%></p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Gender</small>
+                                <p class="fw-bold"><%=c.getGender()%></p>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted">Address</small>
+                                <p class="small"><%=c.getAddress()%>, <%=c.getCity()%>, <%=c.getState()%> - <%=c.getPincode()%></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Card -->
+            <div class="col-12">
+                <% if(card != null){ %>
+                    <div class="bank-card mx-auto" style="max-width: 400px;">
+                        <div class="chip"></div>
+                        <div class="contactless"><i class="fa fa-wifi"></i></div>
+                        <div class="bank-name">SK MINI BANK</div>
+                        <div class="card-number"><%= card.getCardNumber() %></div>
+                        <div class="card-footer">
+                            <div><small>VALID THRU</small><br><b><%= card.getExpiryDate() %></b></div>
+                            <div><small>CVV</small><br><b><%= card.getCvv() %></b></div>
+                        </div>
+                        <div class="holder"><%= card.getCustomerName() %></div>
+                        <div class="visa">VISA</div>
+                    </div>
+                <% } else { %>
+                    <div class="alert alert-warning text-center">Debit Card Not Available</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
 </div>
 
-<%
-}else if("FREEZE".equalsIgnoreCase(accountStatus)){
-%>
-
-<div class="alert alert-warning mt-3">
-    <h5><i class="fa fa-lock"></i> Account Frozen</h5>
-    Deposit Not Allowed.<br>
-    Withdraw Not Allowed.<br>
-    Transfer Not Allowed.<br><br>
-    Please Visit Your Home Branch.
-</div>
-
-<%
-}else{
-%>
-
-<div class="alert alert-success mt-3">
-    <h5><i class="fa fa-circle-check"></i> Account Active</h5>
-    All Banking Services are Available.
-</div>
-
-<%
-}
-%>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
                <div class="container-fluid mt-3">
 
@@ -653,6 +766,36 @@ if ("ADMIN".equals(role)) {
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
+    <!-- Photo Upload Modal -->
+    <div class="modal fade" id="photoModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Customer Photo</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <form action="${pageContext.request.contextPath}/UpdateCustomerPhotoServlet" method="post" enctype="multipart/form-data">
+              <div class="modal-body text-center">
+                  <input type="hidden" name="customerId" value="<%= c.getCustomerId() %>">
+                  <input type="hidden" name="accountNumber" value="<%= c.getAccountNumber() %>">
+
+                  <div class="mb-3">
+                      <img id="modalPreview" src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+                           onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
+                           style="width: 200px; height: 200px; object-fit: cover;" class="rounded border">
+                  </div>
+
+                  <input type="file" name="photo" class="form-control" accept="image/*" required onchange="document.getElementById('modalPreview').src = window.URL.createObjectURL(this.files[0])">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Upload Photo</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <script>
 document.getElementById("serviceBtn").onclick=function(e){
 

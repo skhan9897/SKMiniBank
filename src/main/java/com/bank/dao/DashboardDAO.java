@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardDAO {
 
@@ -48,6 +50,27 @@ public class DashboardDAO {
             e.printStackTrace();
         }
         return 0.0;
+    }
+
+    public List<com.bank.model.Account> getCustomerBalanceList() {
+        List<com.bank.model.Account> list = new ArrayList<>();
+        String sql = "SELECT customer_id, full_name, account_number, balance, status FROM customer WHERE account_number IS NOT NULL ORDER BY balance DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                com.bank.model.Account a = new com.bank.model.Account();
+                a.setCustomerId(rs.getInt("customer_id"));
+                a.setCustomerName(rs.getString("full_name"));
+                a.setAccountNumber(rs.getString("account_number"));
+                a.setBalance(rs.getDouble("balance"));
+                a.setStatus(rs.getString("status"));
+                list.add(a);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public int getTotalTransactions() {

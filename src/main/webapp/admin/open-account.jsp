@@ -177,94 +177,42 @@ Open New Savings / Current Account
 <div class="container-fluid p-4">
 
 <form action="<%=request.getContextPath()%>/RegisterServlet"
-
-method="post">
+method="post" enctype="multipart/form-data">
 
 <div class="section-title">
-
 <i class="fa fa-user"></i>
-
 Personal Details
-
 </div>
 
 <div class="row">
 
-<div class="col-md-4 mb-3">
-
-<label class="form-label">
-
-Full Name
-
-</label>
-
-<input type="text"
-
-name="fullName"
-
-class="form-control"
-
-placeholder="Enter Full Name"
-
-required>
-
+<div class="col-md-4 mb-3 text-center">
+    <label class="form-label d-block">Customer Photo</label>
+    <div class="border rounded p-2 mb-2" style="width: 150px; height: 150px; margin: 0 auto; overflow: hidden; background: #f8f9fa;">
+        <img id="imgPreview" src="${pageContext.request.contextPath}/images/default_user.png" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+    <input type="file" name="photo" class="form-control form-control-sm" accept="image/*" onchange="previewImage(this)">
 </div>
 
-<div class="col-md-4 mb-3">
-
-<label class="form-label">
-
-Father Name
-
-</label>
-
-<input type="text"
-
-name="fatherName"
-
-class="form-control"
-
-placeholder="Enter Father Name"
-
-required>
-
-</div>
-
-<div class="col-md-4 mb-3">
-
-<label class="form-label">
-
-Mother Name
-
-</label>
-
-<input type="text"
-
-name="motherName"
-
-class="form-control"
-
-placeholder="Enter Mother Name"
-
-required>
-
-</div>
-    <div class="col-md-4 mb-3">
-
-<label class="form-label">
-
-Date of Birth
-
-</label>
-
-<input type="date"
-
-name="dob"
-
-class="form-control"
-
-required>
-
+<div class="col-md-8">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="fullName" class="form-control" placeholder="Enter Full Name" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Father Name</label>
+            <input type="text" name="fatherName" class="form-control" placeholder="Enter Father Name" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Mother Name</label>
+            <input type="text" name="motherName" class="form-control" placeholder="Enter Mother Name" required>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" name="dob" class="form-control" required>
+        </div>
+    </div>
 </div>
 
 <div class="col-md-4 mb-3">
@@ -899,6 +847,15 @@ Secure Banking | Digital Banking | Trusted Banking
 </footer>
 
 <script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imgPreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
 
 document.querySelector("form").addEventListener("submit",function(e){
 

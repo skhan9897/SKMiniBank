@@ -136,7 +136,7 @@
                     <div class="card card-summary green shadow text-center">
                         <div class="card-body">
                             <i class="fas fa-wallet"></i>
-                            <h3>${totalAccounts}</h3>
+                            <h3>${totalAccounts != null ? totalAccounts : 0}</h3>
                             <p>Total Accounts</p>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
 
             <!-- Total Balance -->
             <div class="col-md-3">
-                <a href="${pageContext.request.contextPath}/ReportServlet" style="text-decoration:none;">
+                <a href="${pageContext.request.contextPath}/BalanceReportServlet" style="text-decoration:none;">
                     <div class="card card-summary yellow shadow text-center">
                         <div class="card-body">
                             <i class="fas fa-money-bill-wave"></i>
@@ -194,5 +194,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Auto-refresh dashboard every 60 seconds to keep stats updated
+    setTimeout(function() {
+        window.location.reload();
+    }, 60000);
+</script>
 </body>
 </html>

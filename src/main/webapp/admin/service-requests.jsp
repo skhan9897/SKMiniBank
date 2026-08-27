@@ -97,12 +97,12 @@ if("PENDING".equalsIgnoreCase(r.getStatus())){
 
 <td>
 
-<form action="<%=request.getContextPath()%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
+<form action="${pageContext.request.contextPath}/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
     <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
 
     <div class="mb-2">
         <label class="form-label small fw-bold">Remarks:</label>
-        <textarea name="remarks" class="form-control form-control-sm" placeholder="Add status notes..."></textarea>
+        <textarea name="remarks" class="form-control form-control-sm" placeholder="Add status notes..."><%= r.getRemarks() != null ? r.getRemarks() : "" %></textarea>
     </div>
 
     <div class="mb-2">

@@ -135,29 +135,20 @@ public class AdminRequestServlet extends HttpServlet {
             // =========================
             // REDIRECT BACK TO UNIFIED LIST
             // =========================
+            String redirectPath = request.getContextPath();
+            if (redirectPath.equals("/")) redirectPath = "";
+            
             if (status) {
-
-                response.sendRedirect(
-                        request.getContextPath()
-                        + "/AdminAllRequestServlet?msg=success"
-                );
-
+                response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=success");
             } else {
-
-                response.sendRedirect(
-                        request.getContextPath()
-                        + "/AdminAllRequestServlet?msg=failed"
-                );
+                response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=failed");
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/AdminAllRequestServlet?msg=error"
-            );
+            String redirectPath = request.getContextPath();
+            if (redirectPath.equals("/")) redirectPath = "";
+            response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=error");
         }
     }
 

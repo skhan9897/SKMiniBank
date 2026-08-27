@@ -67,6 +67,7 @@ Customer List
 <tr>
 
 <th>ID</th>
+<th>Photo</th>
 <th>Name</th>
 <th>Father</th>
 <th>Mobile</th>
@@ -95,6 +96,12 @@ for(Customer c : list){
 <tr>
 
 <td><%=c.getCustomerId()%></td>
+
+<td class="text-center">
+    <img src="${pageContext.request.contextPath}/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
+         onerror="this.src='${pageContext.request.contextPath}/images/default_user.png'"
+         class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;">
+</td>
 
 <td><%=c.getFullName()%></td>
 

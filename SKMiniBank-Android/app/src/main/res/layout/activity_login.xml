@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp">
 
-                <!-- Logo Frame (ROUND SHAPE) -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/ivLogoFrame"
                     android:layout_width="120dp"
@@ -45,160 +44,226 @@
                 </androidx.cardview.widget.CardView>
             </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Welcome Back"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:textColor="@color/premium_gold"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Secure Login via Mobile &amp; OTP"
-                android:textSize="14sp"
-                android:textColor="@color/accent_green"
-                android:layout_marginBottom="40dp"/>
-
-            <!-- Mobile Input -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilMobile"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Mobile Number"
-                app:startIconDrawable="@android:drawable/ic_menu_call"
-                app:startIconTint="@color/white"
-                app:hintTextColor="@color/white"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white"
-                app:boxStrokeWidth="1.5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMobileNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:textColor="@color/white"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- OTP Input (Initially Hidden) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilOtp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Enter 4-Digit OTP"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                app:startIconDrawable="@android:drawable/ic_dialog_info"
-                app:startIconTint="@color/white"
-                app:hintTextColor="@color/white"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white"
-                app:boxStrokeWidth="1.5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etOtp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:maxLength="4"
-                    android:textColor="@color/white"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Password Input (Initially Hidden) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilPassword"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Login Password"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                app:startIconTint="@color/white"
-                app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/white"
-                app:hintTextColor="@color/white"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white"
-                app:boxStrokeWidth="1.5dp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:textColor="@color/white"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="SEND OTP"
-                android:layout_marginTop="40dp"
-                app:cornerRadius="30dp"
-                android:backgroundTint="@color/accent_green"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:rippleColor="@color/white"/>
-
+            <!-- 1. LANDING UI (Visible for First Time Install) -->
             <LinearLayout
-                android:id="@+id/layoutFingerprint"
-                android:layout_width="wrap_content"
+                android:id="@+id/layoutLanding"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginTop="20dp"
-                android:visibility="gone"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:src="@android:drawable/ic_lock_idle_lock"
-                    app:tint="@color/white"
-                    android:contentDescription="Fingerprint Login"/>
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tap to Login with Fingerprint"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:text="Welcome to SK Mini Bank"
+                    android:textSize="24sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="8dp"/>
+                    android:textColor="@color/white"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fast, Secure &amp; Digital Banking"
+                    android:textSize="14sp"
+                    android:textColor="#B3FFFFFF"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="48dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLandingOpenAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:text="NEW ACCOUNT OPENING"
+                    app:cornerRadius="16dp"
+                    android:backgroundTint="@color/premium_gold"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:icon="@android:drawable/ic_input_add"
+                    app:iconTint="@color/primary_blue"
+                    android:elevation="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShowLogin"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="ALREADY HAVE A BANK ACCOUNT? LOGIN"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="13sp"/>
+
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/btnForgotPassword"
-                android:layout_width="wrap_content"
+            <!-- 2. LOGIN FORM UI (Initially Hidden or Shown based on history) -->
+            <LinearLayout
+                android:id="@+id/layoutLoginForm"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Forgot Password?"
-                android:textColor="@color/accent_red"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="visible">
 
-            <TextView
-                android:id="@+id/btnOpenAccount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Open New Account"
-                android:textColor="@color/premium_gold"
-                android:textStyle="bold"
-                android:textSize="14sp"
-                android:clickable="true"
-                android:focusable="true"/>
+                <TextView
+                    android:id="@+id/tvLoginTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Welcome Back"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/premium_gold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Secure Login via Mobile &amp; OTP"
+                    android:textSize="14sp"
+                    android:textColor="@color/accent_green"
+                    android:layout_marginBottom="40dp"/>
+
+                <!-- Mobile Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMobile"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Mobile Number"
+                    app:startIconDrawable="@android:drawable/ic_menu_call"
+                    app:startIconTint="@color/white"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeWidth="1.5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMobileNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        android:textColor="@color/white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- OTP Input (Initially Hidden) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilOtp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter 4-Digit OTP"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    app:startIconDrawable="@android:drawable/ic_dialog_info"
+                    app:startIconTint="@color/white"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeWidth="1.5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etOtp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:textColor="@color/white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Input (Initially Hidden) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Login Password"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
+                    app:startIconTint="@color/white"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/white"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxStrokeColor="@color/white"
+                    app:boxStrokeWidth="1.5dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:textColor="@color/white"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="SEND OTP"
+                    android:layout_marginTop="40dp"
+                    app:cornerRadius="30dp"
+                    android:backgroundTint="@color/accent_green"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:rippleColor="@color/white"/>
+
+                <LinearLayout
+                    android:id="@+id/layoutFingerprint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@android:drawable/ic_lock_idle_lock"
+                        app:tint="@color/white"
+                        android:contentDescription="Fingerprint Login"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tap to Login with Fingerprint"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="8dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnForgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Forgot Password?"
+                    android:textColor="@color/accent_red"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+                <TextView
+                    android:id="@+id/btnOpenAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Back to Landing Page"
+                    android:textColor="@color/premium_gold"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

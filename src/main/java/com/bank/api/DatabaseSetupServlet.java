@@ -27,7 +27,8 @@ public class DatabaseSetupServlet extends HttpServlet {
                 "ALTER TABLE service_request ADD COLUMN IF NOT EXISTS expected_delivery_date DATE NULL",
                 "ALTER TABLE service_request ADD COLUMN IF NOT EXISTS dispatched_date DATE NULL",
                 "ALTER TABLE service_request ADD COLUMN IF NOT EXISTS delivered_date DATE NULL",
-                "ALTER TABLE service_request MODIFY COLUMN request_details TEXT"
+                "ALTER TABLE service_request MODIFY COLUMN request_details TEXT",
+                "ALTER TABLE customer ADD COLUMN IF NOT EXISTS photo VARCHAR(255) DEFAULT 'default_user.png'"
             };
             
             for (String query : queries) {

@@ -10,12 +10,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import java.io.File;
 
 @WebServlet("/RegisterServlet")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10,      // 10MB
+        maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class RegisterServlet extends HttpServlet {
 
     @Override
@@ -76,6 +82,34 @@ public class RegisterServlet extends HttpServlet {
             customer.setTransactionPin(
                     request.getParameter("transactionPin"));
 
+            // Photo Upload
+            Part filePart = request.getPart("photo");
+            String fileName = "default_user.png";
+            if (filePart != null && filePart.getSize() > 0) {
+                fileName = customer.getAccountNumber() + "_" + getFileName(filePart);
+                String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "customer_photos";
+                File uploadDir = new File(uploadPath);
+                if (!uploadDir.exists()) uploadDir.mkdirs();
+                filePart.write(uploadPath + File.separator + fileName);
+                @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
+}
+            customer.setPhoto(fileName);
+
             CustomerDAO dao = new CustomerDAO();
 
             boolean status = dao.addCustomer(customer);
@@ -87,7 +121,23 @@ public class RegisterServlet extends HttpServlet {
 
                 return;
 
+                @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
+        }
+        return "";
+    }
+}
 
             Connection con = DBConnection.getConnection();
 
@@ -129,7 +179,23 @@ public class RegisterServlet extends HttpServlet {
 
                 customerId = rs.getInt("customer_id");
 
+                @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
+        }
+        return "";
+    }
+}
 
             rs.close();
             ps2.close();
@@ -141,14 +207,78 @@ public class RegisterServlet extends HttpServlet {
                     + "/AccountReceiptServlet?customerId="
                     + customerId);
 
-        } catch (Exception e) {
+            @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
+} catch (Exception e) {
 
             e.printStackTrace();
 
             response.getWriter().println(e.getMessage());
 
-        }
-
+            @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
     }
 
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
+}
+
+        @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
+}
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);
+    }
+
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return "";
+    }
 }
