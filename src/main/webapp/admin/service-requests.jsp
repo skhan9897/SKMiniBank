@@ -96,13 +96,21 @@ if("PENDING".equalsIgnoreCase(r.getStatus())){
 </td>
 
 <td>
-<% String formCtx = request.getContextPath(); if("/".equals(formCtx)) formCtx = ""; %>
-<form action="<%=formCtx%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
+<form action="../AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
     <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
 
     <div class="mb-2">
-        <label class="form-label small fw-bold">Remarks:</label>
-        <textarea name="remarks" class="form-control form-control-sm" placeholder="Add status notes..."><%= r.getRemarks() != null ? r.getRemarks() : "" %></textarea>
+        <label class="form-label small fw-bold">Status Remarks:</label>
+        <select name="remarks" class="form-select form-select-sm">
+            <option value="Verified and Approved">Verified and Approved</option>
+            <option value="Documents Verified">Documents Verified</option>
+            <option value="Request Processed Successfully">Request Processed Successfully</option>
+            <option value="Item Sent for Printing/Dispatch">Item Sent for Printing/Dispatch</option>
+            <option value="Incomplete Information">Incomplete Information</option>
+            <option value="Application Rejected - Policy Violation">Application Rejected - Policy Violation</option>
+            <option value="Duplicate Request Found">Duplicate Request Found</option>
+            <option value="Other - See manual notes">Other...</option>
+        </select>
     </div>
 
     <div class="mb-2">

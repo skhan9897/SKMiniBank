@@ -48,9 +48,7 @@ public class AdminRequestServlet extends HttpServlet {
                     || action == null
                     || action.trim().isEmpty()) {
 
-                String ctx = request.getContextPath();
-                if ("/".equals(ctx)) ctx = "";
-                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalid");
+                response.sendRedirect("AdminAllRequestServlet?msg=invalid");
                 return;
             }
 
@@ -123,29 +121,22 @@ public class AdminRequestServlet extends HttpServlet {
                     break;
 
                 default:
-                    String ctx = request.getContextPath();
-                    if ("/".equals(ctx)) ctx = "";
-                    response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalidAction");
+                    response.sendRedirect("AdminAllRequestServlet?msg=invalidAction");
                     return;
             }
 
             // =========================
             // REDIRECT BACK TO UNIFIED LIST
             // =========================
-            String ctx = request.getContextPath();
-            if ("/".equals(ctx)) ctx = "";
-            
             if (status) {
-                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=success");
+                response.sendRedirect("AdminAllRequestServlet?msg=success");
             } else {
-                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=failed");
+                response.sendRedirect("AdminAllRequestServlet?msg=failed");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            String ctx = request.getContextPath();
-            if ("/".equals(ctx)) ctx = "";
-            response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error");
+            response.sendRedirect("AdminAllRequestServlet?msg=error");
         }
     }
 
@@ -154,9 +145,6 @@ public class AdminRequestServlet extends HttpServlet {
                          HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.sendRedirect(
-                request.getContextPath()
-                + "/AdminAllRequestServlet"
-        );
+        response.sendRedirect("AdminAllRequestServlet");
     }
 }
