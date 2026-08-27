@@ -235,7 +235,7 @@ String role = (String) session.getAttribute("role");
             <h5 class="modal-title fw-bold">Update Photo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <form action="<%=request.getContextPath()%>/UpdateCustomerPhotoServlet" method="post" enctype="multipart/form-data">
+          <form id="photoUploadForm">
               <div class="modal-body text-center p-4">
                   <input type="hidden" name="customerId" value="<%= c.getCustomerId() %>">
                   <div class="mb-4">
@@ -243,10 +243,11 @@ String role = (String) session.getAttribute("role");
                            onerror="this.src='<%=request.getContextPath()%>/images/default_user.png'"
                            style="width: 180px; height: 180px; object-fit: cover;" class="rounded-4 border shadow-sm">
                   </div>
-                  <input type="file" name="photo" class="form-control" accept="image/*" required onchange="document.getElementById('modalPreview').src = window.URL.createObjectURL(this.files[0])">
+                  <div id="uploadStatus" class="small mb-2" style="display:none;"></div>
+                  <input type="file" name="photo" id="photoInput" class="form-control" accept="image/*" required onchange="previewImage(this)">
               </div>
               <div class="modal-footer border-0 pt-0">
-                <button type="submit" class="btn btn-primary btn-action w-100">Upload New Photo</button>
+                <button type="submit" id="uploadBtn" class="btn btn-primary btn-action w-100">Upload New Photo</button>
               </div>
           </form>
         </div>
@@ -259,5 +260,49 @@ String role = (String) session.getAttribute("role");
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById('modalPreview').src = window.URL.createObjectURL(input.files[0]);
+    }
+}
+
+document.getElementById('photoUploadForm').onsubmit = function(e) {
+    e.preventDefault();
+
+    let btn = document.getElementById('uploadBtn');
+    let status = document.getElementById('uploadStatus');
+    let formData = new FormData(this);
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    status.style.display = 'block';
+    status.className = 'small mb-2 text-primary';
+    status.innerHTML = 'Processing your image...';
+
+    fetch('<%=request.getContextPath()%>/UpdateCustomerPhotoServlet', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if(response.redirected) {
+            window.location.href = response.url;
+            return;
+        }
+        return response.text();
+    })
+    .then(data => {
+        // If not redirected, we reload to show success
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        btn.disabled = false;
+        btn.innerHTML = 'Upload New Photo';
+        status.className = 'small mb-2 text-danger';
+        status.innerHTML = 'Upload failed. Try again.';
+    });
+};
+</script>
 </body>
 </html>
