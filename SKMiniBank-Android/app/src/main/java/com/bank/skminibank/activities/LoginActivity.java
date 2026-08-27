@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.core.content.ContextCompat;
 
 import com.bank.skminibank.R;
 import com.bank.skminibank.api.ApiClient;
-import com.bank.skminibank.api.ApiService;
 import com.bank.skminibank.model.GenericResponse;
 import com.bank.skminibank.model.LoginResponse;
 import com.bank.skminibank.utils.SessionManager;
@@ -33,12 +31,11 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
     private EditText etMobile, etOtp, etPassword;
     private TextInputLayout tilOtp, tilPassword;
-    private LinearLayout layoutFingerprint;
+    private LinearLayout layoutLanding, layoutLoginForm, layoutFingerprint;
     private SessionManager sessionManager;
-    private MaterialButton btnAction;
+    private MaterialButton btnAction, btnLandingOpenAccount, btnShowLogin;
     
     private int loginStep = 1; // 1: Send OTP, 2: Verify OTP, 3: Password & Login
 
@@ -48,6 +45,12 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         sessionManager = new SessionManager(this);
+
+        layoutLanding = findViewById(R.id.layoutLanding);
+        layoutLoginForm = findViewById(R.id.layoutLoginForm);
+
+        btnLandingOpenAccount = findViewById(R.id.btnLandingOpenAccount);
+        btnShowLogin = findViewById(R.id.btnShowLogin);
 
         etMobile = findViewById(R.id.etMobileNumber);
         etOtp = findViewById(R.id.etOtp);
@@ -59,17 +62,36 @@ public class LoginActivity extends AppCompatActivity {
 
         startWaveAnimation();
 
-        // Sub login flow: If user already performed OTP once, skip it
-        if (sessionManager.isLoggedInOnce()) {
-            loginStep = 3; // Direct to password
+        // 1. Logic for First Time Install / New User
+        if (!sessionManager.isLoggedInOnce()) {
+            // New user: Show Landing UI
+            layoutLanding.setVisibility(View.VISIBLE);
+            layoutLoginForm.setVisibility(View.GONE);
+        } else {
+            // Returning user: Show Login Form immediately
+            layoutLanding.setVisibility(View.GONE);
+            layoutLoginForm.setVisibility(View.VISIBLE);
+
+            // Returning user doesn't need to re-verify OTP if they already have an account
+            loginStep = 3;
             tilPassword.setVisibility(View.VISIBLE);
             btnAction.setText("LOGIN");
         }
 
-        // Pre-fill if available
+        // 2. Pre-fill mobile if available
         if (sessionManager.getMobile() != null) {
             etMobile.setText(sessionManager.getMobile());
         }
+
+        // 3. Click Listeners
+        btnLandingOpenAccount.setOnClickListener(v -> {
+            startActivity(new Intent(this, OpenAccountActivity.class));
+        });
+
+        btnShowLogin.setOnClickListener(v -> {
+            layoutLanding.setVisibility(View.GONE);
+            layoutLoginForm.setVisibility(View.VISIBLE);
+        });
 
         btnAction.setOnClickListener(v -> handleLoginFlow());
 
@@ -77,8 +99,10 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(this, ResetPasswordActivity.class));
         });
 
-        findViewById<View>(R.id.btnOpenAccount).setOnClickListener(v -> {
-            startActivity(new Intent(this, InstantAccountActivity.class));
+        findViewById(R.id.btnOpenAccount).setOnClickListener(v -> {
+            // This is the "Back" link in Login Form
+            layoutLoginForm.setVisibility(View.GONE);
+            layoutLanding.setVisibility(View.VISIBLE);
         });
 
         setupBiometrics();
@@ -109,7 +133,6 @@ public class LoginActivity extends AppCompatActivity {
                 etOtp.setError("Enter 4-digit OTP");
                 return;
             }
-            // Move to password step
             loginStep = 3;
             tilPassword.setVisibility(View.VISIBLE);
             btnAction.setText("LOGIN");
@@ -117,9 +140,8 @@ public class LoginActivity extends AppCompatActivity {
             String pass = etPassword.getText().toString().trim();
             String otp = etOtp.getText().toString().trim();
             
-            // If skip OTP was used, use a dummy or skip server side check
             if (sessionManager.isLoggedInOnce()) {
-                otp = "9897"; // Bypassing for returning users
+                otp = "9897"; // Mock for returning users
             }
 
             if (pass.isEmpty()) {
@@ -187,13 +209,7 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    String errorMsg = "Server Error: " + response.code();
-                    try {
-                        if (response.errorBody() != null) {
-                            errorMsg += " - " + response.errorBody().string();
-                        }
-                    } catch (Exception ignored) {}
-                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -201,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 btnAction.setEnabled(true);
                 btnAction.setText("VERIFY & LOGIN");
-                Toast.makeText(LoginActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -225,16 +241,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                // For biometric, we bypass the OTP step if credentials are saved
-                loginUser(sessionManager.getMobile(), sessionManager.getPassword(), "9897"); // Mock OTP for biometric
-            }
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-            }
-            @Override
-            public void onAuthenticationFailed() {
-                super.onAuthenticationFailed();
+                loginUser(sessionManager.getMobile(), sessionManager.getPassword(), "9897");
             }
         });
 

@@ -91,179 +91,48 @@ public class RegisterServlet extends HttpServlet {
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) uploadDir.mkdirs();
                 filePart.write(uploadPath + File.separator + fileName);
-                @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
-        }
-        return "";
-    }
-}
             customer.setPhoto(fileName);
 
             CustomerDAO dao = new CustomerDAO();
-
             boolean status = dao.addCustomer(customer);
 
             if (!status) {
-
-                response.sendRedirect(
-                        "register.jsp?error=Registration Failed");
-
+                response.sendRedirect("register.jsp?error=Registration Failed");
                 return;
-
-                @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
-        }
-        return "";
-    }
-}
 
-            Connection con = DBConnection.getConnection();
+            try (Connection con = DBConnection.getConnection();
+                 PreparedStatement ps = con.prepareStatement("INSERT INTO users(username,email,password,role,status) VALUES(?,?,?,?,?)")) {
 
-            String sql = "INSERT INTO users(username,email,password,role,status)"
-                    + " VALUES(?,?,?,?,?)";
+                ps.setString(1, customer.getFullName());
+                ps.setString(2, customer.getAccountNumber());
+                ps.setString(3, customer.getPassword());
+                ps.setString(4, "CUSTOMER");
+                ps.setString(5, "ACTIVE");
+                ps.executeUpdate();
+            }
 
-            PreparedStatement ps =
-                    con.prepareStatement(sql);
-
-            ps.setString(1, customer.getFullName());
-
-            // IMPORTANT:
-            // Customer Login = Account Number
-            ps.setString(2, customer.getAccountNumber());
-
-            ps.setString(3, customer.getPassword());
-
-            ps.setString(4, "CUSTOMER");
-
-            ps.setString(5, "ACTIVE");
-
-            ps.executeUpdate();
-
-            ps.close();
-
-            // Customer ID निकालना
-            PreparedStatement ps2 =
-                    con.prepareStatement(
-                    "SELECT customer_id FROM customer WHERE account_number=?");
-
-            ps2.setString(1,
-                    customer.getAccountNumber());
-
-            ResultSet rs = ps2.executeQuery();
-
+            // Get generated Customer ID
             int customerId = 0;
-
-            if (rs.next()) {
-
-                customerId = rs.getInt("customer_id");
-
-                @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            try (Connection con = DBConnection.getConnection();
+                 PreparedStatement ps2 = con.prepareStatement("SELECT customer_id FROM customer WHERE account_number=?")) {
+                ps2.setString(1, customer.getAccountNumber());
+                try (ResultSet rs = ps2.executeQuery()) {
+                    if (rs.next()) {
+                        customerId = rs.getInt("customer_id");
+                    }
+                }
             }
-        }
-        return "";
-    }
-}
-
-            rs.close();
-            ps2.close();
-            con.close();
 
             // Receipt Open
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/AccountReceiptServlet?customerId="
-                    + customerId);
+            response.sendRedirect(request.getContextPath() + "/AccountReceiptServlet?customerId=" + customerId);
 
-            @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
-            }
-        }
-        return "";
-    }
-} catch (Exception e) {
-
+        } catch (Exception e) {
             e.printStackTrace();
-
-            response.getWriter().println(e.getMessage());
-
-            @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
-            }
+            response.getWriter().println("Error: " + e.getMessage());
         }
-        return "";
     }
-}
-
-        @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    private String getFileName(Part part) {
-        String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
-            }
-        }
-        return "";
-    }
-}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
