@@ -105,7 +105,18 @@ Dashboard
 
 <div class="card-body">
 
-<table class="table table-bordered table-hover align-middle">
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+                <i class="fa fa-search text-muted"></i>
+            </span>
+            <input type="text" id="accountSearch" class="form-control border-start-0" placeholder="Search by Name or Account Number...">
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-hover align-middle" id="accountTable">
 
 <thead>
 
@@ -209,6 +220,18 @@ No Account Found
 </div>
 
 </div>
+
+<script>
+document.getElementById('accountSearch').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#accountTable tbody tr');
+
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 
 </body>
 </html>

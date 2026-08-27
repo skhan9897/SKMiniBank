@@ -25,6 +25,7 @@ public class TransactionServlet extends HttpServlet {
             TransactionDAO dao = new TransactionDAO();
 
             String accountNumber = request.getParameter("accountNumber");
+            String view = request.getParameter("view");
 
             List<Transaction> transactionList;
 
@@ -34,6 +35,8 @@ public class TransactionServlet extends HttpServlet {
                 transactionList =
                         dao.getTransactionsByAccount(accountNumber);
 
+            } else if ("today".equalsIgnoreCase(view)) {
+                transactionList = dao.getTodayTransactions();
             } else {
 
                 transactionList =
@@ -42,7 +45,8 @@ public class TransactionServlet extends HttpServlet {
             }
 
             request.setAttribute("transactionList", transactionList);
-request.setAttribute("accountNumber", accountNumber);
+            request.setAttribute("accountNumber", accountNumber);
+            request.setAttribute("view", view);
 
 request.getRequestDispatcher("/admin/transaction.jsp")
        .forward(request, response);

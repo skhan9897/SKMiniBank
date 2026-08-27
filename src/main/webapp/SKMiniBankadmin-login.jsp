@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SK Mini Bank | Admin Login</title>
+<title>Admin Login | SK Mini Bank</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -23,7 +23,6 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
-    /* Animated RGB Background */
     .bg-container {
         position: absolute;
         top: 0;
@@ -34,7 +33,7 @@
         z-index: -1;
     }
 
-    /* SVG RGB Waves (Built-in, No external dead links) */
+    /* SVG RGB Waves */
     .wave-container {
         position: absolute;
         bottom: 0;
@@ -185,10 +184,14 @@
         font-weight: 600;
         margin-top: 20px;
         transition: 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .btn-home:hover {
-        background: rgba(255,255,255,0.05);
+        background: rgba(255, 255, 255, 0.05);
         color: #fff;
         border-color: #00d2ff;
     }
@@ -214,7 +217,6 @@
 
     <div class="bg-container"></div>
 
-    <!-- SVG RGB Waves -->
     <div class="wave-container">
         <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
@@ -232,9 +234,9 @@
 
     <div class="login-box shadow">
         <div class="logo-area">
-            <i class="fas fa-fingerprint"></i>
-            <h2>Admin Login</h2>
-            <p>Secure Terminal Access</p>
+            <i class="fas fa-university"></i>
+            <h2>SK MINI BANK</h2>
+            <p>Admin Access</p>
         </div>
 
         <%
@@ -254,11 +256,11 @@
             </div>
             <div class="input-wrapper">
                 <i class="fa fa-user-shield input-icon"></i>
-                <input type="text" name="adminId" class="form-control" placeholder="Enter Username" required>
+                <input type="text" name="adminId" class="form-control" placeholder="Enter Admin ID" required>
             </div>
 
             <div class="text-start mb-1">
-                <label class="form-label">Password</label>
+                <label class="form-label">Admin Password</label>
             </div>
             <div class="input-wrapper">
                 <i class="fa fa-lock input-icon"></i>
@@ -266,11 +268,11 @@
             </div>
 
             <button type="submit" class="btn btn-primary w-100 btn-login shadow">
-                Authenticate Login
+                SECURE ADMIN LOGIN
             </button>
 
-            <a href="SKMiniBank.jsp" class="btn btn-home w-100">
-                <i class="fa fa-arrow-left-long me-2"></i> Return Home
+            <a href="SKMiniBank.jsp" class="btn btn-home w-100 mt-4">
+                <i class="fa fa-house-chimney me-2"></i> BACK TO TERMINAL
             </a>
         </form>
     </div>

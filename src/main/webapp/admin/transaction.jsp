@@ -78,11 +78,17 @@ body{
 
 <div class="card">
 
-<div class="card-header">
-Transaction History
+<div class="card-header d-flex justify-content-between align-items-center">
+    <span>Transaction History <%= "today".equalsIgnoreCase((String)request.getAttribute("view")) ? "(Today)" : "" %></span>
+    <div class="input-group w-50 no-print">
+        <span class="input-group-text bg-white border-end-0">
+            <i class="fa fa-search text-primary"></i>
+        </span>
+        <input type="text" id="txnSearch" class="form-control border-start-0" placeholder="Live search in list...">
+    </div>
 </div>
 
-<div class="no-print">
+<div class="no-print p-3 border-bottom">
 
 <form action="<%=request.getContextPath()%>/TransactionServlet" method="get">
 
@@ -271,6 +277,18 @@ if (accountNumber == null || accountNumber.trim().isEmpty()) {
 </a>
 </div>
 
+
+<script>
+document.getElementById('txnSearch').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('table tbody tr');
+
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>
 
 </body>
 </html>

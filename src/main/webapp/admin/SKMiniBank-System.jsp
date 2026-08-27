@@ -259,12 +259,12 @@
 
             <!-- Transactions -->
             <div class="col-md-3">
-                <a href="${pageContext.request.contextPath}/TransactionServlet" style="text-decoration:none;">
+                <a href="${pageContext.request.contextPath}/TransactionServlet?view=today" style="text-decoration:none;">
                     <div class="card card-summary red shadow-sm">
                         <div class="card-body">
                             <i class="fas fa-exchange-alt"></i>
                             <h3>${totalTransactions}</h3>
-                            <p>Total Activity</p>
+                            <p>Today's Activity</p>
                         </div>
                     </div>
                 </a>

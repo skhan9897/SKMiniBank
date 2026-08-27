@@ -57,6 +57,31 @@ public class TransactionDAO {
         return list;
     }
 
+    public List<Transaction> getTodayTransactions() {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE DATE(transaction_date) = CURDATE() ORDER BY transaction_date DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Transaction t = new Transaction();
+                t.setId(rs.getInt("transaction_id"));
+                t.setAccountNumber(rs.getString("account_number"));
+                t.setCustomerName(rs.getString("customer_name"));
+                t.setTransactionType(rs.getString("transaction_type"));
+                t.setAmount(rs.getDouble("amount"));
+                t.setBalance(rs.getDouble("balance"));
+                t.setDescription(rs.getString("description"));
+                t.setTransactionDate(rs.getTimestamp("transaction_date"));
+                t.setStatus(rs.getString("status"));
+                list.add(t);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<Transaction> getTransactionsByAccount(String accountNumber) {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT * FROM transactions WHERE account_number=? ORDER BY transaction_date DESC";
