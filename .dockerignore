@@ -1,0 +1,20 @@
+# Ignore Git
+.git
+.gitignore
+.idea
+.vscode
+
+# Ignore Maven build artifacts
+target/
+*.war
+
+# Ignore Android Projects (They shouldn't be part of the Web App build context)
+android-user-app/
+SKMiniBank-Android/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore NetBeans config
+nb-configuration.xml
