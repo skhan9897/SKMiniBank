@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Customer Login | SK Mini Bank</title>
+<title>Admin Login | SK Mini Bank</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -33,7 +33,6 @@
         z-index: -1;
     }
 
-    /* SVG RGB Waves */
     .wave-container {
         position: absolute;
         bottom: 0;
@@ -65,7 +64,6 @@
         100% { transform: translate3d(85px, 0, 0); }
     }
 
-    /* Glass Login Box */
     .login-box {
         width: 450px;
         background: rgba(255, 255, 255, 0.03);
@@ -133,10 +131,6 @@
         color: white !important;
         padding-left: 50px;
         transition: 0.4s;
-    }
-
-    .form-control::placeholder {
-        color: rgba(255,255,255,0.3);
     }
 
     .form-control:focus {
@@ -234,9 +228,9 @@
 
     <div class="login-box shadow">
         <div class="logo-area">
-            <i class="fas fa-university"></i>
+            <i class="fas fa-user-shield"></i>
             <h2>SK MINI BANK</h2>
-            <p>Customer Access</p>
+            <p>Admin Access</p>
         </div>
 
         <%
@@ -250,38 +244,33 @@
         }
         %>
 
-        <form action="LoginServlet" method="post">
+        <form action="<%=request.getContextPath()%>/AdminLoginServlet" method="post">
             <div class="text-start mb-1">
-                <label class="form-label">Account Number</label>
+                <label class="form-label">Admin ID</label>
             </div>
             <div class="input-wrapper">
-                <i class="fa fa-user input-icon"></i>
-                <input type="text" name="accountNumber" class="form-control" placeholder="Enter Account Number" required>
+                <i class="fa fa-fingerprint input-icon"></i>
+                <input type="text" name="adminId" class="form-control" placeholder="Enter Admin Username" required>
             </div>
 
             <div class="text-start mb-1">
-                <label class="form-label">Login Password</label>
+                <label class="form-label">Admin Password</label>
             </div>
             <div class="input-wrapper">
-                <i class="fa fa-lock input-icon"></i>
+                <i class="fa fa-lock-open input-icon"></i>
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 btn-login shadow">
-                SECURE LOGIN
+                SECURE ADMIN LOGIN
             </button>
 
-            <div class="d-flex gap-2">
-                <a href="register.jsp" class="btn btn-home flex-fill">
-                    <i class="fa fa-user-plus me-2"></i> JOIN NOW
-                </a>
-                <a href="admin-login.jsp" class="btn btn-home flex-fill border-warning text-warning">
-                    <i class="fa fa-user-shield me-2"></i> ADMIN
-                </a>
-            </div>
+            <a href="login.jsp" class="btn btn-home w-100">
+                <i class="fa fa-user me-2"></i> SWITCH TO CUSTOMER LOGIN
+            </a>
 
             <a href="SKMiniBank.jsp" class="btn btn-home w-100 border-0 text-white-50 small mt-2">
-                <i class="fa fa-house-chimney me-2"></i> BACK TO TERMINAL
+                <i class="fa fa-house-chimney me-2"></i> BACK TO HOME
             </a>
         </form>
     </div>

@@ -33,4 +33,8 @@
 
     <!-- Specific background for splash/login as requested (deep navy blue) -->
     <color name="blue_background">@color/primary_blue</color>
+
+    <!-- Missing colors for resource linking -->
+    <color name="warning_yellow">#FFC107</color>
+    <color name="success_green">#4CAF50</color>
 </resources>
