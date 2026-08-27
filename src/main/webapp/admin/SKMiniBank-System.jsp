@@ -78,38 +78,39 @@
 <body>
 
 <div class="sidebar">
+    <% String sidebarCtx = request.getContextPath(); if("/".equals(sidebarCtx)) sidebarCtx = ""; %>
     <div class="logo-section">
         <h4>🏦 SK Mini Bank</h4>
         <p>Admin Panel</p>
     </div>
 
-    <a href="${pageContext.request.contextPath}/DashboardServlet" class="active">🏠 Dashboard</a>
-    <a href="${pageContext.request.contextPath}/AdminAllRequestServlet">📋 All Service Requests</a>
+    <a href="<%=sidebarCtx%>/DashboardServlet" class="active">🏠 Dashboard</a>
+    <a href="<%=sidebarCtx%>/AdminAllRequestServlet">📋 All Service Requests</a>
 
     <div style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5;">Banking Requests</div>
-    <a href="${pageContext.request.contextPath}/AdminATMRequestServlet">💳 ATM Card Requests</a>
-    <a href="${pageContext.request.contextPath}/AdminChequeBookListServlet">📒 Cheque Book Requests</a>
-    <a href="${pageContext.request.contextPath}/AdminNetBankingServlet">🌐 Net Banking Requests</a>
-    <a href="${pageContext.request.contextPath}/AdminMobileBankingServlet">📱 Mobile Banking Requests</a>
-    <a href="${pageContext.request.contextPath}/AdminLoanRequestServlet">🏦 Loan Requests</a>
+    <a href="<%=sidebarCtx%>/AdminATMRequestServlet">💳 ATM Card Requests</a>
+    <a href="<%=sidebarCtx%>/AdminChequeBookListServlet">📒 Cheque Book Requests</a>
+    <a href="<%=sidebarCtx%>/AdminNetBankingServlet">🌐 Net Banking Requests</a>
+    <a href="<%=sidebarCtx%>/AdminMobileBankingServlet">📱 Mobile Banking Requests</a>
+    <a href="<%=sidebarCtx%>/AdminLoanRequestServlet">🏦 Loan Requests</a>
 
     <div style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5;">Customer Management</div>
-    <a href="${pageContext.request.contextPath}/admin/customer-list.jsp">👥 Customers List</a>
-    <a href="${pageContext.request.contextPath}/admin/edit-customer.jsp">➕ Add New Customer</a>
-    <a href="${pageContext.request.contextPath}/admin/open-account.jsp">🏦 Open Account</a>
-    <a href="${pageContext.request.contextPath}/AdminKYCServlet">🪪 KYC Verification</a>
+    <a href="<%=sidebarCtx%>/admin/customer-list.jsp">👥 Customers List</a>
+    <a href="<%=sidebarCtx%>/admin/edit-customer.jsp">➕ Add New Customer</a>
+    <a href="<%=sidebarCtx%>/admin/open-account.jsp">🏦 Open Account</a>
+    <a href="<%=sidebarCtx%>/AdminKYCServlet">🪪 KYC Verification</a>
 
     <div style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5;">Transactions</div>
-    <a href="${pageContext.request.contextPath}/admin/deposit.jsp">💰 Deposit Cash</a>
-    <a href="${pageContext.request.contextPath}/admin/withdraw.jsp">💵 Withdraw Cash</a>
-    <a href="${pageContext.request.contextPath}/admin/transfer.jsp">🔄 Fund Transfer</a>
-    <a href="${pageContext.request.contextPath}/admin/fixed-deposit.jsp">📦 Fixed Deposit</a>
-    <a href="${pageContext.request.contextPath}/admin/loan-dashboard.jsp">🏠 Loan Dashboard</a>
+    <a href="<%=sidebarCtx%>/admin/deposit.jsp">💰 Deposit Cash</a>
+    <a href="<%=sidebarCtx%>/admin/withdraw.jsp">💵 Withdraw Cash</a>
+    <a href="<%=sidebarCtx%>/admin/transfer.jsp">🔄 Fund Transfer</a>
+    <a href="<%=sidebarCtx%>/admin/fixed-deposit.jsp">📦 Fixed Deposit</a>
+    <a href="<%=sidebarCtx%>/admin/loan-dashboard.jsp">🏠 Loan Dashboard</a>
 
     <div style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5;">System</div>
-    <a href="${pageContext.request.contextPath}/NotificationServlet">🔔 Notifications</a>
-    <a href="${pageContext.request.contextPath}/ReportServlet">📊 Reports</a>
-    <a href="${pageContext.request.contextPath}/AdminLogoutServlet" style="color: #ff4d4d;">🚪 Logout</a>
+    <a href="<%=sidebarCtx%>/NotificationServlet">🔔 Notifications</a>
+    <a href="<%=sidebarCtx%>/ReportServlet">📊 Reports</a>
+    <a href="<%=sidebarCtx%>/AdminLogoutServlet" style="color: #ff4d4d;">🚪 Logout</a>
 </div>
 
 <div class="main-content">
@@ -132,7 +133,8 @@
 
             <!-- Total Accounts -->
             <div class="col-md-3">
-                <a href="${pageContext.request.contextPath}/AccountListServlet" style="text-decoration:none;">
+                <% String ctx = request.getContextPath(); if("/".equals(ctx)) ctx = ""; %>
+                <a href="<%=ctx%>/AccountListServlet" style="text-decoration:none;">
                     <div class="card card-summary green shadow text-center">
                         <div class="card-body">
                             <i class="fas fa-wallet"></i>

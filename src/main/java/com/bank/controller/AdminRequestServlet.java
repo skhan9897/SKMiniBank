@@ -48,10 +48,9 @@ public class AdminRequestServlet extends HttpServlet {
                     || action == null
                     || action.trim().isEmpty()) {
 
-                response.sendRedirect(
-                        request.getContextPath()
-                        + "/AdminATMRequestServlet?msg=invalid"
-                );
+                String ctx = request.getContextPath();
+                if ("/".equals(ctx)) ctx = "";
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalid");
                 return;
             }
 
@@ -124,31 +123,29 @@ public class AdminRequestServlet extends HttpServlet {
                     break;
 
                 default:
-
-                    response.sendRedirect(
-                            request.getContextPath()
-                            + "/AdminATMRequestServlet?msg=invalidAction"
-                    );
+                    String ctx = request.getContextPath();
+                    if ("/".equals(ctx)) ctx = "";
+                    response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalidAction");
                     return;
             }
 
             // =========================
             // REDIRECT BACK TO UNIFIED LIST
             // =========================
-            String redirectPath = request.getContextPath();
-            if (redirectPath.equals("/")) redirectPath = "";
+            String ctx = request.getContextPath();
+            if ("/".equals(ctx)) ctx = "";
             
             if (status) {
-                response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=success");
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=success");
             } else {
-                response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=failed");
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=failed");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            String redirectPath = request.getContextPath();
-            if (redirectPath.equals("/")) redirectPath = "";
-            response.sendRedirect(redirectPath + "/AdminAllRequestServlet?msg=error");
+            String ctx = request.getContextPath();
+            if ("/".equals(ctx)) ctx = "";
+            response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error");
         }
     }
 

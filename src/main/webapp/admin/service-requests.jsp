@@ -96,8 +96,8 @@ if("PENDING".equalsIgnoreCase(r.getStatus())){
 </td>
 
 <td>
-
-<form action="${pageContext.request.contextPath}/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
+<% String formCtx = request.getContextPath(); if("/".equals(formCtx)) formCtx = ""; %>
+<form action="<%=formCtx%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
     <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
 
     <div class="mb-2">

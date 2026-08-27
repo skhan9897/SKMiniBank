@@ -90,7 +90,8 @@ body{
 All Bank Accounts
 </h4>
 
-<a href="<%=request.getContextPath()%>/admin/dashboard.jsp"
+<% String backCtx = request.getContextPath(); if("/".equals(backCtx)) backCtx = ""; %>
+<a href="<%=backCtx%>/DashboardServlet"
 class="btn btn-back">
 
 <i class="fa fa-arrow-left"></i>
@@ -141,7 +142,7 @@ for(Account a : accountList){
 
 <tr>
 
-<td><%=a.getId()%></td>
+<td><%=a.getAccountId() != 0 ? a.getAccountId() : a.getCustomerId() %></td>
 
 <td><%=a.getAccountNumber()%></td>
 
