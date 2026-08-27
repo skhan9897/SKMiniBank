@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.nav_link_fd)?.setOnClickListener { 
             val intent = Intent(this, WebPortalActivity::class.java)
-            intent.putExtra("url", "https://skminibank.onrender.com/admin/fixed-deposit.jsp")
+            intent.putExtra("url", "https://skminibank.onrender.com/customer/fixed-deposit.jsp")
             startActivity(intent)
         }
         findViewById<View>(R.id.nav_link_loan)?.setOnClickListener { 

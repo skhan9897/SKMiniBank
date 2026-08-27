@@ -37,6 +37,15 @@ font-weight:bold;
 
 <body>
 
+<%
+    // SESSION ROLE CHECK
+    String userRole = (session.getAttribute("role") != null) ? session.getAttribute("role").toString() : "";
+    if(!"ADMIN".equalsIgnoreCase(userRole)) {
+        response.sendRedirect(request.getContextPath() + "/customer/dashboard.jsp?msg=Access Denied");
+        return;
+    }
+%>
+
 <div class="container">
 
 <div class="card">

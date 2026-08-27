@@ -37,6 +37,24 @@ public class FixedDepositServlet extends HttpServlet {
                 return;
             }
 
+            // CHECK BALANCE IF NOT ADMIN
+            javax.servlet.http.HttpSession session = request.getSession(false);
+            String role = (session != null && session.getAttribute("role") != null) ? session.getAttribute("role").toString() : "ADMIN";
+
+            if (account.getBalance() < amount) {
+                String backUrl = "CUSTOMER".equalsIgnoreCase(role) ? "customer/fixed-deposit.jsp" : "admin/fixed-deposit.jsp";
+                response.sendRedirect(backUrl + "?msg=Insufficient Balance");
+                return;
+            }
+
+            // DEDUCT AMOUNT FROM CUSTOMER ACCOUNT
+            boolean deducted = accountDAO.withdraw(accountNumber, amount);
+            
+            if (!deducted) {
+                response.sendRedirect("admin/fixed-deposit.jsp?msg=Balance Deduction Failed");
+                return;
+            }
+
             double maturityAmount =
                     amount + ((amount * interest * duration) / 100);
 
@@ -59,11 +77,14 @@ public class FixedDepositServlet extends HttpServlet {
             FixedDepositDAO dao = new FixedDepositDAO();
 
             if (dao.addFixedDeposit(fd)) {
-
-                response.sendRedirect("admin/fixed-deposit-list.jsp?msg=FD Created Successfully");
-
+                if ("CUSTOMER".equalsIgnoreCase(role)) {
+                    response.sendRedirect("customer/dashboard.jsp?msg=Fixed Deposit Created Successfully");
+                } else {
+                    response.sendRedirect("admin/fixed-deposit-list.jsp?msg=FD Created Successfully");
+                }
             } else {
-
+                // Re-deposit if FD record fails
+                accountDAO.deposit(accountNumber, amount);
                 response.sendRedirect("admin/fixed-deposit.jsp?msg=FD Failed");
             }
 
