@@ -235,9 +235,10 @@ String role = (String) session.getAttribute("role");
             <h5 class="modal-title fw-bold">Update Photo</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <form id="photoUploadForm">
+          <form id="photoUploadForm" enctype="multipart/form-data">
               <div class="modal-body text-center p-4">
                   <input type="hidden" name="customerId" value="<%= c.getCustomerId() %>">
+                  <input type="hidden" name="accountNumber" value="<%= c.getAccountNumber() %>">
                   <div class="mb-4">
                       <img id="modalPreview" src="<%=request.getContextPath()%>/uploads/customer_photos/<%= c.getPhoto() != null ? c.getPhoto() : "default_user.png" %>"
                            onerror="this.src='<%=request.getContextPath()%>/images/default_user.png'"

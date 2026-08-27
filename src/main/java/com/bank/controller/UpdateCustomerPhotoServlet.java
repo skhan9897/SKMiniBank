@@ -21,35 +21,40 @@ public class UpdateCustomerPhotoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        int customerId = 0;
         try {
-            int customerId = Integer.parseInt(request.getParameter("customerId"));
+            customerId = Integer.parseInt(request.getParameter("customerId"));
             Part filePart = request.getPart("photo");
 
             if (filePart != null && filePart.getSize() > 0) {
-                // Use a unique name with account number placeholder if needed, or just timestamp
                 String fileName = "cust_" + customerId + "_" + System.currentTimeMillis() + ".jpg";
                 
                 String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "customer_photos";
                 File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
+                if (!uploadDir.exists()) {
+                    uploadDir.mkdirs();
+                }
 
-                // High speed write
                 filePart.write(uploadPath + File.separator + fileName);
 
                 CustomerDAO dao = new CustomerDAO();
                 boolean success = dao.updatePhoto(customerId, fileName);
 
                 if (success) {
-                    response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_success");
+                    response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_success");
                 } else {
-                    response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_failed");
+                    response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_failed");
                 }
             } else {
-                response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=no_file");
+                response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=no_file");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("admin/customer-list.jsp?error=upload_error");
+            if (customerId != 0) {
+                response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&error=exception");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/admin/customer-list.jsp?error=upload_error");
+            }
         }
     }
 
