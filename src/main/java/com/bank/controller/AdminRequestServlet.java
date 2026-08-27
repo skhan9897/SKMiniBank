@@ -21,21 +21,18 @@ public class AdminRequestServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
 
         // =========================
         // ADMIN LOGIN CHECK
         // =========================
         if (session == null || session.getAttribute("admin") == null) {
-
-            response.sendRedirect(
-                    request.getContextPath()
-                    + "/admin/admin-login.jsp"
-            );
+            response.sendRedirect(ctx + "/SKMiniBankadmin-login.jsp");
             return;
         }
 
         try {
-
             // =========================
             // GET FORM DATA
             // =========================
@@ -47,81 +44,42 @@ public class AdminRequestServlet extends HttpServlet {
                     || requestIdStr.trim().isEmpty()
                     || action == null
                     || action.trim().isEmpty()) {
-
-                response.sendRedirect("AdminAllRequestServlet?msg=invalid");
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalid");
                 return;
             }
 
             int requestId = Integer.parseInt(requestIdStr);
-
-            String approvedBy =
-                    session.getAttribute("admin").toString();
-
-            ServiceRequestDAO dao =
-                    new ServiceRequestDAO();
-
+            String approvedBy = session.getAttribute("admin").toString();
+            ServiceRequestDAO dao = new ServiceRequestDAO();
             boolean status = false;
 
             // =========================
             // ACTION
             // =========================
             switch (action.toUpperCase()) {
-
                 case "APPROVE":
-
                     Date expectedDelivery = null;
-
-                    String delivery =
-                            request.getParameter(
-                                    "expectedDelivery"
-                            );
-
-                    if (delivery != null
-                            && !delivery.trim().isEmpty()) {
-
-                        expectedDelivery =
-                                Date.valueOf(delivery);
+                    String delivery = request.getParameter("expectedDelivery");
+                    if (delivery != null && !delivery.trim().isEmpty()) {
+                        expectedDelivery = Date.valueOf(delivery);
                     }
-
-                    status = dao.approveRequest(
-                            requestId,
-                            approvedBy,
-                            remarks,
-                            expectedDelivery
-                    );
-
+                    status = dao.approveRequest(requestId, approvedBy, remarks, expectedDelivery);
                     break;
 
                 case "REJECT":
-
-                    status = dao.rejectRequest(
-                            requestId,
-                            approvedBy,
-                            remarks
-                    );
-
+                    status = dao.rejectRequest(requestId, approvedBy, remarks);
                     break;
 
                 case "DISPATCH":
-
-                    status =
-                            dao.dispatchRequest(
-                                    requestId
-                            );
-
+                    status = dao.dispatchRequest(requestId);
                     break;
 
                 case "DELIVER":
-
-                    status =
-                            dao.deliverRequest(
-                                    requestId
-                            );
-
+                    status = dao.deliverRequest(requestId);
                     break;
 
                 default:
-                    response.sendRedirect("AdminAllRequestServlet?msg=invalidAction");
+                    response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=invalidAction");
                     return;
             }
 
@@ -129,14 +87,14 @@ public class AdminRequestServlet extends HttpServlet {
             // REDIRECT BACK TO UNIFIED LIST
             // =========================
             if (status) {
-                response.sendRedirect("AdminAllRequestServlet?msg=success");
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=success");
             } else {
-                response.sendRedirect("AdminAllRequestServlet?msg=failed");
+                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=failed");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("AdminAllRequestServlet?msg=error");
+            response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error");
         }
     }
 
@@ -144,7 +102,8 @@ public class AdminRequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
-
-        response.sendRedirect("AdminAllRequestServlet");
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
+        response.sendRedirect(ctx + "/AdminAllRequestServlet");
     }
 }

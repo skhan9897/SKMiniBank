@@ -78,7 +78,19 @@ SK Mini Bank
 
 <div class="card-body">
 
-<form action="<%=request.getContextPath()%>/RegisterServlet" method="post">
+<form action="<%=request.getContextPath()%>/RegisterServlet" method="post" enctype="multipart/form-data">
+
+<!-- Profile Photo -->
+<h4 class="section-title">
+    <i class="fas fa-camera"></i>
+    Profile Photo
+</h4>
+<div class="row">
+    <div class="col-md-12 mb-3">
+        <label>Upload Customer Photo *</label>
+        <input type="file" name="photo" class="form-control" accept="image/*" required>
+    </div>
+</div>
 
     <div class="row mb-3">
         <div class="col-md-4">
