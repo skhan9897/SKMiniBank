@@ -52,7 +52,13 @@ public class PaymentSuccessActivity extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         String acc = getIntent().getStringExtra("acc");
         String balance = getIntent().getStringExtra("balance");
-        
+
+        // Sanitize "null" strings from backend or intent
+        if ("null".equalsIgnoreCase(name)) name = "Unknown Receiver";
+        if ("null".equalsIgnoreCase(acc)) acc = "N/A";
+        if ("null".equalsIgnoreCase(amount)) amount = "0.00";
+        if ("null".equalsIgnoreCase(balance)) balance = "0.00";
+
         amountToSpeak = amount != null ? amount : "0";
 
         // Generate a dummy transaction ID

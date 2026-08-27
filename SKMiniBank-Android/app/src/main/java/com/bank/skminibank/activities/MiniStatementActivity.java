@@ -1,17 +1,25 @@
 package com.bank.skminibank.activities;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.bank.skminibank.R;
-import com.bank.skminibank.adapters.TransactionAdapter;
+import com.bank.skminibank.adapters.TransactionsAdapter;
 import com.bank.skminibank.api.ApiClient;
 import com.bank.skminibank.model.Transaction;
 import com.bank.skminibank.model.TransactionResponse;
 import com.bank.skminibank.utils.SessionManager;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,9 +28,10 @@ import retrofit2.Response;
 public class MiniStatementActivity extends AppCompatActivity {
 
     private RecyclerView rvMiniStatement;
-    private TransactionAdapter adapter;
+    private TransactionsAdapter adapter;
     private List<Transaction> transactionList = new ArrayList<>();
     private SessionManager sessionManager;
+    private SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,16 +40,39 @@ public class MiniStatementActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Mini Statement");
+        }
 
         sessionManager = new SessionManager(this);
         rvMiniStatement = findViewById(R.id.rvMiniStatement);
+        swipeRefresh = findViewById(R.id.swipeRefreshMini);
+        
         rvMiniStatement.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TransactionAdapter(this, transactionList);
+        adapter = new TransactionsAdapter(transactionList);
         rvMiniStatement.setAdapter(adapter);
 
+        swipeRefresh.setOnRefreshListener(this::fetchMiniStatement);
+
         fetchMiniStatement();
+        startWaveAnimation();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchMiniStatement();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.miniStatementRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     @Override
@@ -50,27 +82,41 @@ public class MiniStatementActivity extends AppCompatActivity {
     }
 
     private void fetchMiniStatement() {
+        swipeRefresh.setRefreshing(true);
         String accountNumber = sessionManager.getAccountNumber();
         if (accountNumber != null) {
             ApiClient.getService().getTransactions(accountNumber).enqueue(new Callback<TransactionResponse>() {
                 @Override
-                public void onResponse(Call<TransactionResponse> call, Response<TransactionResponse> response) {
+                public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
+                    swipeRefresh.setRefreshing(false);
                     if (response.isSuccessful() && response.body() != null) {
-                        transactionList.clear();
-                        // Show only the last 5 transactions
-                        int count = 0;
-                        for (int i = response.body().getTransactions().size() - 1; i >= 0 && count < 5; i--, count++) {
-                            transactionList.add(response.body().getTransactions().get(i));
+                        List<Transaction> allTransactions = response.body().getTransactions();
+                        if (allTransactions != null && !allTransactions.isEmpty()) {
+                            transactionList.clear();
+                            // Sort and get last 5
+                            List<Transaction> reversedList = new ArrayList<>(allTransactions);
+                            Collections.reverse(reversedList);
+                            
+                            int count = 0;
+                            for (int i = 0; i < reversedList.size() && count < 5; i++) {
+                                transactionList.add(reversedList.get(i));
+                                count++;
+                            }
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(MiniStatementActivity.this, "No transactions found", Toast.LENGTH_SHORT).show();
                         }
-                        adapter.notifyDataSetChanged();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<TransactionResponse> call, Throwable t) {
-                    // Handle failure
+                public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
+                    swipeRefresh.setRefreshing(false);
+                    Toast.makeText(MiniStatementActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
                 }
             });
+        } else {
+            swipeRefresh.setRefreshing(false);
         }
     }
 }

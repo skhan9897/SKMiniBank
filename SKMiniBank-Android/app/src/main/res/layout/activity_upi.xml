@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/upiRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/fino_background">
+    android:background="@drawable/rgb_wave_anim">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fino_primary"
+        android:background="#40000000"
         app:title="UPI Management"
         app:titleTextColor="@color/white"
         app:navigationIcon="?attr/homeAsUpIndicator"
@@ -26,14 +27,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Red Header Section -->
+            <!-- Header Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/fino_primary"
+                android:background="#20000000"
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
-                android:paddingBottom="60dp"
+                android:paddingBottom="40dp"
                 android:paddingTop="10dp">
 
                 <TextView
@@ -58,16 +59,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="-40dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
+                android:layout_marginTop="-20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
                 app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="28dp"
+                    android:padding="24dp"
                     android:gravity="center">
 
                     <TextView
@@ -76,7 +77,7 @@
                         android:text="YOUR ACTIVE UPI ID"
                         android:textSize="11sp"
                         android:textStyle="bold"
-                        android:textColor="@color/fino_text_secondary"
+                        android:textColor="@color/text_dark_secondary"
                         android:letterSpacing="0.1"/>
 
                     <TextView
@@ -86,7 +87,7 @@
                         android:text="Loading..."
                         android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textColor="@color/fino_text_primary"
+                        android:textColor="@color/text_dark_primary"
                         android:layout_marginTop="12dp"/>
 
                     <TextView
@@ -98,8 +99,8 @@
                         android:textStyle="bold"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:textColor="@color/fino_accent_green"
-                        android:background="@drawable/badge_approved"
+                        android:textColor="@color/accent_green"
+                        android:background="#1000C853"
                         android:layout_marginTop="12dp"
                         android:visibility="gone"/>
 
@@ -107,22 +108,61 @@
                         android:id="@+id/btnGenerateUpi"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="24dp"
                         android:text="CREATE UPI ID"
-                        android:backgroundTint="@color/fino_primary"
+                        android:backgroundTint="@color/primary_blue"
                         android:textColor="@color/white"
                         android:textStyle="bold"
-                        app:cornerRadius="28dp"
+                        app:cornerRadius="12dp"
                         android:visibility="visible"/>
 
-                    <!-- PIN & OTP Section - Always Visible -->
+                    <!-- Action Buttons Container -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="24dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnShowQr"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="GENERATE QR CODE"
+                            android:textColor="@color/primary_blue"
+                            android:textStyle="bold"
+                            app:strokeColor="@color/primary_blue"
+                            app:cornerRadius="12dp"
+                            app:icon="@android:drawable/ic_menu_camera"
+                            app:iconTint="@color/primary_blue"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnTogglePinSection"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="8dp"
+                            android:text="SET / CHANGE UPI PIN"
+                            android:textColor="@color/primary_blue"
+                            android:textStyle="bold"
+                            app:icon="@android:drawable/ic_lock_lock"
+                            app:iconTint="@color/primary_blue"/>
+                    </LinearLayout>
+
+                    <!-- PIN & OTP Section - Initially Hidden or Shown based on Toggle -->
                     <LinearLayout
                         android:id="@+id/layoutSetPin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="20dp"
-                        android:visibility="visible">
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider_light"
+                            android:layout_marginBottom="20dp"/>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilOtp"
@@ -130,11 +170,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Enter 4-Digit OTP"
-                            android:visibility="visible"
                             app:startIconDrawable="@android:drawable/ic_dialog_info"
-                            app:startIconTint="@color/fino_primary"
-                            app:boxStrokeColor="@color/fino_primary"
-                            app:hintTextColor="@color/fino_primary">
+                            app:startIconTint="@color/primary_blue"
+                            app:boxStrokeColor="@color/primary_blue"
+                            app:hintTextColor="@color/primary_blue">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etOtp"
@@ -144,7 +183,7 @@
                                 android:maxLength="4"
                                 android:gravity="center"
                                 android:textSize="18sp"
-                                android:textColor="@color/fino_text_primary"/>
+                                android:textColor="@color/text_dark_primary"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -154,12 +193,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
                             android:hint="Create New 4-Digit PIN"
-                            android:visibility="visible"
                             app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                            app:startIconTint="@color/fino_primary"
+                            app:startIconTint="@color/primary_blue"
                             app:passwordToggleEnabled="true"
-                            app:boxStrokeColor="@color/fino_primary"
-                            app:hintTextColor="@color/fino_primary">
+                            app:boxStrokeColor="@color/primary_blue"
+                            app:hintTextColor="@color/primary_blue">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etUpiPin"
@@ -171,7 +209,7 @@
                                 android:gravity="center"
                                 android:textSize="22sp"
                                 android:textStyle="bold"
-                                android:textColor="@color/fino_text_primary"/>
+                                android:textColor="@color/text_dark_primary"/>
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.button.MaterialButton
@@ -181,9 +219,8 @@
                             android:layout_marginTop="24dp"
                             android:text="VERIFY AND SET PIN"
                             android:textStyle="bold"
-                            android:visibility="visible"
-                            app:backgroundTint="@color/fino_primary"
-                            app:cornerRadius="28dp"/>
+                            app:backgroundTint="@color/primary_blue"
+                            app:cornerRadius="12dp"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -194,11 +231,12 @@
                 android:layout_height="wrap_content"
                 android:text="Always keep your UPI PIN secret. Do not share it with anyone."
                 android:textSize="12sp"
-                android:textColor="@color/fino_text_secondary"
+                android:textColor="@color/white"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="40dp"
                 android:gravity="center"
-                android:paddingHorizontal="32dp"/>
+                android:paddingHorizontal="32dp"
+                android:alpha="0.8"/>
 
         </LinearLayout>
     </ScrollView>

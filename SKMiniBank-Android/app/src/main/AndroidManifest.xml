@@ -60,6 +60,9 @@
         <activity android:name=".activities.SkStoreActivity" android:exported="false" />
         <activity android:name=".activities.ProfileActivity" android:exported="false" />
         <activity android:name=".activities.DashboardActivity" android:exported="false" />
+        <activity android:name=".activities.WebPortalActivity" android:exported="false" />
+        <activity android:name=".activities.CashWithdrawalActivity" android:exported="false" />
+        <activity android:name=".activities.FixedDepositActivity" android:exported="false" />
         <activity android:name=".activities.LoginActivity" android:exported="false" />
         <activity android:name=".activities.ChatTransferActivity" android:exported="false" />
         <activity android:name=".activities.SendMoneyActivity" android:exported="false" />

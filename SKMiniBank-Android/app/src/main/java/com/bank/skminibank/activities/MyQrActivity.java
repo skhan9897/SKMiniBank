@@ -3,6 +3,7 @@ package com.bank.skminibank.activities;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -73,6 +74,17 @@ public class MyQrActivity extends AppCompatActivity {
 
         // Then try to fetch the actual UPI ID from server
         fetchUpiDetails();
+        startWaveAnimation();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.qrRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     private void fetchUpiDetails() {

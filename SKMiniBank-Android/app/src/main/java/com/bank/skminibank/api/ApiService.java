@@ -321,4 +321,11 @@ public interface ApiService {
             @Field("method") String method,
             @Field("amount") double amount
     );
+
+    @FormUrlEncoded
+    @POST("api/deposit")
+    Call<com.bank.skminibank.model.LoginResponse> performDeposit(
+            @Field("accountNumber") String accountNumber,
+            @Field("amount") double amount
+    );
 }

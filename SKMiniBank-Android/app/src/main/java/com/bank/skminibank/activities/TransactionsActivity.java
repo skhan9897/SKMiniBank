@@ -1,6 +1,11 @@
 package com.bank.skminibank.activities;
 
+import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,13 +19,13 @@ import com.bank.skminibank.R;
 import com.bank.skminibank.adapters.TransactionsAdapter;
 import com.bank.skminibank.api.ApiClient;
 import com.bank.skminibank.api.ApiService;
+import com.bank.skminibank.database.AppDatabase;
+import com.bank.skminibank.database.TransactionEntity;
 import com.bank.skminibank.model.Transaction;
 import com.bank.skminibank.model.TransactionResponse;
 import com.bank.skminibank.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 
-import android.content.Intent;
-import android.net.Uri;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -37,6 +42,8 @@ public class TransactionsActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefresh;
     private SessionManager sessionManager;
     private MaterialButton btnDownloadPdf;
+    private TextView tvTotalTransactions;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +58,11 @@ public class TransactionsActivity extends AppCompatActivity {
         }
 
         sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
         rvTransactions = findViewById(R.id.rvTransactions);
         swipeRefresh = findViewById(R.id.swipeRefresh);
         btnDownloadPdf = findViewById(R.id.btnDownloadPdf);
+        tvTotalTransactions = findViewById(R.id.tvTotalTransactions);
 
         rvTransactions.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TransactionsAdapter(transactionList);
@@ -63,15 +72,71 @@ public class TransactionsActivity extends AppCompatActivity {
 
         btnDownloadPdf.setOnClickListener(v -> downloadStatement());
 
+        loadTransactionsFromLocal();
         fetchTransactions();
+        startWaveAnimation();
+    }
+
+    private void loadTransactionsFromLocal() {
+        String acc = sessionManager.getAccountNumber();
+        if (acc == null) return;
+        
+        new Thread(() -> {
+            List<TransactionEntity> entities = db.transactionDao().getAllTransactions(acc);
+            runOnUiThread(() -> {
+                transactionList.clear();
+                for (TransactionEntity e : entities) {
+                    transactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
+                }
+                adapter.notifyDataSetChanged();
+                if (tvTotalTransactions != null) {
+                    tvTotalTransactions.setText("Total Transactions: " + transactionList.size());
+                }
+            });
+        }).start();
+    }
+
+    private void saveTransactionsToLocal(List<Transaction> txns) {
+        String acc = sessionManager.getAccountNumber();
+        if (acc == null) return;
+        
+        new Thread(() -> {
+            for (Transaction t : txns) {
+                String tid = t.getTransactionId();
+                if (tid == null || tid.isEmpty() || tid.equals("null")) {
+                    tid = "TXN_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
+                }
+                
+                if (!db.transactionDao().isTransactionExists(acc, tid)) {
+                    db.transactionDao().insertTransaction(new TransactionEntity(
+                            acc, tid, t.getType(), t.getAmount(), t.getDescription(), t.getDate(), t.getBalanceAfter()
+                    ));
+                }
+            }
+            loadTransactionsFromLocal();
+        }).start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchTransactions();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.transactionsRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     private void downloadStatement() {
         String accountNumber = sessionManager.getAccountNumber();
         if (accountNumber == null) return;
 
-        // Base URL from ApiClient is internal, let's construct the full link
-        // We'll use the same BASE_URL used for Retrofit
         String url = "https://skminibank-1.onrender.com/TransactionPDFServlet?accountNumber=" + accountNumber;
         
         Toast.makeText(this, "Opening Statement PDF...", Toast.LENGTH_SHORT).show();
@@ -95,40 +160,28 @@ public class TransactionsActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    TransactionResponse res = response.body();
-                    String status = res.getStatus();
-                    if (status != null && (status.equalsIgnoreCase("success") || status.equalsIgnoreCase("ok") || status.equalsIgnoreCase("true"))) {
-                        if (res.getTransactions() != null && !res.getTransactions().isEmpty()) {
-                            transactionList.clear();
-                            transactionList.addAll(res.getTransactions());
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(TransactionsActivity.this, "No transactions found", Toast.LENGTH_SHORT).show();
-                        }
-                    } else if (res.getTransactions() != null && !res.getTransactions().isEmpty()) {
-                        // Even if status is missing, if we have data, show it
-                        transactionList.clear();
-                        transactionList.addAll(res.getTransactions());
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(TransactionsActivity.this, "No transactions found", Toast.LENGTH_SHORT).show();
+                    List<Transaction> txns = response.body().getTransactions();
+                    if (txns != null && !txns.isEmpty()) {
+                        saveTransactionsToLocal(txns);
                     }
                 } else {
-                    Toast.makeText(TransactionsActivity.this, "Server Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    // Fallback to local if server fails
+                    loadTransactionsFromLocal();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(TransactionsActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                loadTransactionsFromLocal();
+                Toast.makeText(TransactionsActivity.this, "Network Error - Showing Saved History", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        getOnBackPressedDispatcher().onBackPressed();
+        onBackPressed();
         return true;
     }
 }

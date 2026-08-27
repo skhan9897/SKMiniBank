@@ -22,7 +22,7 @@ public class AdminAllRequestServlet extends HttpServlet {
 
         ServiceRequestDAO dao = new ServiceRequestDAO();
 
-        List<ServiceRequest> list = dao.getPendingRequests();
+        List<ServiceRequest> list = dao.getAllRequests();
 
         request.setAttribute("requestList", list);
 

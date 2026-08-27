@@ -21,6 +21,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("totalAccounts", dao.getTotalAccounts());
         request.setAttribute("totalBalance", dao.getTotalBalance());
         request.setAttribute("totalTransactions", dao.getTotalTransactions());
+        request.setAttribute("totalPendingRequests", dao.getTotalPendingRequests());
 
         request.getRequestDispatcher("/admin/SKMiniBank-System.jsp")
                .forward(request, response);

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transferRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_background">
+    android:background="@drawable/rgb_wave_anim">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary_blue"
+        android:background="#40000000"
         app:title="Fund Transfer"
         app:titleTextColor="@color/white"
         app:navigationIcon="?attr/homeAsUpIndicator"
@@ -34,7 +35,7 @@
                 android:text="TRANSFER FROM"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_dark_secondary"
+                android:textColor="@color/white"
                 android:letterSpacing="0.1"/>
 
             <androidx.cardview.widget.CardView
@@ -44,7 +45,7 @@
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/card_background">
+                app:cardBackgroundColor="#20FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,7 +80,7 @@
                 android:text="TRANSFER TO"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="@color/text_dark_secondary"
+                android:textColor="@color/white"
                 android:letterSpacing="0.1"/>
 
             <androidx.cardview.widget.CardView
@@ -88,7 +89,7 @@
                 android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/card_background">
+                app:cardBackgroundColor="#20FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"

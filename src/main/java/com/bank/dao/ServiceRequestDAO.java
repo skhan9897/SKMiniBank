@@ -63,6 +63,21 @@ public class ServiceRequestDAO {
         return list;
     }
 
+    public List<ServiceRequest> getAllRequests() {
+        List<ServiceRequest> list = new ArrayList<>();
+        String sql = "SELECT * FROM service_request ORDER BY request_date DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<ServiceRequest> getRequestsByType(String requestType) {
         List<ServiceRequest> list = new ArrayList<>();
         String sql = "SELECT * FROM service_request WHERE UPPER(request_type)=UPPER(?) ORDER BY request_date DESC";

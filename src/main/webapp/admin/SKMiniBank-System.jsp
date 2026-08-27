@@ -84,7 +84,7 @@
     </div>
 
     <a href="${pageContext.request.contextPath}/DashboardServlet" class="active">🏠 Dashboard</a>
-    <a href="${pageContext.request.contextPath}/admin/service-requests.jsp">📋 Service Requests</a>
+    <a href="${pageContext.request.contextPath}/AdminAllRequestServlet">📋 All Service Requests</a>
 
     <div style="padding: 10px 20px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5;">Banking Requests</div>
     <a href="${pageContext.request.contextPath}/AdminATMRequestServlet">💳 ATM Card Requests</a>
@@ -164,6 +164,19 @@
                             <i class="fas fa-exchange-alt"></i>
                             <h3>${totalTransactions}</h3>
                             <p>Transactions</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Pending Service Requests -->
+            <div class="col-md-3 mt-md-0 mt-3">
+                <a href="${pageContext.request.contextPath}/AdminAllRequestServlet" style="text-decoration:none;">
+                    <div class="card card-summary shadow text-center" style="background: linear-gradient(45deg, #6610f2, #4b0db8);">
+                        <div class="card-body">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>${totalPendingRequests}</h3>
+                            <p>Pending Requests</p>
                         </div>
                     </div>
                 </a>

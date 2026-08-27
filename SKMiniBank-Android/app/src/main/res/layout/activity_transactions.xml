@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/transactionsRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/fino_primary">
+    android:background="@drawable/rgb_wave_anim">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,7 +19,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/fino_background"
+        android:background="@android:color/transparent"
         android:layout_marginTop="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -33,28 +34,46 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_search"
-                    app:tint="@color/fino_text_secondary"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:gravity="center_vertical">
 
-                <EditText
-                    android:id="@+id/etSearch"
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@android:drawable/ic_menu_search"
+                        app:tint="@color/fino_text_secondary"/>
+
+                    <EditText
+                        android:id="@+id/etSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:hint="Search transactions"
+                        android:background="@null"
+                        android:textColor="@color/fino_text_primary"
+                        android:textColorHint="@color/fino_text_secondary"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvTotalTransactions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:hint="Search transactions"
-                    android:background="@null"
-                    android:textColor="@color/fino_text_primary"
-                    android:textColorHint="@color/fino_text_secondary"
-                    android:textSize="14sp"/>
+                    android:paddingBottom="12dp"
+                    android:paddingStart="44dp"
+                    android:text="Total Transactions: 0"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="visible"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

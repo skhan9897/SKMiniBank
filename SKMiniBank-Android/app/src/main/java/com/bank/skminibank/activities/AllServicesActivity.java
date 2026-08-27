@@ -1,6 +1,7 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +29,17 @@ public class AllServicesActivity extends AppCompatActivity {
         setupBankingServices();
         setupRechargeServices();
         setupTravelServices();
+        startWaveAnimation();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.allServicesRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     private void setupBankingServices() {
@@ -38,7 +50,12 @@ public class AllServicesActivity extends AppCompatActivity {
         setupSvc(R.id.svcMobileBanking, "Mobile Banking", android.R.drawable.ic_menu_call, v -> startActivity(new Intent(this, MobileBankingActivity.class)));
         setupSvc(R.id.svcKyc, "Update KYC", android.R.drawable.ic_menu_save, v -> startActivity(new Intent(this, KYCUpdateActivity.class)));
         setupSvc(R.id.svcStatement, "E-Statement", android.R.drawable.ic_menu_recent_history, v -> startActivity(new Intent(this, TransactionsActivity.class)));
-        setupSvc(R.id.svcFd, "Fixed Deposit", android.R.drawable.ic_input_add, v -> showPlaceholder("Fixed Deposit"));
+        setupSvc(R.id.svcFd, "Fixed Deposit", android.R.drawable.ic_input_add, v -> {
+            Intent intent = new Intent(this, WebPortalActivity.class);
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/fixed-deposit.jsp");
+            intent.putExtra("title", "Fixed Deposit");
+            startActivity(intent);
+        });
     }
 
     private void setupRechargeServices() {

@@ -39,6 +39,17 @@ public class Transaction {
     @SerializedName(value = "balanceAfter", alternate = {"closingBalance", "afterBalance", "balance"})
     private double balanceAfter;
 
+    public Transaction() {}
+
+    public Transaction(String transactionId, String type, double amount, String description, String date, double balanceAfter) {
+        this.transactionId = transactionId;
+        this.type = type;
+        this.amount = amount;
+        this.description = description;
+        this.date = date;
+        this.balanceAfter = balanceAfter;
+    }
+
     public String getTransactionId() { return transactionId; }
     public String getType() { return type; }
     public double getAmount() { return amount; }

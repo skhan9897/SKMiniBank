@@ -52,22 +52,74 @@ class MainActivity : AppCompatActivity() {
         // Navigation Links Handlers
         findViewById<View>(R.id.nav_link_dashboard)?.setOnClickListener { openWebPortal() }
         findViewById<View>(R.id.nav_link_service)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_atm)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_cheque)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_net)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_mobile)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_loan_req)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_all_req)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_customers)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_add_cust)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_open_acc)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_deposit)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_withdraw)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_atm)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/atm-card-list.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_cheque)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/cheque-book-list.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_net)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/internet-banking-list.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_mobile)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/mobile-banking.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_loan_req)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/loan-dashboard.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_all_req)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/all-service-requests.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_customers)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/customer-list.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_add_cust)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/open-account.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_open_acc)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/open-account.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_deposit)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/deposit.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_withdraw)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/withdraw.jsp")
+            startActivity(intent)
+        }
         findViewById<View>(R.id.nav_link_transfer)?.setOnClickListener { 
             startActivity(Intent(this, TransferActivity::class.java))
         }
-        findViewById<View>(R.id.nav_link_fd)?.setOnClickListener { openWebPortal() }
-        findViewById<View>(R.id.nav_link_loan)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_fd)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/fixed-deposit.jsp")
+            startActivity(intent)
+        }
+        findViewById<View>(R.id.nav_link_loan)?.setOnClickListener { 
+            val intent = Intent(this, WebPortalActivity::class.java)
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/loan-dashboard.jsp")
+            startActivity(intent)
+        }
         findViewById<View>(R.id.nav_link_kyc)?.setOnClickListener { 
             val intent = Intent(this, WebPortalActivity::class.java)
             intent.putExtra("url", "https://skminibank.onrender.com/admin/kyc.jsp")

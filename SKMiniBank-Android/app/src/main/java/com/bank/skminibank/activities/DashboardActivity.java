@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bank.skminibank.R;
-import com.bank.skminibank.adapters.TransactionAdapter;
+import com.bank.skminibank.adapters.TransactionsAdapter;
 import com.bank.skminibank.api.ApiClient;
+import com.bank.skminibank.database.AppDatabase;
+import com.bank.skminibank.database.TransactionEntity;
 import com.bank.skminibank.model.DashboardResponse;
 import com.bank.skminibank.model.Transaction;
 import com.bank.skminibank.model.TransactionResponse;
@@ -46,9 +48,10 @@ public class DashboardActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private ImageView btnToggleBalance;
     private RecyclerView rvRecentTransactions;
-    private TransactionAdapter transactionAdapter;
+    private TransactionsAdapter transactionAdapter;
     private List<Transaction> transactionList = new ArrayList<>();
-    
+    private AppDatabase db;
+
     private double lastFetchedBalance = 0.0;
     private boolean isBalanceVisible = false;
     private TextToSpeech tts;
@@ -61,6 +64,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
         
         try {
             Intent paymentService = new Intent(this, PaymentNotificationService.class);
@@ -80,7 +84,7 @@ public class DashboardActivity extends AppCompatActivity {
         // Setup RecyclerView
         if (rvRecentTransactions != null) {
             rvRecentTransactions.setLayoutManager(new LinearLayoutManager(this));
-            transactionAdapter = new TransactionAdapter(this, transactionList);
+            transactionAdapter = new TransactionsAdapter(transactionList);
             rvRecentTransactions.setAdapter(transactionAdapter);
         }
 
@@ -95,6 +99,7 @@ public class DashboardActivity extends AppCompatActivity {
         setupBottomNav();
         
         populateBasicInfo();
+        loadRecentTransactionsFromLocal();
         refreshData();
         startPolling();
         
@@ -109,7 +114,12 @@ public class DashboardActivity extends AppCompatActivity {
         
         findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         findViewById(R.id.btnBalanceInquiry).setOnClickListener(v -> startPinActivity());
-        
+
+        View btnViewAll = findViewById(R.id.btnViewAll);
+        if (btnViewAll != null) {
+            btnViewAll.setOnClickListener(v -> startActivity(new Intent(this, TransactionsActivity.class)));
+        }
+
         if (btnToggleBalance != null) {
             btnToggleBalance.setOnClickListener(v -> {
                 isBalanceVisible = !isBalanceVisible;
@@ -136,15 +146,25 @@ public class DashboardActivity extends AppCompatActivity {
         
         // Main Services
         setupServiceCard(R.id.cardBalanceInq, "Balance Inquiry", android.R.drawable.ic_menu_info_details, v -> startPinActivity());
-        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> startActivity(new Intent(this, AllServicesActivity.class)));
+        setupServiceCard(R.id.cardWithdrawal, "Cash Withdrawal", android.R.drawable.ic_menu_myplaces, v -> {
+            Intent intent = new Intent(this, WebPortalActivity.class);
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/withdraw.jsp");
+            intent.putExtra("title", "Cash Withdrawal");
+            startActivity(intent);
+        });
         setupServiceCard(R.id.cardPassbook, "Passbook", android.R.drawable.ic_menu_agenda, v -> startActivity(new Intent(this, TransactionsActivity.class)));
         
-        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> startActivity(new Intent(this, AllServicesActivity.class)));
+        setupServiceCard(R.id.cardFixedDeposit, "Fixed Deposit", android.R.drawable.ic_menu_view, v -> {
+            Intent intent = new Intent(this, WebPortalActivity.class);
+            intent.putExtra("url", "https://skminibank.onrender.com/admin/fixed-deposit.jsp");
+            intent.putExtra("title", "Fixed Deposit");
+            startActivity(intent);
+        });
         setupServiceCard(R.id.cardUpiPayment, "UPI Payment", android.R.drawable.ic_menu_camera, v -> startActivity(new Intent(this, UpiActivity.class)));
         setupServiceCard(R.id.cardScanPay, "Scan & Pay", android.R.drawable.ic_menu_camera, v -> startScanner());
         
         setupServiceCard(R.id.cardBeneficiary, "View Beneficiary", android.R.drawable.ic_menu_mylocation, v -> startActivity(new Intent(this, AddBankActivity.class)));
-        setupServiceCard(R.id.cardAtm, "ATM Card", android.R.drawable.ic_lock_lock, v -> startActivity(new Intent(this, ManageCardActivity.class)));
+        setupServiceCard(R.id.cardAtm, "ATM Card", android.R.drawable.ic_lock_lock, v -> startActivity(new Intent(this, AtmApplyActivity.class)));
         setupServiceCard(R.id.cardMiniStatement, "Mini Statement", android.R.drawable.ic_menu_recent_history, v -> startActivity(new Intent(this, MiniStatementActivity.class)));
 
         setupServiceCard(R.id.cardRequests, "Requests", android.R.drawable.ic_menu_edit, v -> startActivity(new Intent(this, MyRequestsActivity.class)));
@@ -237,21 +257,57 @@ public class DashboardActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
                     if (txns != null) {
-                        transactionList.clear();
-                        // Get only last 5
-                        for (int i = 0; i < Math.min(txns.size(), 5); i++) {
-                            transactionList.add(txns.get(i));
-                        }
-                        if (transactionAdapter != null) {
-                            transactionAdapter.notifyDataSetChanged();
-                        }
+                        saveTransactionsToLocal(txns);
                     }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {}
+            public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
+                loadRecentTransactionsFromLocal();
+            }
         });
+    }
+
+    private void loadRecentTransactionsFromLocal() {
+        String acc = sessionManager.getAccountNumber();
+        if (acc == null) return;
+        
+        new Thread(() -> {
+            List<TransactionEntity> entities = db.transactionDao().getAllTransactions(acc);
+            runOnUiThread(() -> {
+                transactionList.clear();
+                // Get only last 5 from local
+                for (int i = 0; i < Math.min(entities.size(), 5); i++) {
+                    TransactionEntity e = entities.get(i);
+                    transactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
+                }
+                if (transactionAdapter != null) {
+                    transactionAdapter.notifyDataSetChanged();
+                }
+            });
+        }).start();
+    }
+
+    private void saveTransactionsToLocal(List<Transaction> txns) {
+        String acc = sessionManager.getAccountNumber();
+        if (acc == null) return;
+        
+        new Thread(() -> {
+            for (Transaction t : txns) {
+                String tid = t.getTransactionId();
+                if (tid == null || tid.isEmpty() || tid.equals("null")) {
+                    tid = "TXN_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
+                }
+                
+                if (!db.transactionDao().isTransactionExists(acc, tid)) {
+                    db.transactionDao().insertTransaction(new TransactionEntity(
+                            acc, tid, t.getType(), t.getAmount(), t.getDescription(), t.getDate(), t.getBalanceAfter()
+                    ));
+                }
+            }
+            loadRecentTransactionsFromLocal();
+        }).start();
     }
 
     private void updateUI(DashboardResponse data) {
@@ -308,6 +364,12 @@ public class DashboardActivity extends AppCompatActivity {
                 pollingHandler.postDelayed(this, 10000); // Check every 10 seconds
             }
         }, 10000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshData();
     }
 
     @Override

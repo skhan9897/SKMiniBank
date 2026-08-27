@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/qrRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/fino_background">
+    android:background="@drawable/rgb_wave_anim">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fino_primary"
+        android:background="#40000000"
         app:title="My QR Code"
         app:titleTextColor="@color/white"
         app:navigationIcon="?attr/homeAsUpIndicator"
@@ -32,9 +33,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/fino_card_bg">
+                app:cardCornerRadius="24dp"
+                app:cardElevation="12dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,21 +50,20 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:layout_marginBottom="24dp"
-                        android:background="@drawable/white_circle_bg"
-                        android:backgroundTint="#10000000"
+                        android:background="#10000000"
                         android:paddingHorizontal="16dp"
-                        android:paddingVertical="8dp">
+                        android:paddingVertical="8dp"
+                        android:backgroundTint="#0A000000">
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:src="@drawable/sk_logo"/>
                         <TextView
-                            android:id="@+id/tvBankDetail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:text="SK Mini Payment Bank"
-                            android:textColor="@color/fino_text_primary"
+                            android:textColor="@color/primary_blue"
                             android:textStyle="bold"
                             android:textSize="14sp"/>
                     </LinearLayout>
@@ -71,15 +71,14 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="@color/white"
-                        android:padding="8dp">
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp"
+                        app:cardBackgroundColor="@color/white">
                         <ImageView
                             android:id="@+id/ivQrCode"
                             android:layout_width="250dp"
                             android:layout_height="250dp"
-                            android:padding="16dp"
+                            android:padding="12dp"
                             android:scaleType="fitCenter"
                             android:contentDescription="Generated QR Code"/>
                     </androidx.cardview.widget.CardView>
@@ -90,9 +89,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="UPI ID: loading..."
-                        android:textColor="@color/fino_text_primary"
+                        android:textColor="@color/text_dark_primary"
                         android:textStyle="bold"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:letterSpacing="0.05"/>
 
                     <TextView
@@ -101,20 +100,21 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="User Name"
-                        android:textColor="@color/fino_text_secondary"
-                        android:textSize="13sp"/>
+                        android:textColor="@color/text_dark_secondary"
+                        android:textSize="14sp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#10000000"
+                        android:background="@color/divider_light"
                         android:layout_marginTop="32dp"
                         android:layout_marginBottom="24dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnDownload"
@@ -122,10 +122,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Save Image"
-                            android:textColor="@color/fino_primary"
+                            android:text="SAVE IMAGE"
+                            android:textColor="@color/primary_blue"
+                            android:textStyle="bold"
                             app:icon="@android:drawable/ic_menu_save"
-                            app:iconTint="@color/fino_primary"/>
+                            app:iconTint="@color/primary_blue"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnShare"
@@ -133,10 +134,11 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Share QR"
-                            android:textColor="@color/fino_primary"
+                            android:text="SHARE QR"
+                            android:textColor="@color/primary_blue"
+                            android:textStyle="bold"
                             app:icon="@android:drawable/ic_menu_share"
-                            app:iconTint="@color/fino_primary"/>
+                            app:iconTint="@color/primary_blue"/>
 
                     </LinearLayout>
 
@@ -147,11 +149,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:layout_marginBottom="40dp"
                 android:text="Scan this QR to receive money from any UPI app like PhonePe, GPay, or Paytm."
-                android:textColor="@color/fino_text_secondary"
+                android:textColor="@color/white"
                 android:textSize="12sp"
                 android:gravity="center"
-                android:paddingHorizontal="24dp"/>
+                android:paddingHorizontal="24dp"
+                android:alpha="0.8"/>
 
         </LinearLayout>
     </ScrollView>

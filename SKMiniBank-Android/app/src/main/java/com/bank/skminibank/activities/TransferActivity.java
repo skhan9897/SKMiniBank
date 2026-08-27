@@ -1,6 +1,7 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -67,6 +68,17 @@ public class TransferActivity extends AppCompatActivity {
         btnVerify.setOnClickListener(v -> verifyAccount());
         
         fetchCurrentBalance();
+        startWaveAnimation();
+    }
+
+    private void startWaveAnimation() {
+        View root = findViewById(R.id.transferRoot);
+        if (root != null && root.getBackground() instanceof AnimationDrawable) {
+            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
+            animationDrawable.setEnterFadeDuration(2000);
+            animationDrawable.setExitFadeDuration(4000);
+            animationDrawable.start();
+        }
     }
 
     private void fetchCurrentBalance() {
