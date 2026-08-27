@@ -172,11 +172,15 @@
                         <label class="form-label">Father's Name</label>
                         <input type="text" name="fatherName" class="form-control" required>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Mother's Name</label>
+                        <input type="text" name="motherName" class="form-control" required>
+                    </div>
+                    <div class="col-md-3 mb-4">
                         <label class="form-label">Date of Birth</label>
                         <input type="date" name="dob" class="form-control" required>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-3 mb-4">
                         <label class="form-label">Gender</label>
                         <select name="gender" class="form-select" required>
                             <option value="Male">Male</option>
@@ -184,7 +188,16 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Marital Status</label>
+                        <select name="maritalStatus" class="form-select" required>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-4">
                         <label class="form-label">Occupation</label>
                         <input type="text" name="occupation" class="form-control" value="Private Job" required>
                     </div>
@@ -204,13 +217,43 @@
                         <label class="form-label">Current Residential Address</label>
                         <input type="text" name="address" class="form-control" required>
                     </div>
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <label class="form-label">City / Town</label>
                         <input type="text" name="city" class="form-control" required>
                     </div>
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <label class="form-label">State</label>
                         <input type="text" name="state" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" name="pincode" class="form-control" maxlength="6" required>
+                    </div>
+                </div>
+
+                <div class="section-title">Nominee Details</div>
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">Nominee Name</label>
+                        <input type="text" name="nomineeName" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">Relationship</label>
+                        <select name="relationship" class="form-select" required>
+                            <option value="Father">Father</option>
+                            <option value="Mother">Mother</option>
+                            <option value="Brother">Brother</option>
+                            <option value="Sister">Sister</option>
+                            <option value="Wife">Wife</option>
+                            <option value="Husband">Husband</option>
+                            <option value="Son">Son</option>
+                            <option value="Daughter">Daughter</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">Nominee Mobile</label>
+                        <input type="text" name="nomineeMobile" class="form-control" maxlength="10" required>
                     </div>
                 </div>
 
@@ -221,6 +264,10 @@
                         <input type="text" name="mobile" class="form-control" maxlength="10" required>
                     </div>
                     <div class="col-md-6 mb-4">
+                        <label class="form-label">Alternate Mobile (Optional)</label>
+                        <input type="text" name="alternateMobile" class="form-control" maxlength="10">
+                    </div>
+                    <div class="col-md-12 mb-4">
                         <label class="form-label">Email Address</label>
                         <input type="email" name="email" class="form-control" required>
                     </div>
