@@ -231,6 +231,26 @@
                     </div>
                 </div>
 
+                <div class="section-title">Bank Assigned Details (Auto-Generated)</div>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <label class="form-label">Customer Code</label>
+                        <input type="text" id="autoCustCode" name="customerCode" class="form-control bg-light" readonly>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <label class="form-label">CIF Number</label>
+                        <input type="text" id="autoCif" name="cifNumber" class="form-control bg-light" readonly>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <label class="form-label">Account Number</label>
+                        <input type="text" id="autoAccNo" name="accountNumber" class="form-control bg-light" readonly>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <label class="form-label">IFSC Code</label>
+                        <input type="text" name="ifscCode" class="form-control bg-light" value="SKMB0001001" readonly>
+                    </div>
+                </div>
+
                 <div class="section-title">Nominee Details</div>
                 <div class="row">
                     <div class="col-md-4 mb-4">
@@ -310,6 +330,14 @@
     </div>
 
     <script>
+        // Auto-generate details on load
+        window.onload = function() {
+            let ts = new Date().getTime();
+            document.getElementById('autoCustCode').value = "SKC" + ts;
+            document.getElementById('autoCif').value = "CIF" + ts;
+            document.getElementById('autoAccNo').value = "SKM" + ts;
+        };
+
         function previewImage(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
