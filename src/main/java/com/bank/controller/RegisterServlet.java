@@ -82,15 +82,27 @@ public class RegisterServlet extends HttpServlet {
             customer.setTransactionPin(
                     request.getParameter("transactionPin"));
 
-            // Photo Upload
+            // Photo Upload (Enhanced)
             Part filePart = request.getPart("photo");
             String fileName = "default_user.png";
             if (filePart != null && filePart.getSize() > 0) {
-                fileName = customer.getAccountNumber() + "_" + getFileName(filePart);
-                String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "customer_photos";
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
-                filePart.write(uploadPath + File.separator + fileName);
+                String originalFileName = getFileName(filePart);
+                if (originalFileName != null && !originalFileName.isEmpty()) {
+                    fileName = customer.getAccountNumber() + "_" + System.currentTimeMillis() + ".jpg";
+                    String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "customer_photos";
+                    
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                    }
+                    
+                    try {
+                        filePart.write(uploadPath + File.separator + fileName);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        fileName = "default_user.png"; // Fallback on write error
+                    }
+                }
             }
             customer.setPhoto(fileName);
 

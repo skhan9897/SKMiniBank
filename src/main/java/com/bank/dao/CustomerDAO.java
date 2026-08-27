@@ -9,17 +9,12 @@ import java.util.List;
 public class CustomerDAO {
 
     public boolean addCustomer(Customer c) throws SQLException {
-        // Step 1: Ensure 'photo' column exists (Auto-Fix for older MySQL)
-        try (Connection con = DBConnection.getConnection()) {
-            DatabaseMetaData md = con.getMetaData();
-            ResultSet rsCol = md.getColumns(null, null, "customer", "photo");
-            if (!rsCol.next()) {
-                try (Statement st = con.createStatement()) {
-                    st.executeUpdate("ALTER TABLE customer ADD COLUMN photo VARCHAR(255) DEFAULT 'default_user.png'");
-                }
-            }
+        // Step 1: Forcefully ensure 'photo' column exists (Direct ALTER attempt)
+        try (Connection con = DBConnection.getConnection();
+             Statement st = con.createStatement()) {
+            st.executeUpdate("ALTER TABLE customer ADD COLUMN photo VARCHAR(255) DEFAULT 'default_user.png'");
         } catch (Exception e) {
-            e.printStackTrace();
+            // Silence if column already exists
         }
 
         String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin,photo) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?)";
