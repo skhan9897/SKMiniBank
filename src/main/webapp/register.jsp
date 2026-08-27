@@ -1,667 +1,293 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-
-<title>SK Mini Bank | Customer Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register | SK Mini Bank Premium</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-
-body{
-    background:#eef3f8;
-    font-family:Segoe UI,sans-serif;
-}
-
-.card{
-    margin-top:30px;
-    margin-bottom:30px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.2);
-}
-
-.card-header{
-    background:#0d6efd;
-    color:#fff;
-    text-align:center;
-    padding:20px;
-}
-
-.card-header h2{
-    font-weight:bold;
-    margin-bottom:5px;
-}
-
-.section-title{
-    color:#0d6efd;
-    font-weight:bold;
-    margin-top:25px;
-    margin-bottom:15px;
-    border-bottom:2px solid #0d6efd;
-    padding-bottom:5px;
-}
-
-label{
-    font-weight:600;
-}
-
-.btn{
-    min-width:150px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="card">
-
-<div class="card-header">
-
-<h2>
-<i class="fas fa-university"></i>
-SK Mini Bank
-</h2>
-
-<h5>Customer Registration Form</h5>
-
-</div>
-
-<div class="card-body">
-
-<form action="<%=request.getContextPath()%>/RegisterServlet" method="post" enctype="multipart/form-data">
-
-<!-- Profile Photo -->
-<h4 class="section-title">
-    <i class="fas fa-camera"></i>
-    Profile Photo
-</h4>
-<div class="row">
-    <div class="col-md-12 mb-3">
-        <label>Upload Customer Photo *</label>
-        <input type="file" name="photo" class="form-control" accept="image/*" required>
-    </div>
-</div>
-
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label>Existing Account Number (if registering)</label>
-            <input type="text" name="accountNumber" id="accountNumber" class="form-control" placeholder="Enter Account Number">
-        </div>
-        <div class="col-md-4">
-            <label>Account Password</label>
-            <input type="password" name="accountPassword" id="accountPassword" class="form-control" placeholder="Enter Account Password">
-        </div>
-        <div class="col-md-4 d-grid">
-            <label>&nbsp;</label>
-            <button type="button" class="btn btn-warning" onclick="sendMobileOTP()">Send Registration OTP</button>
-        </div>
-    </div>
-
-<!-- Personal Details -->
-
-<h4 class="section-title">
-
-<i class="fas fa-user"></i>
-
-Personal Details
-
-</h4>
-<!-- Personal Details -->
-
-<div class="row">
-
-    <div class="col-md-4 mb-3">
-        <label>Full Name *</label>
-        <input type="text" name="fullName" class="form-control" required>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Father Name *</label>
-        <input type="text" name="fatherName" class="form-control" required>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Mother Name</label>
-        <input type="text" name="motherName" class="form-control">
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-md-3 mb-3">
-        <label>Date of Birth *</label>
-        <input type="date" name="dob" class="form-control" required>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>Gender *</label>
-        <select name="gender" class="form-select" required>
-            <option value="">Select</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-        </select>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>Marital Status</label>
-        <select name="maritalStatus" class="form-select">
-            <option>Single</option>
-            <option>Married</option>
-            <option>Divorced</option>
-            <option>Widow</option>
-        </select>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>Occupation</label>
-        <input type="text" name="occupation" class="form-control">
-    </div>
-
-</div>
-
-<<!-- ========================= -->
-<!-- Contact Details -->
-<!-- ========================= -->
-
-<h4 class="section-title">
-    <i class="fas fa-phone"></i>
-    Contact Details
-</h4>
-
-<div class="row">
-
-    <!-- Mobile Number -->
-    <div class="col-md-4 mb-3">
-        <label>Mobile Number *</label>
-        <input type="text"
-               name="mobile"
-               class="form-control"
-               maxlength="10"
-               pattern="[0-9]{10}"
-               placeholder="Enter Mobile Number"
-               required>
-    </div>
-
-    <!-- Send OTP -->
-    <div class="col-md-2 mb-3 d-grid">
-        <label>&nbsp;</label>
-        <button type="button"
-                class="btn btn-primary"
-                onclick="sendMobileOTP()">
-            <i class="fas fa-paper-plane"></i>
-            Send OTP
-        </button>
-    </div>
-
-    <!-- Mobile OTP -->
-    <div class="col-md-3 mb-3">
-        <label>Enter Mobile OTP</label>
-        <input type="text"
-               name="mobileOtp"
-               class="form-control"
-               maxlength="6"
-               placeholder="6 Digit OTP">
-    </div>
-
-    <!-- Verify -->
-    <div class="col-md-3 mb-3 d-grid">
-        <label>&nbsp;</label>
-        <button type="button"
-                class="btn btn-success"
-                onclick="verifyMobileOTP()">
-            <i class="fas fa-check-circle"></i>
-            Verify OTP
-        </button>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <!-- Email -->
-    <div class="col-md-4 mb-3">
-        <label>Email Address *</label>
-        <input type="email"
-               name="email"
-               class="form-control"
-               placeholder="Enter Email Address"
-               required>
-    </div>
-
-    <!-- Send Email OTP -->
-    <div class="col-md-2 mb-3 d-grid">
-        <label>&nbsp;</label>
-        <button type="button"
-                class="btn btn-info text-white"
-                onclick="sendEmailOTP()">
-            <i class="fas fa-envelope"></i>
-            Send OTP
-        </button>
-    </div>
-
-    <!-- Email OTP -->
-    <div class="col-md-3 mb-3">
-        <label>Enter Email OTP</label>
-        <input type="text"
-               name="emailOtp"
-               class="form-control"
-               maxlength="6"
-               placeholder="6 Digit OTP">
-    </div>
-
-    <!-- Verify Email -->
-    <div class="col-md-3 mb-3 d-grid">
-        <label>&nbsp;</label>
-        <button type="button"
-                class="btn btn-success"
-                onclick="verifyEmailOTP()">
-            <i class="fas fa-check-circle"></i>
-            Verify OTP
-        </button>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <!-- Alternate Mobile -->
-    <div class="col-md-6 mb-3">
-        <label>Alternate Mobile Number</label>
-        <input type="text"
-               name="alternateMobile"
-               class="form-control"
-               maxlength="10"
-               pattern="[0-9]{10}"
-               placeholder="Enter Alternate Mobile Number">
-    </div>
-
-</div>
-
-<script>
-
-function sendMobileOTP(){
-    const mobile = document.querySelector('input[name="mobile"]').value;
-    const accountNumber = document.getElementById('accountNumber').value;
-    const accountPassword = document.getElementById('accountPassword').value;
-
-    if (!mobile || !/^\d{10}$/.test(mobile)){
-        alert('Please enter a valid 10 digit mobile number');
-        return;
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: #0f0c29;
+        font-family: 'Segoe UI', sans-serif;
     }
 
-    const params = new URLSearchParams();
-    params.append('mobile', mobile);
-    if (accountNumber) params.append('accountNumber', accountNumber);
-    if (accountPassword) params.append('password', accountPassword);
+    .bg-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        z-index: -1;
+    }
 
-    fetch('<%=request.getContextPath()%>/api/sendOtp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params.toString()
-    }).then(res => res.json())
-      .then(data => {
-          if (data.status === 'success'){
-              alert(data.message + '\n(For testing: OTP='+data.otp+')');
-          } else {
-              alert('Error: ' + data.message);
-          }
-      }).catch(err => {
-          console.error(err);
-          alert('Server error while sending OTP');
-      });
-}
+    /* SVG RGB Waves */
+    .wave-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 10vh;
+        z-index: 0;
+    }
 
-function verifyMobileOTP(){
-    alert("Mobile OTP Verified Successfully");
-}
+    .waves {
+        width: 100%;
+        height: 100%;
+    }
 
-function sendEmailOTP(){
-    alert("Email OTP Sent Successfully");
-}
+    .parallax > use {
+        animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+    }
+    .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255, 255, 255, 0.1); }
+    .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(0, 210, 255, 0.1); }
+    .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(58, 123, 213, 0.1); }
+    .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: rgba(0, 210, 255, 0.3); }
 
-function verifyEmailOTP(){
-    alert("Email OTP Verified Successfully");
-}
+    @keyframes move-forever {
+        0% { transform: translate3d(-90px, 0, 0); }
+        100% { transform: translate3d(85px, 0, 0); }
+    }
 
-</script>
-<!-- Identity Details -->
+    .reg-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 60px auto;
+        z-index: 10;
+        position: relative;
+        padding: 0 20px;
+    }
 
-<h4 class="section-title">
-    <i class="fas fa-id-card"></i>
-    Identity Details
-</h4>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 40px;
+        padding: 50px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        color: white;
+    }
 
-<div class="row">
+    .section-header {
+        color: #00d2ff;
+        font-weight: 800;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 40px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+    }
 
-    <div class="col-md-6 mb-3">
-        <label>Aadhaar Number *</label>
-        <input type="text"
-               name="aadhaar"
-               class="form-control"
-               maxlength="12"
-               required>
+    .form-control, .form-select {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 15px;
+        color: white !important;
+        padding: 15px;
+        transition: 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: #00d2ff !important;
+        box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+    }
+
+    .form-label {
+        font-weight: 700;
+        font-size: 12px;
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+        border: none;
+        border-radius: 15px;
+        padding: 18px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        box-shadow: 0 15px 35px rgba(0, 210, 255, 0.3);
+        transition: 0.3s;
+        margin-top: 40px;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 50px rgba(0, 210, 255, 0.5);
+    }
+
+    .logo-area { text-align: center; margin-bottom: 50px; }
+    .logo-area i { font-size: 70px; color: #00d2ff; margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4)); }
+    .logo-area h2 { font-weight: 900; letter-spacing: 2px; }
+
+    .photo-input-wrap {
+        width: 130px;
+        height: 130px;
+        border-radius: 40px;
+        background: rgba(255,255,255,0.1);
+        border: 2px dashed rgba(0, 210, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+        margin: 0 auto 20px;
+    }
+    .photo-input-wrap img { width: 100%; height: 100%; object-fit: cover; }
+</style>
+</head>
+<body>
+
+    <div class="bg-container"></div>
+    <div class="wave-container">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none">
+            <defs><path id="w" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" /></defs>
+            <g class="parallax">
+                <use xlink:href="#w" x="48" y="0" />
+                <use xlink:href="#w" x="48" y="3" />
+                <use xlink:href="#w" x="48" y="5" />
+                <use xlink:href="#w" x="48" y="7" />
+            </g>
+        </svg>
     </div>
 
-    <div class="col-md-6 mb-3">
-        <label>PAN Number *</label>
-        <input type="text"
-               name="pan"
-               class="form-control"
-               maxlength="10"
-               required>
+    <div class="reg-container">
+        <div class="glass-card shadow-lg">
+            <div class="logo-area">
+                <i class="fas fa-university"></i>
+                <h2>JOIN SK MINI BANK</h2>
+                <p class="text-white-50 small">Experience the Future of Digital Wealth</p>
+            </div>
+
+            <%
+            String error = request.getParameter("error");
+            if(error != null) {
+            %>
+            <div class="alert alert-danger border-0 bg-danger text-white rounded-4 mb-5 text-center" style="--bs-bg-opacity: .5;">
+                <i class="fas fa-triangle-exclamation me-2"></i> <%= java.net.URLDecoder.decode(error, "UTF-8") %>
+            </div>
+            <% } %>
+
+            <form action="<%=request.getContextPath()%>/RegisterServlet" method="post" enctype="multipart/form-data">
+
+                <div class="text-center">
+                    <div class="photo-input-wrap shadow-sm" onclick="document.getElementById('photoInput').click()">
+                        <img id="imgPreview" src="${pageContext.request.contextPath}/images/default_user.png">
+                    </div>
+                    <label class="form-label">Upload Profile Photo *</label>
+                    <input type="file" name="photo" id="photoInput" class="d-none" accept="image/*" required onchange="previewImage(this)">
+                </div>
+
+                <div class="section-header">Primary Details</div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="fullName" class="form-control" placeholder="John Doe" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Father's Name</label>
+                        <input type="text" name="fatherName" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Date of Birth</label>
+                        <input type="date" name="dob" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-select" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="section-header">Identity Documents</div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Aadhaar Card Number</label>
+                        <input type="text" name="aadhaar" class="form-control" maxlength="12" placeholder="12 Digit Number" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">PAN Card Number</label>
+                        <input type="text" name="pan" class="form-control" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase" required>
+                    </div>
+                </div>
+
+                <div class="section-header">Contact & Security</div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" name="mobile" class="form-control" maxlength="10" placeholder="10 Digit Number" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="example@bank.com" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Create Login Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label">Set 4-Digit Transaction PIN</label>
+                        <input type="password" name="transactionPin" class="form-control" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div class="section-header">Residential Address</div>
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <label class="form-label">Full Residential Address</label>
+                        <input type="text" name="address" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">State</label>
+                        <input type="text" name="state" class="form-control" required>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label class="form-label">Pincode</label>
+                        <input type="text" name="pincode" class="form-control" maxlength="6" required>
+                    </div>
+                </div>
+
+                <input type="hidden" name="accountType" value="Saving Account">
+                <input type="hidden" name="balance" value="5000">
+
+                <button type="submit" class="btn btn-premium w-100 text-white mt-3">
+                    ACTIVATE DIGITAL ACCOUNT
+                </button>
+
+                <div class="text-center mt-5 opacity-50 small">
+                    Already have an account? <a href="login.jsp" class="text-info">Login Securely</a>
+                </div>
+            </form>
+        </div>
     </div>
 
-</div>
-
-<!-- Address Details -->
-
-<h4 class="section-title">
-    <i class="fas fa-home"></i>
-    Address Details
-</h4>
-
-<div class="row">
-
-    <div class="col-md-12 mb-3">
-        <label>Address *</label>
-        <textarea name="address"
-                  class="form-control"
-                  rows="3"
-                  required></textarea>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-md-4 mb-3">
-        <label>City *</label>
-        <input type="text"
-               name="city"
-               class="form-control"
-               required>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>State *</label>
-        <input type="text"
-               name="state"
-               class="form-control"
-               required>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Pincode *</label>
-        <input type="text"
-               name="pincode"
-               class="form-control"
-               maxlength="6"
-               required>
-    </div>
-
-</div>
-
-<!-- Nominee Details -->
-
-<h4 class="section-title">
-    <i class="fas fa-user-friends"></i>
-    Nominee Details
-</h4>
-
-<div class="row">
-
-    <div class="col-md-4 mb-3">
-        <label>Nominee Name</label>
-        <input type="text"
-               name="nomineeName"
-               class="form-control">
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Relationship</label>
-        <select name="relationship"
-                class="form-select">
-
-            <option value="">Select</option>
-            <option>Father</option>
-            <option>Mother</option>
-            <option>Brother</option>
-            <option>Sister</option>
-            <option>Husband</option>
-            <option>Wife</option>
-            <option>Son</option>
-            <option>Daughter</option>
-            <option>Other</option>
-
-        </select>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Nominee Mobile Number</label>
-        <input type="text"
-               name="nomineeMobile"
-               class="form-control"
-               maxlength="10">
-    </div>
-
-</div>
-<!-- ========================= -->
-<!-- Bank Details -->
-<!-- ========================= -->
-
-<h4 class="section-title">
-    <i class="fas fa-university"></i>
-    Bank Details
-</h4>
-
-<div class="row">
-
-    <div class="col-md-3 mb-3">
-        <label>Customer Code</label>
-        <input type="text"
-               class="form-control"
-               value="Auto Generated"
-               readonly>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>CIF Number</label>
-        <input type="text"
-               class="form-control"
-               value="Auto Generated"
-               readonly>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>Account Number</label>
-        <input type="text"
-               class="form-control"
-               value="Auto Generated"
-               readonly>
-    </div>
-
-    <div class="col-md-3 mb-3">
-        <label>IFSC Code</label>
-        <input type="text"
-               name="ifscCode"
-               class="form-control"
-               value="SKMB0001001"
-               readonly>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-md-4 mb-3">
-        <label>Branch</label>
-        <input type="text"
-               name="branch"
-               class="form-control"
-               value="Bareilly Main Branch"
-               readonly>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Account Type</label>
-        <select name="accountType" class="form-select" required>
-            <option value="">Select Account Type</option>
-            <option>Saving Account</option>
-            <option>Current Account</option>
-        </select>
-    </div>
-
-    <div class="col-md-4 mb-3">
-        <label>Opening Balance</label>
-        <input type="number"
-               name="balance"
-               class="form-control"
-               value="5000"
-               readonly>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-md-6 mb-3">
-        <label>UPI ID</label>
-        <input type="text"
-               class="form-control"
-               value="Auto Generated"
-               readonly>
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label>UPI Status</label>
-        <input type="text"
-               class="form-control"
-               value="ACTIVE"
-               readonly>
-    </div>
-
-</div>
-<!-- ========================= -->
-<!-- Security Details -->
-<!-- ========================= -->
-
-<h4 class="section-title">
-    <i class="fas fa-lock"></i>
-    Security Details
-</h4>
-
-<div class="row">
-
-    <div class="col-md-6 mb-3">
-        <label>Password *</label>
-        <input type="password"
-               name="password"
-               class="form-control"
-               required>
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label>Confirm Password *</label>
-        <input type="password"
-               name="confirmPassword"
-               class="form-control"
-               required>
-    </div>
-
-</div>
-
-<div class="row">
-
-    <div class="col-md-6 mb-3">
-        <label>4 Digit Transaction PIN *</label>
-        <input type="password"
-               name="transactionPin"
-               class="form-control"
-               maxlength="4"
-               required>
-    </div>
-
-    <div class="col-md-6 mb-3">
-        <label>Confirm Transaction PIN *</label>
-        <input type="password"
-               name="confirmTransactionPin"
-               class="form-control"
-               maxlength="4"
-               required>
-    </div>
-
-</div>
-
-<hr>
-
-<div class="form-check mb-4">
-
-    <input class="form-check-input"
-           type="checkbox"
-           required>
-
-    <label class="form-check-label">
-
-        I hereby declare that all the information provided by me is true and correct.
-
-    </label>
-
-</div>
-<!-- ========================= -->
-<!-- Buttons -->
-<!-- ========================= -->
-
-<hr>
-
-<div class="row mt-4">
-
-    <div class="col-md-4 d-grid mb-2">
-        <button type="submit" class="btn btn-primary btn-lg">
-            <i class="fas fa-user-plus"></i>
-            Register Now
-        </button>
-    </div>
-
-    <div class="col-md-4 d-grid mb-2">
-        <button type="reset" class="btn btn-warning btn-lg">
-            <i class="fas fa-rotate-left"></i>
-            Reset
-        </button>
-    </div>
-
-    <div class="col-md-4 d-grid mb-2">
-        <a href="login.jsp" class="btn btn-success btn-lg">
-            <i class="fas fa-right-to-bracket"></i>
-            Login
-        </a>
-    </div>
-
-</div>
-
-</form>
-
-</div>
-<!-- Card Body -->
-
-</div>
-<!-- Card -->
-
-</div>
-<!-- Container -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imgPreview').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 </body>
 </html>

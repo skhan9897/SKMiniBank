@@ -3,164 +3,150 @@
 <%@page import="com.bank.model.ServiceRequest"%>
 
 <%
-List<ServiceRequest> requestList =
-(List<ServiceRequest>)request.getAttribute("requestList");
+List<ServiceRequest> requestList = (List<ServiceRequest>)request.getAttribute("requestList");
+String ctx = request.getContextPath();
+if ("/".equals(ctx)) ctx = "";
 %>
 
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-
-<title>Service Requests</title>
-
+<title>Service Requests | Admin</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+    body { background-color: #f8f9fa; font-family: 'Segoe UI', sans-serif; }
+    .status-badge { font-weight: bold; text-transform: uppercase; font-size: 11px; padding: 5px 10px; border-radius: 20px; }
+    .table-container { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+    .page-header { background: #003366; color: white; padding: 20px; border-radius: 0 0 20px 20px; margin-bottom: 30px; }
+</style>
 </head>
-
 <body>
 
-<div class="container-fluid mt-4">
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Service Requests (<%= requestList != null ? requestList.size() : 0 %>)</h2>
-    <a href="<%=request.getContextPath()%>/AdminAllRequestServlet" class="btn btn-primary btn-sm">Refresh All</a>
+<div class="page-header shadow">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0"><i class="fas fa-clipboard-list me-2"></i> Service Requests</h2>
+            <p class="mb-0 opacity-75 small">Manage ATM, Loan, and Banking requests from customers</p>
+        </div>
+        <div>
+            <a href="<%=ctx%>/DashboardServlet" class="btn btn-outline-light btn-sm me-2"><i class="fa fa-arrow-left"></i> Dashboard</a>
+            <a href="<%=ctx%>/AdminAllRequestServlet" class="btn btn-light btn-sm text-primary fw-bold"><i class="fas fa-sync"></i> Refresh List</a>
+        </div>
+    </div>
 </div>
 
-<table class="table table-bordered table-hover">
+<div class="container-fluid">
 
-<thead class="table-dark">
-
-<tr>
-
-<th>ID</th>
-<th>Customer ID</th>
-<th>Account No</th>
-<th>Service</th>
-<th>Details</th>
-<th>Request Date</th>
-<th>Status</th>
-<th>Action</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<%
-if(requestList!=null && !requestList.isEmpty()){
-
-for(ServiceRequest r : requestList){
-%>
-
-<tr>
-
-<td><%=r.getRequestId()%></td>
-
-<td><%=r.getCustomerId()%></td>
-
-<td><%=r.getAccountNumber()%></td>
-
-<td><span class="badge bg-info text-dark"><%=r.getRequestType()%></span></td>
-
-<td style="max-width: 200px; font-size: 11px;"><%=r.getRequestDetails()%></td>
-
-<td><%=r.getRequestDate()%></td>
-
-<td>
-
-<%
-if("PENDING".equalsIgnoreCase(r.getStatus())){
-%>
-
-<span class="badge bg-warning text-dark">Pending</span>
-
-<%
-}else if("APPROVED".equalsIgnoreCase(r.getStatus())){
-%>
-
-<span class="badge bg-success">Approved</span>
-
-<%
-}else{
-%>
-
-<span class="badge bg-danger">Rejected</span>
-
-<%
-}
-%>
-
-</td>
-
-<td>
-<% String formAction = request.getContextPath(); if("/".equals(formAction)) formAction = ""; %>
-<form action="<%=formAction%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light">
-    <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
-
-    <div class="mb-2">
-        <label class="form-label small fw-bold">Status Remarks:</label>
-        <select name="remarks" class="form-select form-select-sm">
-            <option value="Verified and Approved">Verified and Approved</option>
-            <option value="Documents Verified">Documents Verified</option>
-            <option value="Request Processed Successfully">Request Processed Successfully</option>
-            <option value="Item Sent for Printing/Dispatch">Item Sent for Printing/Dispatch</option>
-            <option value="Incomplete Information">Incomplete Information</option>
-            <option value="Application Rejected - Policy Violation">Application Rejected - Policy Violation</option>
-            <option value="Duplicate Request Found">Duplicate Request Found</option>
-            <option value="Other - See manual notes">Other...</option>
-        </select>
+    <%
+    String msg = request.getParameter("msg");
+    if(msg != null) {
+        String alertClass = msg.equals("success") ? "alert-success" : (msg.equals("error") ? "alert-danger" : "alert-warning");
+        String icon = msg.equals("success") ? "fa-check-circle" : "fa-circle-exclamation";
+        String text = msg.equals("success") ? "Request processed successfully!" : (msg.equals("error") ? "Error: " + request.getParameter("error") : "Status: " + msg);
+    %>
+    <div class="alert <%=alertClass%> alert-dismissible fade show shadow-sm mb-4">
+        <i class="fas <%=icon%> me-2"></i> <%=text%>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+    <% } %>
 
-    <div class="mb-2">
-        <label class="form-label small fw-bold">Exp. Delivery Date:</label>
-        <input type="date" name="expectedDelivery" class="form-control form-control-sm">
+    <div class="table-container shadow-sm">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Customer & Account</th>
+                    <th>Service Type</th>
+                    <th>Request Details</th>
+                    <th>Requested On</th>
+                    <th>Status</th>
+                    <th style="width: 300px;">Actions & Updates</th>
+                </tr>
+            </thead>
+            <tbody>
+            <%
+            if(requestList != null && !requestList.isEmpty()){
+                for(ServiceRequest r : requestList){
+            %>
+            <tr>
+                <td class="fw-bold">#<%=r.getRequestId()%></td>
+                <td>
+                    <div class="fw-bold text-primary"><%=r.getAccountNumber()%></div>
+                    <small class="text-muted">CID: <%=r.getCustomerId()%></small>
+                </td>
+                <td><span class="badge bg-dark px-3 py-2"><%=r.getRequestType()%></span></td>
+                <td>
+                    <div class="small text-truncate" style="max-width: 250px;" title="<%=r.getRequestDetails()%>">
+                        <%=r.getRequestDetails()%>
+                    </div>
+                </td>
+                <td class="small"><%=r.getRequestDate()%></td>
+                <td>
+                    <%
+                    String status = r.getStatus() != null ? r.getStatus().toUpperCase() : "PENDING";
+                    String badgeClass = status.equals("APPROVED") ? "bg-success" : (status.equals("PENDING") ? "bg-warning text-dark" : "bg-danger");
+                    if(status.equals("DISPATCHED")) badgeClass = "bg-info text-white";
+                    if(status.equals("DELIVERED")) badgeClass = "bg-primary";
+                    %>
+                    <span class="badge <%=badgeClass%> status-badge"><%=status%></span>
+                </td>
+                <td>
+                    <form action="<%=ctx%>/AdminRequestServlet" method="post" class="p-2 border rounded bg-light border-secondary-subtle">
+                        <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
+
+                        <div class="mb-2">
+                            <select name="remarks" class="form-select form-select-sm">
+                                <option value="Verified and Approved">Verified and Approved</option>
+                                <option value="Documents Verified">Documents Verified</option>
+                                <option value="Request Processed Successfully">Request Processed Successfully</option>
+                                <option value="Item Sent for Dispatch">Item Sent for Dispatch</option>
+                                <option value="Incomplete Information">Incomplete Information</option>
+                                <option value="Application Rejected">Application Rejected</option>
+                                <option value="Policy Violation">Policy Violation</option>
+                            </select>
+                        </div>
+
+                        <% if("PENDING".equalsIgnoreCase(r.getStatus()) || "APPROVED".equalsIgnoreCase(r.getStatus())) { %>
+                        <div class="mb-2">
+                            <label class="small fw-bold opacity-75">Expected Delivery (Optional):</label>
+                            <input type="date" name="expectedDelivery" class="form-control form-control-sm">
+                        </div>
+                        <% } %>
+
+                        <div class="d-flex flex-wrap gap-1">
+                            <% if("PENDING".equalsIgnoreCase(r.getStatus())) { %>
+                                <button type="submit" class="btn btn-success btn-sm flex-fill" name="action" value="APPROVE"><i class="fa fa-check"></i> Approve</button>
+                                <button type="submit" class="btn btn-danger btn-sm flex-fill" name="action" value="REJECT"><i class="fa fa-times"></i> Reject</button>
+                            <% } else if("APPROVED".equalsIgnoreCase(r.getStatus())) { %>
+                                <button type="submit" class="btn btn-info btn-sm text-white w-100" name="action" value="DISPATCH"><i class="fa fa-truck"></i> Dispatch Item</button>
+                            <% } else if("DISPATCHED".equalsIgnoreCase(r.getStatus())) { %>
+                                <button type="submit" class="btn btn-primary btn-sm w-100" name="action" value="DELIVER"><i class="fa fa-hand-holding"></i> Mark Delivered</button>
+                            <% } else { %>
+                                <div class="text-center w-100 small text-muted fst-italic">No further actions</div>
+                            <% } %>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr>
+                <td colspan="7" class="text-center py-5">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No Service Requests Found</h5>
+                    <p class="small">When customers apply for services, they will appear here.</p>
+                </td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
     </div>
-
-    <div class="d-flex flex-wrap gap-1">
-        <% if("PENDING".equalsIgnoreCase(r.getStatus())) { %>
-            <button type="submit" class="btn btn-success btn-sm flex-fill" name="action" value="APPROVE">Approve</button>
-            <button type="submit" class="btn btn-danger btn-sm flex-fill" name="action" value="REJECT">Reject</button>
-        <% } else if("APPROVED".equalsIgnoreCase(r.getStatus())) { %>
-            <button type="submit" class="btn btn-primary btn-sm w-100" name="action" value="DISPATCH">Dispatch Item</button>
-        <% } else if("DISPATCHED".equalsIgnoreCase(r.getStatus())) { %>
-            <button type="submit" class="btn btn-dark btn-sm w-100" name="action" value="DELIVER">Mark Delivered</button>
-        <% } %>
-    </div>
-</form>
-
-</td>
-
-</tr>
-
-<%
-}
-
-}else{
-%>
-
-<tr>
-
-<td colspan="7" class="text-center">
-
-No Service Requests Found
-
-</td>
-
-</tr>
-
-<%
-}
-%>
-
-</tbody>
-
-</table>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

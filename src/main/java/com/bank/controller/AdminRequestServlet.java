@@ -40,6 +40,8 @@ public class AdminRequestServlet extends HttpServlet {
             String action = request.getParameter("action");
             String remarks = request.getParameter("remarks");
 
+            System.out.println("DEBUG: Processing Request ID: " + requestIdStr + ", Action: " + action);
+
             if (requestIdStr == null
                     || requestIdStr.trim().isEmpty()
                     || action == null
@@ -54,14 +56,18 @@ public class AdminRequestServlet extends HttpServlet {
             boolean status = false;
 
             // =========================
-            // ACTION
+            // ACTION LOGIC
             // =========================
             switch (action.toUpperCase()) {
                 case "APPROVE":
                     Date expectedDelivery = null;
                     String delivery = request.getParameter("expectedDelivery");
                     if (delivery != null && !delivery.trim().isEmpty()) {
-                        expectedDelivery = Date.valueOf(delivery);
+                        try {
+                            expectedDelivery = Date.valueOf(delivery);
+                        } catch (Exception e) {
+                            System.err.println("DEBUG: Invalid Date Format: " + delivery);
+                        }
                     }
                     status = dao.approveRequest(requestId, approvedBy, remarks, expectedDelivery);
                     break;
@@ -84,17 +90,17 @@ public class AdminRequestServlet extends HttpServlet {
             }
 
             // =========================
-            // REDIRECT BACK TO UNIFIED LIST
+            // REDIRECT BACK
             // =========================
             if (status) {
-                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=success");
+                response.sendRedirect("AdminAllRequestServlet?msg=success");
             } else {
-                response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=failed");
+                response.sendRedirect("AdminAllRequestServlet?msg=error&error=Database update returned 0 rows affected. Check if ID exists.");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error");
+            response.sendRedirect("AdminAllRequestServlet?msg=error&error=" + java.net.URLEncoder.encode(e.toString(), "UTF-8"));
         }
     }
 

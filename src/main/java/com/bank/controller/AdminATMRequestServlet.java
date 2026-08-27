@@ -23,20 +23,14 @@ public class AdminATMRequestServlet extends HttpServlet {
         try {
             ServiceRequestDAO dao = new ServiceRequestDAO();
             
-            // Use a broader search to ensure we catch the requests
+            // Fetch specifically ATM Card requests
             List<ServiceRequest> requestList = dao.getRequestsByType("ATM_CARD");
             
-            // If the above returns nothing, let's try a fallback to see if ANYTHING is in the table
-            if (requestList == null || requestList.isEmpty()) {
-                System.out.println("DEBUG: ATM_CARD specific search returned zero. Fetching PENDING as fallback.");
-                requestList = dao.getPendingRequests();
-            }
-
-            System.out.println("DEBUG: AdminATMRequestServlet sending " + (requestList != null ? requestList.size() : 0) + " items to JSP.");
-
+            // If empty, let's still show the page with empty list
             request.setAttribute("requestList", requestList);
             request.getRequestDispatcher("/admin/service-requests.jsp")
                    .forward(request, response);
+                   
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("errorMessage", "Error loading ATM requests: " + e.getMessage());
@@ -48,7 +42,6 @@ public class AdminATMRequestServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-
         doGet(request, response);
     }
 }

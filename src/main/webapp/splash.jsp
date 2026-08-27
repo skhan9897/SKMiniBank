@@ -15,9 +15,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #000;
+        background: #0f0c29;
         overflow: hidden;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Segoe UI', sans-serif;
     }
 
     /* Premium RGB Animated Background */
@@ -27,61 +27,40 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
         z-index: -1;
     }
 
-    /* CSS Waves with RGB effect */
-    .wave {
+    /* Pure CSS RGB Waves (SVG Data URI - No external images) */
+    .wave-container {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 100px;
-        background: url('https://i.imgur.com/G5qE7U0.png');
-        background-size: 1000px 100px;
+        height: 15vh;
+        z-index: 1;
     }
 
-    .wave1 {
-        animation: animate 30s linear infinite;
-        z-index: 1000;
-        opacity: 1;
-        bottom: 0;
-        filter: hue-rotate(0deg);
+    .waves {
+        position: relative;
+        width: 100%;
+        height: 15vh;
+        margin-bottom: -7px;
+        min-height: 100px;
+        max-height: 150px;
     }
 
-    .wave2 {
-        animation: animate2 15s linear infinite;
-        z-index: 999;
-        opacity: 0.5;
-        bottom: 10px;
-        filter: hue-rotate(90deg);
+    .parallax > use {
+        animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
     }
+    .parallax > use:nth-child(1) { animation-delay: -2s; animation-duration: 7s; fill: rgba(255, 255, 255, 0.7); }
+    .parallax > use:nth-child(2) { animation-delay: -3s; animation-duration: 10s; fill: rgba(0, 210, 255, 0.5); }
+    .parallax > use:nth-child(3) { animation-delay: -4s; animation-duration: 13s; fill: rgba(58, 123, 213, 0.3); }
+    .parallax > use:nth-child(4) { animation-delay: -5s; animation-duration: 20s; fill: #3a7bd5; }
 
-    .wave3 {
-        animation: animate 10s linear infinite;
-        z-index: 998;
-        opacity: 0.2;
-        bottom: 15px;
-        filter: hue-rotate(180deg);
-    }
-
-    .wave4 {
-        animation: animate2 5s linear infinite;
-        z-index: 997;
-        opacity: 0.7;
-        bottom: 20px;
-        filter: hue-rotate(270deg);
-    }
-
-    @keyframes animate {
-        0% { background-position-x: 0; }
-        100% { background-position-x: 1000px; }
-    }
-
-    @keyframes animate2 {
-        0% { background-position-x: 0; }
-        100% { background-position-x: -1000px; }
+    @keyframes move-forever {
+        0% { transform: translate3d(-90px, 0, 0); }
+        100% { transform: translate3d(85px, 0, 0); }
     }
 
     /* Content Styling */
@@ -92,22 +71,27 @@
     }
 
     .logo-box {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        padding: 40px 60px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.4);
         margin-bottom: 20px;
-        animation: fadeInDown 1s ease-out;
+        animation: fadeInScale 1s ease-out;
+    }
+
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
     }
 
     .bank-name {
-        font-size: 42px;
-        font-weight: 800;
-        letter-spacing: 2px;
+        font-size: 48px;
+        font-weight: 900;
+        letter-spacing: 3px;
         margin: 0;
-        background: linear-gradient(to right, #fff, #8e9eab);
+        background: linear-gradient(to right, #00d2ff, #91eaff, #fff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -115,86 +99,72 @@
     .tagline {
         font-size: 14px;
         text-transform: uppercase;
-        letter-spacing: 5px;
+        letter-spacing: 6px;
         color: #00d2ff;
-        margin-top: 5px;
+        margin-top: 10px;
+        font-weight: 600;
     }
 
-    /* Modern Loader */
-    .loader-container {
-        width: 250px;
-        height: 4px;
-        background: rgba(255,255,255,0.1);
+    /* Premium Modern Loader */
+    .loader-wrap {
+        margin-top: 50px;
+    }
+
+    .progress-bar {
+        width: 300px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
-        margin: 40px auto 20px;
+        margin: 0 auto;
         overflow: hidden;
-        position: relative;
+        border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .loader-bar {
+    .progress-fill {
         width: 0%;
         height: 100%;
-        background: linear-gradient(to right, #00d2ff, #3a7bd5, #00d2ff);
+        background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
         background-size: 200% 100%;
-        animation: loading 2s ease-in-out forwards, shimmer 1s linear infinite;
+        animation: fill 2s ease-in-out forwards, shimmer 1.5s linear infinite;
     }
 
-    @keyframes loading {
-        0% { width: 0%; }
-        100% { width: 100%; }
-    }
+    @keyframes fill { 100% { width: 100%; } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-    @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-    }
-
-    .status-text {
-        font-size: 12px;
-        color: #aaa;
-        font-style: italic;
+    .status {
+        margin-top: 15px;
+        font-size: 13px;
+        color: #8892b0;
+        letter-spacing: 1px;
         animation: pulse 1.5s infinite;
     }
 
-    /* Developer Credit */
+    /* Footer Credit */
     .footer {
         position: absolute;
-        bottom: 50px;
+        bottom: 40px;
         width: 100%;
         text-align: center;
-        color: rgba(255,255,255,0.5);
+        color: rgba(255, 255, 255, 0.4);
         font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 1px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        z-index: 10;
+        text-transform: uppercase;
     }
 
-    .footer span {
-        color: #ff6b6b;
-        animation: colorCycle 4s linear infinite;
+    .footer b {
+        color: #00d2ff;
+        text-shadow: 0 0 10px rgba(0, 210, 255, 0.5);
     }
 
-    @keyframes colorCycle {
-        0% { color: #ff6b6b; }
-        33% { color: #51cf66; }
-        66% { color: #339af0; }
-        100% { color: #ff6b6b; }
-    }
-
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-30px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulse {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 1; }
-    }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 </style>
 
 <script>
-    // Redirect after 2 seconds
+    // Redirect after 2 seconds to Customer Login
     setTimeout(function() {
-        window.location.href = "<%=request.getContextPath()%>/SKMiniBankadmin-login.jsp";
+        window.location.href = "<%=request.getContextPath()%>/login.jsp";
     }, 2000);
 </script>
 
@@ -203,26 +173,38 @@
 
     <div class="bg-animation"></div>
 
-    <!-- RGB Waves -->
-    <div class="wave wave1"></div>
-    <div class="wave wave2"></div>
-    <div class="wave wave3"></div>
-    <div class="wave wave4"></div>
+    <!-- SVG RGB Waves (Built-in, No dead links) -->
+    <div class="wave-container">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+        <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+        <use xlink:href="#gentle-wave" x="48" y="0" />
+        <use xlink:href="#gentle-wave" x="48" y="3" />
+        <use xlink:href="#gentle-wave" x="48" y="5" />
+        <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+        </svg>
+    </div>
 
     <div class="content">
         <div class="logo-box">
             <h1 class="bank-name">SK MINI BANK</h1>
-            <div class="tagline">The Digital Era</div>
+            <div class="tagline">Premium Digital Banking</div>
         </div>
 
-        <div class="loader-container">
-            <div class="loader-bar"></div>
+        <div class="loader-wrap">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="status">Initializing Secure Terminal...</div>
         </div>
-        <div class="status-text">Connecting to Secure Server...</div>
     </div>
 
     <div class="footer">
-        DEVELOPED BY <span>SAJID KHAN</span>
+        Developed By <b>Sajid Khan</b>
     </div>
 
 </body>

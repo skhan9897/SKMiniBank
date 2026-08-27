@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CustomerDAO {
 
-    public boolean addCustomer(Customer c) {
+    public boolean addCustomer(Customer c) throws SQLException {
         String sql = "INSERT INTO customer(full_name,father_name,mother_name,marital_status,dob,gender,occupation,mobile,alternate_mobile,email,aadhaar,pan,address,city,state,pincode,nominee_name,relationship,nominee_mobile,customer_code,cif_number,account_number,ifsc_code,account_type,branch,balance,mobile_verified,email_verified,upi_id,upi_status,status,kyc_status,password,transaction_pin,photo) VALUES (?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?, ?,?,?,?)";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -48,9 +48,6 @@ public class CustomerDAO {
             ps.setString(34, c.getTransactionPin());
             ps.setString(35, c.getPhoto());
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

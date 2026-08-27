@@ -138,7 +138,7 @@ public interface ApiService {
     );
 
     @GET("api/chequebook/status")
-    Call<GenericResponse> getChequeBookStatus(
+    Call<com.bank.skminibank.model.ChequeBookResponse> getChequeBookStatus(
             @Query("customerId") int customerId
     );
 

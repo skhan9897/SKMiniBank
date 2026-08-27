@@ -52,10 +52,20 @@ public class ChequeBookStatusApiServlet extends HttpServlet {
             }
 
             String requestDate = "";
+            String approvalDate = "";
+            String expectedDate = "";
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd MMM yyyy");
 
             if (service.getRequestDate() != null) {
-                requestDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .format(service.getRequestDate());
+                requestDate = sdf.format(service.getRequestDate());
+            }
+            if (service.getApprovalDate() != null) {
+                approvalDate = sdf.format(service.getApprovalDate());
+            }
+            if (service.getExpectedDeliveryDate() != null) {
+                expectedDate = dateOnlySdf.format(service.getExpectedDeliveryDate());
             }
 
             String json =
@@ -66,7 +76,10 @@ public class ChequeBookStatusApiServlet extends HttpServlet {
                     + "\"accountNumber\":\"" + service.getAccountNumber() + "\","
                     + "\"chequeType\":\"" + service.getRequestDetails() + "\","
                     + "\"status\":\"" + service.getStatus() + "\","
-                    + "\"requestDate\":\"" + requestDate + "\""
+                    + "\"remarks\":\"" + (service.getRemarks() != null ? service.getRemarks() : "") + "\","
+                    + "\"requestDate\":\"" + requestDate + "\","
+                    + "\"approvalDate\":\"" + approvalDate + "\","
+                    + "\"expectedDeliveryDate\":\"" + expectedDate + "\""
                     + "}";
 
             response.getWriter().print(json);

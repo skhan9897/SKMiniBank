@@ -94,11 +94,33 @@ public class RegisterServlet extends HttpServlet {
             }
             customer.setPhoto(fileName);
 
+            String sourcePage = request.getHeader("Referer");
+            if (sourcePage == null || sourcePage.isEmpty()) {
+                sourcePage = "register.jsp";
+            }
+
             CustomerDAO dao = new CustomerDAO();
-            boolean status = dao.addCustomer(customer);
+            boolean status = false;
+            try {
+                status = dao.addCustomer(customer);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String errorMsg = java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
+                if (sourcePage.contains("?")) {
+                    response.sendRedirect(sourcePage + "&error=" + errorMsg);
+                } else {
+                    response.sendRedirect(sourcePage + "?error=" + errorMsg);
+                }
+                return;
+            }
 
             if (!status) {
-                response.sendRedirect("register.jsp?error=Registration Failed");
+                String errorMsg = java.net.URLEncoder.encode("Registration Failed - DB Error", "UTF-8");
+                if (sourcePage.contains("?")) {
+                    response.sendRedirect(sourcePage + "&error=" + errorMsg);
+                } else {
+                    response.sendRedirect(sourcePage + "?error=" + errorMsg);
+                }
                 return;
             }
 

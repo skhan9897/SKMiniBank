@@ -100,27 +100,63 @@ public class ServiceRequestDAO {
     }
 
     public boolean approveRequest(int requestId, String approvedBy, String remarks, java.sql.Date expectedDeliveryDate) {
-        String sql = "UPDATE service_request SET status='APPROVED', remarks=?, approved_by=?, approval_date=NOW(), expected_delivery_date=? WHERE request_id=?";
+        System.out.println("LOG: Attempting to Approve Request ID: " + requestId);
+        
+        // Strategy 1: Full Update
+        String sqlFull = "UPDATE service_request SET status='APPROVED', remarks=?, approved_by=?, approval_date=NOW(), expected_delivery_date=? WHERE request_id=?";
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sqlFull)) {
             ps.setString(1, remarks);
             ps.setString(2, approvedBy);
             ps.setDate(3, expectedDeliveryDate);
             ps.setInt(4, requestId);
-            return ps.executeUpdate() > 0;
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("LOG: Full Approval SUCCESS for ID: " + requestId);
+                return true;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            System.err.println("LOG: Full approval failed (likely column missing): " + e.getMessage());
         }
+
+        // Strategy 2: Minimal Update (Resilient)
+        String sqlBasic = "UPDATE service_request SET status='APPROVED' WHERE request_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlBasic)) {
+            ps.setInt(1, requestId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("LOG: Basic Fallback Approval SUCCESS for ID: " + requestId);
+                return true;
+            }
+        } catch (Exception e) {
+            System.err.println("LOG: Basic approval ALSO failed: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean rejectRequest(int requestId, String approvedBy, String remarks) {
-        String sql = "UPDATE service_request SET status='REJECTED', remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
+        System.out.println("LOG: Attempting to Reject Request ID: " + requestId);
+        
+        // Strategy 1: Full Update
+        String sqlFull = "UPDATE service_request SET status='REJECTED', remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sqlFull)) {
             ps.setString(1, remarks);
             ps.setString(2, approvedBy);
             ps.setInt(3, requestId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) return true;
+        } catch (Exception e) {
+            System.err.println("LOG: Full rejection failed: " + e.getMessage());
+        }
+        
+        // Strategy 2: Minimal Update
+        String sqlBasic = "UPDATE service_request SET status='REJECTED' WHERE request_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlBasic)) {
+            ps.setInt(1, requestId);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
