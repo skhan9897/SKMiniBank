@@ -173,21 +173,21 @@ public class ServiceRequestDAO {
         return getLatestRequestByType(customerId, "ATM_CARD");
     }
 
-    private ServiceRequest mapRow(ResultSet rs) throws Exception {
+    private ServiceRequest mapRow(ResultSet rs) {
         ServiceRequest request = new ServiceRequest();
-        request.setRequestId(rs.getInt("request_id"));
-        request.setCustomerId(rs.getInt("customer_id"));
-        request.setAccountNumber(rs.getString("account_number"));
-        request.setRequestType(rs.getString("request_type"));
-        request.setRequestDetails(rs.getString("request_details"));
-        request.setStatus(rs.getString("status"));
-        request.setRemarks(rs.getString("remarks"));
-        request.setApprovedBy(rs.getString("approved_by"));
-        request.setRequestDate(rs.getTimestamp("request_date"));
-        request.setApprovalDate(rs.getTimestamp("approval_date"));
-        request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date"));
-        request.setDispatchedDate(rs.getDate("dispatched_date"));
-        request.setDeliveredDate(rs.getDate("delivered_date"));
+        try { request.setRequestId(rs.getInt("request_id")); } catch (Exception e) {}
+        try { request.setCustomerId(rs.getInt("customer_id")); } catch (Exception e) {}
+        try { request.setAccountNumber(rs.getString("account_number")); } catch (Exception e) {}
+        try { request.setRequestType(rs.getString("request_type")); } catch (Exception e) {}
+        try { request.setRequestDetails(rs.getString("request_details")); } catch (Exception e) {}
+        try { request.setStatus(rs.getString("status")); } catch (Exception e) {}
+        try { request.setRemarks(rs.getString("remarks")); } catch (Exception e) {}
+        try { request.setApprovedBy(rs.getString("approved_by")); } catch (Exception e) {}
+        try { request.setRequestDate(rs.getTimestamp("request_date")); } catch (Exception e) {}
+        try { request.setApprovalDate(rs.getTimestamp("approval_date")); } catch (Exception e) {}
+        try { request.setExpectedDeliveryDate(rs.getDate("expected_delivery_date")); } catch (Exception e) {}
+        try { request.setDispatchedDate(rs.getDate("dispatched_date")); } catch (Exception e) {}
+        try { request.setDeliveredDate(rs.getDate("delivered_date")); } catch (Exception e) {}
         return request;
     }
 }

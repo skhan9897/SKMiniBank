@@ -3,10 +3,9 @@ package com.bank.api;
 import com.bank.dao.AccountDAO;
 import com.bank.dao.TransactionDAO;
 import com.bank.model.Account;
-import com.bank.model.Transaction;
 import com.bank.model.LoginResponse;
+import com.bank.model.Transaction;
 import com.google.gson.Gson;
-
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,43 +15,53 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/api/deposit")
 public class DepositApiServlet extends HttpServlet {
+
     private final Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
         String accountNumber = request.getParameter("accountNumber");
         String amountStr = request.getParameter("amount");
-        
+
         LoginResponse apiResponse = new LoginResponse();
 
-        if (accountNumber == null || amountStr == null) {
+        if (accountNumber == null || amountStr == null || accountNumber.isEmpty() || amountStr.isEmpty()) {
             apiResponse.setStatus("FAILED");
-            apiResponse.setMessage("Missing parameters");
+            apiResponse.setMessage("Required parameters (accountNumber, amount) are missing.");
             response.getWriter().write(gson.toJson(apiResponse));
             return;
         }
 
         try {
             double amount = Double.parseDouble(amountStr);
+            if (amount <= 0) {
+                apiResponse.setStatus("FAILED");
+                apiResponse.setMessage("Amount must be greater than zero.");
+                response.getWriter().write(gson.toJson(apiResponse));
+                return;
+            }
+
             AccountDAO accountDAO = new AccountDAO();
             Account account = accountDAO.getAccountByNumber(accountNumber);
 
             if (account == null) {
                 apiResponse.setStatus("FAILED");
-                apiResponse.setMessage("Account not found");
+                apiResponse.setMessage("Account not found: " + accountNumber);
             } else if ("FREEZE".equalsIgnoreCase(account.getStatus())) {
                 apiResponse.setStatus("FAILED");
-                apiResponse.setMessage("Account is frozen. Deposit not allowed.");
+                apiResponse.setMessage("Transaction declined. Account is frozen.");
             } else {
                 boolean success = accountDAO.deposit(accountNumber, amount);
                 if (success) {
-                    // Refresh account to get new balance
+                    // Fetch updated data
                     account = accountDAO.getAccountByNumber(accountNumber);
-                    
-                    // Log transaction
+
+                    // Log transaction record
                     Transaction t = new Transaction();
                     t.setAccountNumber(accountNumber);
                     t.setCustomerName(account.getCustomerName());
@@ -64,18 +73,23 @@ public class DepositApiServlet extends HttpServlet {
                     new TransactionDAO().addTransaction(t);
 
                     apiResponse.setStatus("SUCCESS");
-                    apiResponse.setMessage("Deposit successful");
+                    apiResponse.setMessage("Amount ₹" + amount + " deposited successfully.");
                     apiResponse.setBalance(account.getBalance());
+                    apiResponse.setAccountNumber(accountNumber);
                 } else {
                     apiResponse.setStatus("FAILED");
-                    apiResponse.setMessage("Deposit failed");
+                    apiResponse.setMessage("Server failed to update balance. Please contact support.");
                 }
             }
+        } catch (NumberFormatException e) {
+            apiResponse.setStatus("FAILED");
+            apiResponse.setMessage("Invalid amount format.");
         } catch (Exception e) {
             apiResponse.setStatus("FAILED");
-            apiResponse.setMessage("Error: " + e.getMessage());
+            apiResponse.setMessage("Server Error: " + e.getMessage());
         }
 
         response.getWriter().write(gson.toJson(apiResponse));
     }
 }
+

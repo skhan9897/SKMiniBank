@@ -23,7 +23,10 @@ List<ServiceRequest> requestList =
 
 <div class="container-fluid mt-4">
 
-<h2 class="mb-4">Service Requests</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Service Requests (<%= requestList != null ? requestList.size() : 0 %>)</h2>
+    <a href="<%=request.getContextPath()%>/AdminAllRequestServlet" class="btn btn-primary btn-sm">Refresh All</a>
+</div>
 
 <table class="table table-bordered table-hover">
 
@@ -35,6 +38,7 @@ List<ServiceRequest> requestList =
 <th>Customer ID</th>
 <th>Account No</th>
 <th>Service</th>
+<th>Details</th>
 <th>Request Date</th>
 <th>Status</th>
 <th>Action</th>
@@ -59,7 +63,9 @@ for(ServiceRequest r : requestList){
 
 <td><%=r.getAccountNumber()%></td>
 
-<td><%=r.getRequestType()%></td>
+<td><span class="badge bg-info text-dark"><%=r.getRequestType()%></span></td>
+
+<td style="max-width: 200px; font-size: 11px;"><%=r.getRequestDetails()%></td>
 
 <td><%=r.getRequestDate()%></td>
 
