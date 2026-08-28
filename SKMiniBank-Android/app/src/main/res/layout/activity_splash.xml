@@ -1,43 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/splashRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rgb_wave_anim">
+    android:background="@drawable/premium_background">
 
-    <!-- Main Content Container -->
-    <LinearLayout
+    <!-- Bottom SVG Waves -->
+    <ImageView
+        android:id="@+id/bottomWaves"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/svg_waves"
+        android:alpha="0.8" />
+
+    <!-- Centered Glass Card Content -->
+    <androidx.cardview.widget.CardView
         android:id="@+id/containerMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="15dp"
+        app:cardBackgroundColor="@color/glass_white">
 
-        <!-- Logo Container -->
-        <FrameLayout
-            android:id="@+id/logoContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="40dp">
 
-            <!-- Rotating Star / Circle around Logo -->
-            <ImageView
-                android:id="@+id/ivRotatingStar"
-                android:layout_width="220dp"
-                android:layout_height="220dp"
-                android:layout_gravity="center"
-                android:src="@drawable/star_spinner"
-                android:alpha="0.6"
-                app:tint="@color/white" />
-
-            <!-- Logo Frame (ROUND SHAPE) -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/ivLogoFrame"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                app:cardCornerRadius="80dp"
-                app:cardElevation="12dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="60dp"
+                app:cardElevation="8dp"
                 app:cardBackgroundColor="@color/white">
 
                 <ImageView
@@ -45,127 +47,57 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/sk_logo"
-                    android:padding="2dp"
-                    android:scaleType="centerCrop"
-                    android:contentDescription="Bank Logo" />
+                    android:padding="5dp"
+                    android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
-        </FrameLayout>
-
-        <!-- Branding Section -->
-        <LinearLayout
-            android:id="@+id/layoutBranding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center"
-            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvBankName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="SK MINI BANK"
                 android:textColor="@color/white"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.25"
-                android:shadowColor="#40000000"
-                android:shadowDx="2"
-                android:shadowDy="2"
-                android:shadowRadius="4"/>
-
-            <View
-                android:id="@+id/lineUnderName"
-                android:layout_width="80dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/white" />
+                android:letterSpacing="0.1" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"
-                android:text="Elite Digital Experience"
-                android:textColor="@color/white"
-                android:textSize="13sp"
-                android:letterSpacing="0.2"
+                android:text="The Digital Era"
+                android:textColor="#80FFFFFF"
+                android:textSize="12sp"
                 android:textAllCaps="true"
-                android:textStyle="bold"/>
+                android:letterSpacing="0.4"
+                android:layout_marginTop="4dp"/>
+
+            <ProgressBar
+                android:id="@+id/splashProgress"
+                style="@android:style/Widget.Material.ProgressBar.Horizontal"
+                android:layout_width="200dp"
+                android:layout_height="3dp"
+                android:layout_marginTop="40dp"
+                android:progress="0"
+                android:max="100"
+                android:progressTint="@color/web_accent_blue"
+                android:progressBackgroundTint="#1AFFFFFF" />
 
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-    <!-- Bottom Section -->
-    <LinearLayout
-        android:id="@+id/layoutDeveloper"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvDeveloper"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/badge_approved"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp"
-            android:alpha="0.8">
-
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@android:drawable/ic_lock_idle_lock"
-                app:tint="@color/white"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="Secured Connection"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:textAllCaps="true"/>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Powered by"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            android:textAllCaps="true"
-            android:letterSpacing="0.1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="SAJID KHAN"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.2"
-            android:layout_marginTop="2dp"
-            android:shadowColor="#4D000000"
-            android:shadowRadius="5"/>
-
-        <!-- Progress Line -->
-        <ProgressBar
-            android:id="@+id/splashProgress"
-            style="@android:style/Widget.Material.ProgressBar.Horizontal"
-            android:layout_width="200dp"
-            android:layout_height="4dp"
-            android:layout_marginTop="24dp"
-            android:progress="0"
-            android:max="100"
-            android:progressBackgroundTint="#33FFFFFF"
-            android:progressTint="@color/white" />
-    </LinearLayout>
+        android:layout_marginBottom="40dp"
+        android:text="Developed By Sajid Khan"
+        android:textColor="#4DFFFFFF"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:letterSpacing="0.2"/>
 
 </RelativeLayout>

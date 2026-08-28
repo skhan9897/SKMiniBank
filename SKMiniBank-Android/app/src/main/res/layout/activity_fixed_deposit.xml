@@ -58,6 +58,7 @@
                         app:hintTextColor="@color/white"
                         app:boxStrokeColor="@color/white">
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFdAmount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
@@ -69,10 +70,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="Tenure (Months)"
+                        android:hint="Tenure (Years)"
                         app:hintTextColor="@color/white"
                         app:boxStrokeColor="@color/white">
                         <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFdDuration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
@@ -80,6 +82,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSubmitFd"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginTop="32dp"

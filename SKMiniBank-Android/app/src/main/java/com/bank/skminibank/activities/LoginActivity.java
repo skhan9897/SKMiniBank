@@ -1,7 +1,6 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.bank.skminibank.R;
 import com.bank.skminibank.api.ApiClient;
+import com.bank.skminibank.api.ApiService;
 import com.bank.skminibank.model.GenericResponse;
 import com.bank.skminibank.model.LoginResponse;
 import com.bank.skminibank.utils.SessionManager;
@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etMobile, etOtp, etPassword;
     private TextInputLayout tilOtp, tilPassword;
-    private LinearLayout layoutLanding, layoutLoginForm, layoutFingerprint;
+    private LinearLayout layoutLanding, layoutLoginForm;
     private SessionManager sessionManager;
     private MaterialButton btnAction, btnLandingOpenAccount, btnShowLogin;
     
@@ -58,32 +58,23 @@ public class LoginActivity extends AppCompatActivity {
         tilOtp = findViewById(R.id.tilOtp);
         tilPassword = findViewById(R.id.tilPassword);
         btnAction = findViewById(R.id.btnLogin);
-        layoutFingerprint = findViewById(R.id.layoutFingerprint);
-
-        startWaveAnimation();
 
         // 1. Logic for First Time Install / New User
         if (!sessionManager.isLoggedInOnce()) {
-            // New user: Show Landing UI
             layoutLanding.setVisibility(View.VISIBLE);
             layoutLoginForm.setVisibility(View.GONE);
         } else {
-            // Returning user: Show Login Form immediately
             layoutLanding.setVisibility(View.GONE);
             layoutLoginForm.setVisibility(View.VISIBLE);
-
-            // Returning user doesn't need to re-verify OTP if they already have an account
             loginStep = 3;
             tilPassword.setVisibility(View.VISIBLE);
             btnAction.setText("LOGIN");
         }
 
-        // 2. Pre-fill mobile if available
         if (sessionManager.getMobile() != null) {
             etMobile.setText(sessionManager.getMobile());
         }
 
-        // 3. Click Listeners
         btnLandingOpenAccount.setOnClickListener(v -> {
             startActivity(new Intent(this, OpenAccountActivity.class));
         });
@@ -100,22 +91,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnOpenAccount).setOnClickListener(v -> {
-            // This is the "Back" link in Login Form
             layoutLoginForm.setVisibility(View.GONE);
             layoutLanding.setVisibility(View.VISIBLE);
         });
-
-        setupBiometrics();
-    }
-
-    private void startWaveAnimation() {
-        View root = findViewById(R.id.loginRoot);
-        if (root != null && root.getBackground() instanceof AnimationDrawable) {
-            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
-            animationDrawable.setEnterFadeDuration(2000);
-            animationDrawable.setExitFadeDuration(4000);
-            animationDrawable.start();
-        }
     }
 
     private void handleLoginFlow() {
@@ -141,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             String otp = etOtp.getText().toString().trim();
             
             if (sessionManager.isLoggedInOnce()) {
-                otp = "9897"; // Mock for returning users
+                otp = "9897";
             }
 
             if (pass.isEmpty()) {
@@ -161,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<GenericResponse> call, @NonNull Response<GenericResponse> response) {
                 btnAction.setEnabled(true);
                 if (response.isSuccessful() && response.body() != null) {
-                    if ("success".equalsIgnoreCase(response.body().getStatus())) {
+                    if (response.body().isSuccess()) {
                         loginStep = 2;
                         tilOtp.setVisibility(View.VISIBLE);
                         btnAction.setText("VERIFY OTP");
@@ -194,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse res = response.body();
-                    if ("success".equalsIgnoreCase(res.getStatus())) {
+                    if (res.isSuccess()) {
                         sessionManager.createLoginSession(
                                 res.getCustomerId(),
                                 res.getCustomerName(),
@@ -217,40 +195,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<LoginResponse> call, @NonNull Throwable t) {
                 btnAction.setEnabled(true);
                 btnAction.setText("VERIFY & LOGIN");
-                Toast.makeText(LoginActivity.this, "Network Error", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void setupBiometrics() {
-        BiometricManager biometricManager = BiometricManager.from(this);
-        int canAuth = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.BIOMETRIC_WEAK);
-
-        if (canAuth == BiometricManager.BIOMETRIC_SUCCESS && sessionManager.getMobile() != null && sessionManager.getPassword() != null) {
-            layoutFingerprint.setVisibility(View.VISIBLE);
-            layoutFingerprint.setOnClickListener(v -> showBiometricPrompt());
-        } else {
-            layoutFingerprint.setVisibility(View.GONE);
-        }
-    }
-
-    private void showBiometricPrompt() {
-        Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(LoginActivity.this,
-                executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                loginUser(sessionManager.getMobile(), sessionManager.getPassword(), "9897");
-            }
-        });
-
-        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Secure Login")
-                .setSubtitle("Login with Fingerprint")
-                .setNegativeButtonText("Use Mobile & OTP")
-                .build();
-
-        biometricPrompt.authenticate(promptInfo);
     }
 }

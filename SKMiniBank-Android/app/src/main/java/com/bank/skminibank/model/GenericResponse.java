@@ -17,6 +17,10 @@ public class GenericResponse {
         return "error";
     }
 
+    public boolean isSuccess() {
+        return "success".equalsIgnoreCase(getStatus());
+    }
+
     public String getMessage() {
         return message;
     }

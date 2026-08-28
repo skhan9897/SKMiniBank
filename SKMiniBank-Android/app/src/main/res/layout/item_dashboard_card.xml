@@ -17,7 +17,9 @@
         android:orientation="vertical"
         android:paddingHorizontal="8dp"
         android:paddingVertical="16dp"
-        android:background="@drawable/premium_service_card_bg">
+        android:background="@drawable/premium_service_card_bg"
+        android:clickable="false"
+        android:focusable="false">
 
         <FrameLayout
             android:layout_width="wrap_content"

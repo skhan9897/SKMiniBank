@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "https://skminibank-1.onrender.com/";
+    private static final String BASE_URL = "https://skminibank.onrender.com/";
 
     private static Retrofit retrofit;
 

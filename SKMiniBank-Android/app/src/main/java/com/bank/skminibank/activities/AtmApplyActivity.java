@@ -185,7 +185,7 @@ public class AtmApplyActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     GenericResponse res = response.body();
-                    if ("success".equalsIgnoreCase(res.getStatus())) {
+                    if (res.isSuccess()) {
                         Toast.makeText(AtmApplyActivity.this, "Request Submitted Successfully", Toast.LENGTH_LONG).show();
                         checkATMStatus(); // Refresh to show status card
                     } else {

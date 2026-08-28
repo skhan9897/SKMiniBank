@@ -159,7 +159,7 @@ public class ChequeBookActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && response.body() != null) {
                     GenericResponse res = response.body();
-                    if ("success".equalsIgnoreCase(res.getStatus())) {
+                    if (res.isSuccess()) {
                         Toast.makeText(ChequeBookActivity.this, "Request Submitted Successfully", Toast.LENGTH_LONG).show();
                         checkStatus();
                     } else {

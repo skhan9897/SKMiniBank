@@ -104,6 +104,20 @@
             </intent-filter>
         </activity>
 
+        <!-- Launcher for the Admin Panel -->
+        <activity
+            android:name=".activities.AdminSplashActivity"
+            android:exported="true"
+            android:label="SK Admin"
+            android:icon="@drawable/sk_logo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activities.AdminLoginActivity" android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

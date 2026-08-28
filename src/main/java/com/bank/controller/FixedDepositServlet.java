@@ -76,23 +76,25 @@ public class FixedDepositServlet extends HttpServlet {
 
             FixedDepositDAO dao = new FixedDepositDAO();
 
+            String ctx = request.getContextPath();
+
             if (dao.addFixedDeposit(fd)) {
                 if ("CUSTOMER".equalsIgnoreCase(role)) {
-                    response.sendRedirect("customer/dashboard.jsp?msg=Fixed Deposit Created Successfully");
+                    response.sendRedirect(ctx + "/customer/dashboard.jsp?msg=Fixed Deposit Created Successfully");
                 } else {
-                    response.sendRedirect("admin/fixed-deposit-list.jsp?msg=FD Created Successfully");
+                    response.sendRedirect(ctx + "/admin/fixed-deposit-list.jsp?msg=FD Created Successfully");
                 }
             } else {
                 // Re-deposit if FD record fails
                 accountDAO.deposit(accountNumber, amount);
-                response.sendRedirect("admin/fixed-deposit.jsp?msg=FD Failed");
+                String backUrl = "CUSTOMER".equalsIgnoreCase(role) ? "/customer/fixed-deposit.jsp" : "/admin/fixed-deposit.jsp";
+                response.sendRedirect(ctx + backUrl + "?msg=FD Creation Failed");
             }
 
         } catch (Exception e) {
-    e.printStackTrace();
-    response.setContentType("text/plain");
-    e.printStackTrace(response.getWriter());
-}
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp?msg=Error: " + e.getMessage());
+        }
 
     }
 }

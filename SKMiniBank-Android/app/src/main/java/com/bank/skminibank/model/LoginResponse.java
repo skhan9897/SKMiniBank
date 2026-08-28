@@ -22,6 +22,10 @@ public class LoginResponse {
         return status;
     }
 
+    public boolean isSuccess() {
+        return "success".equalsIgnoreCase(status);
+    }
+
     public String getMessage() {
         return message;
     }

@@ -31,8 +31,15 @@
     <color name="fino_text_secondary">@color/text_dark_secondary</color>
     <color name="fino_divider">@color/divider_light</color>
 
+    <!-- Web Style Palette -->
+    <color name="web_bg_dark">#0f0c29</color>
+    <color name="web_bg_mid">#302b63</color>
+    <color name="web_bg_end">#24243e</color>
+    <color name="web_accent_blue">#00d2ff</color>
+    <color name="glass_white">#15FFFFFF</color>
+
     <!-- Specific background for splash/login as requested (deep navy blue) -->
-    <color name="blue_background">@color/primary_blue</color>
+    <color name="blue_background">@color/web_bg_dark</color>
 
     <!-- Missing colors for resource linking -->
     <color name="warning_yellow">#FFC107</color>

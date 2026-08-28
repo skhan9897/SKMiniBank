@@ -328,4 +328,12 @@ public interface ApiService {
             @Field("accountNumber") String accountNumber,
             @Field("amount") double amount
     );
+
+    @FormUrlEncoded
+    @POST("api/fixed-deposit/create")
+    Call<com.bank.skminibank.model.GenericResponse> createFixedDeposit(
+            @Field("accountNumber") String accountNumber,
+            @Field("amount") double amount,
+            @Field("duration") int duration
+    );
 }
