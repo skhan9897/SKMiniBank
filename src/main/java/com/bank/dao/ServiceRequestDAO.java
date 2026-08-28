@@ -205,6 +205,10 @@ public class ServiceRequestDAO {
         return null;
     }
 
+    public ServiceRequest getLatestATMRequest(int customerId) {
+        return getLatestRequestByType(customerId, "ATM_CARD");
+    }
+
     public boolean updateRequestStatus(int requestId, String status, String remarks, String approvedBy) {
         String sql = "UPDATE service_request SET status=?, remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
         try (Connection con = DBConnection.getConnection();
