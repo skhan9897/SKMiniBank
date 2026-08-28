@@ -372,13 +372,13 @@ public class ChatTransferActivity extends AppCompatActivity {
             @Override
             public void run() {
                 fetchTransactions();
-                pollingHandler.postDelayed(this, 500); // Super Fast Polling (0.5 sec) for "Instant" delivery
+                pollingHandler.postDelayed(this, 1000); // Poll every 1 second
             }
         }, 0);
     }
 
     private void fetchTransactions() {
-        ApiClient.getService().getTransactions(sessionManager.getAccountNumber()).enqueue(new Callback<TransactionResponse>() {
+        ApiClient.getService().getTransactions(sessionManager.getAccountNumber(), sessionManager.getCustomerId()).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -403,6 +403,8 @@ public class ChatTransferActivity extends AppCompatActivity {
 
             String desc = txn.getDescription() != null ? txn.getDescription().toLowerCase(Locale.getDefault()) : "";
             String targetMobileClean = contactMobile != null ? contactMobile.replaceAll("[^0-9]", "") : "";
+            if (targetMobileClean.length() > 10) targetMobileClean = targetMobileClean.substring(targetMobileClean.length() - 10);
+            
             String targetNameLower = contactName != null ? contactName.toLowerCase(Locale.getDefault()) : "";
             String cleanIdentifierLower = resolvedReceiverIdentifier != null ? resolvedReceiverIdentifier.toLowerCase(Locale.getDefault()) : "";
 
@@ -450,9 +452,9 @@ public class ChatTransferActivity extends AppCompatActivity {
                         db.chatDao().insertMessage(entity);
                         runOnUiThread(() -> {
                             TransactionChatMessage newMsg = new TransactionChatMessage(txn.getAmount(), "SUCCESS", finalIsSentByMe, transactionId, txn.getDate());
-                            newMsg.setOtherPartyName(contactName); // Set for Paytm Look
+                            newMsg.setOtherPartyName(contactName); 
                             messageList.add(newMsg);
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyItemInserted(messageList.size() - 1);
                             rvChat.scrollToPosition(messageList.size() - 1);
                         });
                     }

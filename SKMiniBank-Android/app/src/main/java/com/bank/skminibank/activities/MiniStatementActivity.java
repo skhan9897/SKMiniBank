@@ -84,9 +84,11 @@ public class MiniStatementActivity extends AppCompatActivity {
     private void fetchMiniStatement() {
         swipeRefresh.setRefreshing(true);
         String accountNumber = sessionManager.getAccountNumber();
+        int customerId = sessionManager.getCustomerId();
+        
         if (accountNumber != null) {
             String cleanAcc = accountNumber.replaceAll("\\s+", "");
-            ApiClient.getService().getTransactions(cleanAcc).enqueue(new Callback<TransactionResponse>() {
+            ApiClient.getService().getTransactions(cleanAcc, customerId).enqueue(new Callback<TransactionResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                     swipeRefresh.setRefreshing(false);

@@ -18,6 +18,15 @@ public class AdminChequeBookListServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        javax.servlet.http.HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
+
+        if (session == null || session.getAttribute("admin") == null) {
+            response.sendRedirect(ctx + "/SKMiniBankadmin-login.jsp");
+            return;
+        }
+
         ServiceRequestDAO dao = new ServiceRequestDAO();
 
         // Fetch unified CHEQUE_BOOK requests

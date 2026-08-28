@@ -21,7 +21,7 @@ public class AdminKYCActionServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect(request.getContextPath() + "/admin-login.jsp");
+            response.sendRedirect(request.getContextPath() + "/SKMiniBankadmin-login.jsp");
             return;
         }
 

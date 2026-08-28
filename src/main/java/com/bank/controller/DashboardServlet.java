@@ -15,6 +15,15 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        javax.servlet.http.HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
+
+        if (session == null || session.getAttribute("admin") == null) {
+            response.sendRedirect(ctx + "/SKMiniBankadmin-login.jsp");
+            return;
+        }
+
         DashboardDAO dao = new DashboardDAO();
 
         request.setAttribute("totalCustomers", dao.getTotalCustomers());

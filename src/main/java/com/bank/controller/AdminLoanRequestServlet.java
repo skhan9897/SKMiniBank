@@ -18,6 +18,15 @@ public class AdminLoanRequestServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+        javax.servlet.http.HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
+
+        if (session == null || session.getAttribute("admin") == null) {
+            response.sendRedirect(ctx + "/SKMiniBankadmin-login.jsp");
+            return;
+        }
+
         try {
             ServiceRequestDAO dao = new ServiceRequestDAO();
             // Specifically fetch LOAN type requests

@@ -275,7 +275,7 @@
                 <a href="register.jsp" class="btn btn-home flex-fill">
                     <i class="fa fa-user-plus me-2"></i> JOIN NOW
                 </a>
-                <a href="admin-login.jsp" class="btn btn-home flex-fill border-warning text-warning">
+                <a href="SKMiniBankadmin-login.jsp" class="btn btn-home flex-fill border-warning text-warning">
                     <i class="fa fa-user-shield me-2"></i> ADMIN
                 </a>
             </div>

@@ -21,19 +21,26 @@ public class AdminChequeBookServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
+        String ctx = request.getContextPath();
+        if ("/".equals(ctx)) ctx = "";
 
         if (session == null || session.getAttribute("admin") == null) {
-            response.sendRedirect("SKMiniBankadmin-login.jsp");
+            response.sendRedirect(ctx + "/SKMiniBankadmin-login.jsp");
             return;
         }
 
         int id = Integer.parseInt(request.getParameter("id"));
-
         String action = request.getParameter("action");
-
         String remarks = request.getParameter("remarks");
-
-        int approvedBy = (Integer) session.getAttribute("admin");
+        String adminId = session.getAttribute("admin").toString();
+        
+        // Convert to int if necessary for DAO, but check type first
+        int approvedBy = 0;
+        try {
+            approvedBy = Integer.parseInt(adminId);
+        } catch (NumberFormatException e) {
+            // Handle if adminId is not numeric
+        }
 
         ChequeBookRequestDAO dao = new ChequeBookRequestDAO();
 

@@ -252,8 +252,9 @@ public class DashboardActivity extends AppCompatActivity {
     private void fetchRecentTransactions(String accNo) {
         if (accNo == null) return;
         String cleanAcc = accNo.replaceAll("\\s+", "");
+        int customerId = sessionManager.getCustomerId();
 
-        ApiClient.getService().getTransactions(cleanAcc).enqueue(new Callback<TransactionResponse>() {
+        ApiClient.getService().getTransactions(cleanAcc, customerId).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -327,8 +328,12 @@ public class DashboardActivity extends AppCompatActivity {
         updateBalanceVisibility();
         
         if (data.getAccountNumber() != null) {
-            sessionManager.setAccountNumber(data.getAccountNumber());
-            tvAccNo.setText("Account No. " + data.getAccountNumber());
+            String cleanAcc = data.getAccountNumber().replaceAll("\\s+", "");
+            sessionManager.setAccountNumber(cleanAcc);
+            tvAccNo.setText("Account No. " + cleanAcc);
+            
+            // Immediately fetch transactions for this account
+            fetchRecentTransactions(cleanAcc);
         }
         
         if (data.getCustomerName() != null) {

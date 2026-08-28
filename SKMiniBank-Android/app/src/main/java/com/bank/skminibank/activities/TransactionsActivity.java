@@ -159,8 +159,9 @@ public class TransactionsActivity extends AppCompatActivity {
 
         // Clean account number (remove any spaces)
         String cleanAcc = accountNumber.replaceAll("\\s+", "");
+        int customerId = sessionManager.getCustomerId();
 
-        ApiClient.getService().getTransactions(cleanAcc).enqueue(new Callback<TransactionResponse>() {
+        ApiClient.getService().getTransactions(cleanAcc, customerId).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);

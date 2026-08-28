@@ -197,7 +197,7 @@ public class SendMoneyActivity extends AppCompatActivity {
     }
 
     private void fetchServerTransactions() {
-        ApiClient.getService().getTransactions(sessionManager.getAccountNumber()).enqueue(new Callback<TransactionResponse>() {
+        ApiClient.getService().getTransactions(sessionManager.getAccountNumber(), sessionManager.getCustomerId()).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {

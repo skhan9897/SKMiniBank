@@ -245,7 +245,8 @@ public interface ApiService {
 
     @GET("api/transactions")
     Call<TransactionResponse> getTransactions(
-            @Query("accountNumber") String accountNumber
+            @Query("accountNumber") String accountNumber,
+            @Query("customerId") int customerId
     );
 
     @FormUrlEncoded
