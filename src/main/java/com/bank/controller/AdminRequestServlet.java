@@ -69,8 +69,16 @@ public class AdminRequestServlet extends HttpServlet {
 
                 case "DISBURSE":
                     String amtStr = request.getParameter("approvedAmount");
-                    if (amtStr != null && accNo != null) {
-                        status = dao.disburseLoan(requestId, accNo, Double.parseDouble(amtStr), remarks, adminName);
+                    if (amtStr != null && !amtStr.trim().isEmpty() && accNo != null) {
+                        try {
+                            double amount = Double.parseDouble(amtStr);
+                            status = dao.disburseLoan(requestId, accNo, amount, remarks, adminName);
+                        } catch (NumberFormatException e) {
+                            System.err.println("Invalid amount format: " + amtStr);
+                            status = false;
+                        }
+                    } else {
+                        System.err.println("Missing amount or account number for disburse");
                     }
                     break;
 

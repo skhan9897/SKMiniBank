@@ -80,8 +80,7 @@
         <!-- Launcher for the Main Banking App -->
         <activity
             android:name=".activities.SplashActivity"
-            android:exported="true"
-            android:label="SK Mini Bank">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -89,33 +88,12 @@
         </activity>
 
         <!-- New Loan App Activities -->
+        <activity android:name=".activities.LoanSplashActivity" android:exported="false" />
         <activity android:name=".activities.LoanDashboardActivity" android:exported="false" />
         <activity android:name=".activities.LoanLoginActivity" android:exported="false" />
 
-        <!-- Launcher for the New Loan App -->
-        <activity
-            android:name=".activities.LoanSplashActivity"
-            android:exported="true"
-            android:label="SK Loan"
-            android:icon="@drawable/ic_bank_logo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- Launcher for the Admin Panel -->
-        <activity
-            android:name=".activities.AdminSplashActivity"
-            android:exported="true"
-            android:label="SK Admin"
-            android:icon="@drawable/ic_bank_logo">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
+        <!-- Admin Panel -->
+        <activity android:name=".activities.AdminSplashActivity" android:exported="false" />
         <activity android:name=".activities.AdminLoginActivity" android:exported="false" />
 
         <provider

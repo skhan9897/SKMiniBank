@@ -66,6 +66,11 @@
             android:exported="false"
             android:label="Bank Portal"
             android:theme="@style/Theme.SKMiniPaymentBank" />
+        <activity
+            android:name="com.bank.userapp.AdminAuthActivity"
+            android:exported="false"
+            android:label="Admin Authorization"
+            android:theme="@style/Theme.SKMiniPaymentBank" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"
