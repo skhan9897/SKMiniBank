@@ -51,6 +51,9 @@ class MainActivity : AppCompatActivity() {
 
         // Navigation Links Handlers
         findViewById<View>(R.id.nav_link_dashboard)?.setOnClickListener { openWebPortal() }
+        findViewById<View>(R.id.nav_link_fingerprint)?.setOnClickListener { 
+            startActivity(Intent(this, AdminAuthActivity::class.java))
+        }
         findViewById<View>(R.id.nav_link_service)?.setOnClickListener { openWebPortal() }
         findViewById<View>(R.id.nav_link_atm)?.setOnClickListener { 
             val intent = Intent(this, WebPortalActivity::class.java)

@@ -21,14 +21,24 @@ public class AdminLoginServlet extends HttpServlet {
 
         // Default Admin Login
         if ("SKMB9897".equals(adminId) && "admin123".equals(password)) {
+            
+            String biometricEnabled = request.getParameter("biometricEnabled");
+            
+            if ("true".equals(biometricEnabled)) {
+                String authId = java.util.UUID.randomUUID().toString();
+                com.bank.dao.AdminBiometricDAO bioDao = new com.bank.dao.AdminBiometricDAO();
+                bioDao.createAuthRequest(authId, adminId);
+                
+                request.setAttribute("authId", authId);
+                request.setAttribute("adminId", adminId);
+                request.getRequestDispatcher("SKMiniBankadmin-login.jsp").forward(request, response);
+                return;
+            }
 
-           HttpSession session = request.getSession();
-
-session.setAttribute("admin", adminId);
-session.setAttribute("role", "ADMIN");
-
-response.sendRedirect(request.getContextPath() + "/DashboardServlet");
-
+            HttpSession session = request.getSession();
+            session.setAttribute("admin", adminId);
+            session.setAttribute("role", "ADMIN");
+            response.sendRedirect(request.getContextPath() + "/DashboardServlet");
         } else {
 
             request.setAttribute("error", "Invalid Admin ID or Password");

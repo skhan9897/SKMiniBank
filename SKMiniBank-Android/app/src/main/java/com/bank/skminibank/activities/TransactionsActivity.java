@@ -217,22 +217,35 @@ public class TransactionsActivity extends AppCompatActivity {
         String cleanAcc = accountNumber.replaceAll("\\s+", "");
         int customerId = sessionManager.getCustomerId();
 
-        ApiClient.getService().getTransactions(cleanAcc, customerId).enqueue(new Callback<TransactionResponse>() {
+        // Try with cleaned account number first
+        executeFetch(cleanAcc, customerId, false);
+    }
+
+    private void executeFetch(String accNo, int customerId, boolean isRetry) {
+        ApiClient.getService().getTransactions(accNo, customerId).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
                     if (txns != null && !txns.isEmpty()) {
-                        // Immediately show live data
                         fullTransactionList.clear();
                         fullTransactionList.addAll(txns);
                         filterTransactions(etSearch.getText().toString());
-                        
-                        // Save to local in background
                         saveTransactionsToLocal(txns);
+                    } else if (!isRetry) {
+                        // If nothing found, try with the RAW account number from session
+                        String rawAcc = sessionManager.getAccountNumber();
+                        if (rawAcc != null && !rawAcc.equals(accNo)) {
+                            executeFetch(rawAcc, customerId, true);
+                        } else {
+                            loadTransactionsFromLocal();
+                        }
                     } else {
                         loadTransactionsFromLocal();
+                        if (response.body().getMessage() != null) {
+                            Toast.makeText(TransactionsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } else {
                     loadTransactionsFromLocal();
@@ -243,7 +256,7 @@ public class TransactionsActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 loadTransactionsFromLocal();
-                Toast.makeText(TransactionsActivity.this, "Server Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TransactionsActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
