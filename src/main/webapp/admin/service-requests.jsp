@@ -99,16 +99,24 @@ if ("/".equals(ctx)) ctx = "";
                                 <option value="Documents Under Verification">Documents Under Verification</option>
                                 <option value="Request Processed">Request Processed</option>
                                 <option value="Application Rejected - Policy">Application Rejected</option>
+                                <option value="Item Dispatched to Address">Item Dispatched</option>
+                                <option value="Delivered Successfully">Delivered Successfully</option>
                             </select>
                         </div>
 
-                        <% if("LOAN".equalsIgnoreCase(type) && (status.equals("APPROVED") || status.equals("DOC_VERIFICATION"))) { %>
-                            <input type="number" name="approvedAmount" class="form-control form-control-sm mb-2 shadow-sm border-0" placeholder="Approved Amount">
+                        <% if("LOAN".equalsIgnoreCase(type) && status.equals("APPROVED")) { %>
+                            <input type="number" name="approvedAmount" class="form-control form-control-sm mb-2 shadow-sm border-0" placeholder="Approved Amount" required>
+                        <% } %>
+
+                        <% if(("ATM_CARD".equalsIgnoreCase(type) || "CHEQUE_BOOK".equalsIgnoreCase(type)) && status.equals("PENDING")) { %>
+                            <input type="date" name="expectedDelivery" class="form-control form-control-sm mb-2 shadow-sm border-0" title="Expected Delivery Date">
                         <% } %>
 
                         <div class="d-flex gap-1">
                             <% if(status.equals("PENDING")) { %>
-                                <button type="submit" name="action" value="VERIFY" class="btn btn-info btn-sm text-white flex-fill">Verify</button>
+                                <% if(type.equalsIgnoreCase("LOAN")) { %>
+                                    <button type="submit" name="action" value="VERIFY" class="btn btn-info btn-sm text-white flex-fill">Verify Docs</button>
+                                <% } %>
                                 <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
                                 <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>
                             <% } else if(status.equals("DOC_VERIFICATION")) { %>
@@ -116,15 +124,17 @@ if ("/".equals(ctx)) ctx = "";
                             <% } else if(status.equals("APPROVED")) { %>
                                 <% if(type.equalsIgnoreCase("LOAN")) { %>
                                     <button type="submit" name="action" value="DISBURSE" class="btn btn-primary btn-sm w-100">Disburse Funds</button>
-                                <% } else if(type.contains("BANKING")) { %>
+                                <% } else if(type.toUpperCase().contains("BANKING")) { %>
                                     <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Activate Service</button>
-                                <% } else { %>
+                                <% } else if(type.equalsIgnoreCase("ATM_CARD") || type.equalsIgnoreCase("CHEQUE_BOOK")) { %>
                                     <button type="submit" name="action" value="DISPATCH" class="btn btn-info btn-sm text-white w-100">Dispatch Item</button>
+                                <% } else { %>
+                                    <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Complete Process</button>
                                 <% } %>
                             <% } else if(status.equals("DISPATCHED")) { %>
                                 <button type="submit" name="action" value="DELIVER" class="btn btn-dark btn-sm w-100">Confirm Delivery</button>
                             <% } else { %>
-                                <div class="text-center w-100 small text-muted py-1">Process Completed</div>
+                                <div class="text-center w-100 small text-muted py-1"><i class="fas fa-check-circle text-success me-1"></i> Completed</div>
                             <% } %>
                         </div>
                     </form>
