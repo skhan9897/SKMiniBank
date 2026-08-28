@@ -110,7 +110,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
         
-        findViewById(R.id.btnProfile).setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         findViewById(R.id.btnBalanceInquiry).setOnClickListener(v -> startPinActivity());
 
         View btnViewAll = findViewById(R.id.btnViewAll);
@@ -130,11 +129,6 @@ public class DashboardActivity extends AppCompatActivity {
             fabScan.setOnClickListener(v -> startScanner());
         }
 
-        View btnHeaderScan = findViewById(R.id.btnHeaderScan);
-        if (btnHeaderScan != null) {
-            btnHeaderScan.setOnClickListener(v -> startScanner());
-        }
-
         View searchContainer = findViewById(R.id.searchContainer);
         if (searchContainer != null) {
             searchContainer.setOnClickListener(v -> startActivity(new Intent(this, AllServicesActivity.class)));
@@ -143,6 +137,16 @@ public class DashboardActivity extends AppCompatActivity {
         View ivNotifications = findViewById(R.id.ivNotifications);
         if (ivNotifications != null) {
             ivNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationHistoryActivity.class)));
+        }
+
+        View btnSettings = findViewById(R.id.btnSettings);
+        if (btnSettings != null) {
+            btnSettings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
+        }
+
+        View btnProfileHeader = findViewById(R.id.btnProfileHeader);
+        if (btnProfileHeader != null) {
+            btnProfileHeader.setOnClickListener(v -> startActivity(new Intent(this, ProfileActivity.class)));
         }
     }
 
@@ -203,8 +207,15 @@ public class DashboardActivity extends AppCompatActivity {
             ImageView iv = v.findViewById(R.id.ivIcon);
             if (tv != null) tv.setText(title);
             if (iv != null) iv.setImageResource(icon);
+            
+            // Explicitly set click listener on the CardView itself
             v.setClickable(true);
+            v.setFocusable(true);
             v.setOnClickListener(listener);
+            
+            // Also set on children just in case they consume events
+            View inner = v.findViewById(R.id.tvTitle);
+            if (inner != null) inner.setOnClickListener(listener);
         }
     }
 
@@ -259,7 +270,17 @@ public class DashboardActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
-                    if (txns != null) {
+                    if (txns != null && !txns.isEmpty()) {
+                        // Immediately show live data in Recent Transactions
+                        transactionList.clear();
+                        for (int i = 0; i < Math.min(txns.size(), 10); i++) {
+                            transactionList.add(txns.get(i));
+                        }
+                        if (transactionAdapter != null) {
+                            transactionAdapter.notifyDataSetChanged();
+                        }
+                        
+                        // Save to local
                         saveTransactionsToLocal(txns);
                     }
                 }

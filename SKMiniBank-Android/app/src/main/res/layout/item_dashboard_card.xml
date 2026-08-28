@@ -8,7 +8,8 @@
     android:focusable="true"
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="@android:color/transparent">
+    app:cardBackgroundColor="@android:color/white"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +20,8 @@
         android:paddingVertical="16dp"
         android:background="@drawable/premium_service_card_bg"
         android:clickable="false"
-        android:focusable="false">
+        android:focusable="false"
+        android:duplicateParentState="true">
 
         <FrameLayout
             android:layout_width="wrap_content"

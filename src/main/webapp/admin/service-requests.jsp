@@ -95,46 +95,79 @@ if ("/".equals(ctx)) ctx = "";
 
                         <div class="mb-2">
                             <select name="remarks" class="form-select form-select-sm border-0 shadow-sm">
-                                <option value="Verified and Approved">Verified and Approved</option>
-                                <option value="Documents Under Verification">Documents Under Verification</option>
-                                <option value="Request Processed">Request Processed</option>
-                                <option value="Application Rejected - Policy">Application Rejected</option>
-                                <option value="Item Dispatched to Address">Item Dispatched</option>
-                                <option value="Delivered Successfully">Delivered Successfully</option>
+                                <% if("ATM_CARD".equalsIgnoreCase(type) || "CHEQUE_BOOK".equalsIgnoreCase(type)) { %>
+                                    <% if(status.equals("PENDING")) { %>
+                                        <option value="Request Approved - Under Processing">Approved - Processing</option>
+                                        <option value="Rejected - Invalid Address/Details">Rejected - Invalid Details</option>
+                                    <% } else if(status.equals("APPROVED")) { %>
+                                        <option value="Item Dispatched via Courier Service">Item Dispatched</option>
+                                    <% } else if(status.equals("DISPATCHED")) { %>
+                                        <option value="Delivered Successfully to Customer Address">Delivered Successfully</option>
+                                    <% } else { %>
+                                        <option value="Process Completed">Process Completed</option>
+                                    <% } %>
+                                <% } else if(type.toUpperCase().contains("BANKING")) { %>
+                                    <option value="Service Activated Successfully">Service Activated Successfully</option>
+                                    <option value="Credentials Sent to Registered Mobile">Credentials Sent</option>
+                                    <option value="Rejected - Security/Policy Reasons">Rejected - Security Reasons</option>
+                                <% } else if("LOAN".equalsIgnoreCase(type)) { %>
+                                    <% if(status.equals("PENDING")) { %>
+                                        <option value="Documents Under Verification">Documents Under Verification</option>
+                                        <option value="Verified and Sent for Approval">Verified - Sent for Approval</option>
+                                    <% } else if(status.equals("APPROVED")) { %>
+                                        <option value="Loan Amount Disbursed to Account">Loan Amount Disbursed</option>
+                                    <% } else { %>
+                                        <option value="Loan Application Processed">Loan Application Processed</option>
+                                    <% } %>
+                                    <option value="Rejected - Low Credit Score/Eligibility">Rejected - Low Credit Score</option>
+                                    <option value="Rejected - Income Documents Missing">Rejected - Documents Missing</option>
+                                <% } else { %>
+                                    <option value="Request Processed Successfully">Request Processed</option>
+                                    <option value="Application Rejected">Application Rejected</option>
+                                <% } %>
                             </select>
                         </div>
 
                         <% if("LOAN".equalsIgnoreCase(type) && status.equals("APPROVED")) { %>
-                            <input type="number" name="approvedAmount" class="form-control form-control-sm mb-2 shadow-sm border-0" placeholder="Approved Amount" required>
+                            <div class="input-group input-group-sm mb-2 shadow-sm">
+                                <span class="input-group-text border-0 bg-white">₹</span>
+                                <input type="number" name="approvedAmount" class="form-control border-0" placeholder="Approved Amount" required>
+                            </div>
                         <% } %>
 
                         <% if(("ATM_CARD".equalsIgnoreCase(type) || "CHEQUE_BOOK".equalsIgnoreCase(type)) && status.equals("PENDING")) { %>
-                            <input type="date" name="expectedDelivery" class="form-control form-control-sm mb-2 shadow-sm border-0" title="Expected Delivery Date">
+                            <div class="mb-2">
+                                <label class="x-small text-muted mb-1" style="font-size: 10px;">EXPECTED DELIVERY</label>
+                                <input type="date" name="expectedDelivery" class="form-control form-control-sm shadow-sm border-0">
+                            </div>
                         <% } %>
 
                         <div class="d-flex gap-1">
                             <% if(status.equals("PENDING")) { %>
                                 <% if(type.equalsIgnoreCase("LOAN")) { %>
-                                    <button type="submit" name="action" value="VERIFY" class="btn btn-info btn-sm text-white flex-fill">Verify Docs</button>
+                                    <button type="submit" name="action" value="VERIFY" class="btn btn-info btn-sm text-white flex-fill">Verify</button>
                                 <% } %>
                                 <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
                                 <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>
                             <% } else if(status.equals("DOC_VERIFICATION")) { %>
-                                <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm w-100">Approve Request</button>
+                                <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
+                                <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>
                             <% } else if(status.equals("APPROVED")) { %>
                                 <% if(type.equalsIgnoreCase("LOAN")) { %>
                                     <button type="submit" name="action" value="DISBURSE" class="btn btn-primary btn-sm w-100">Disburse Funds</button>
                                 <% } else if(type.toUpperCase().contains("BANKING")) { %>
-                                    <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Activate Service</button>
+                                    <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Activate Now</button>
                                 <% } else if(type.equalsIgnoreCase("ATM_CARD") || type.equalsIgnoreCase("CHEQUE_BOOK")) { %>
-                                    <button type="submit" name="action" value="DISPATCH" class="btn btn-info btn-sm text-white w-100">Dispatch Item</button>
+                                    <button type="submit" name="action" value="DISPATCH" class="btn btn-info btn-sm text-white w-100"><i class="fas fa-truck me-1"></i> Dispatch</button>
                                 <% } else { %>
-                                    <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Complete Process</button>
+                                    <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Complete</button>
                                 <% } %>
                             <% } else if(status.equals("DISPATCHED")) { %>
-                                <button type="submit" name="action" value="DELIVER" class="btn btn-dark btn-sm w-100">Confirm Delivery</button>
+                                <button type="submit" name="action" value="DELIVER" class="btn btn-dark btn-sm w-100"><i class="fas fa-check-double me-1"></i> Confirm Delivery</button>
+                            <% } else if(status.equals("REJECTED")) { %>
+                                <div class="text-center w-100 small text-danger py-1 fw-bold"><i class="fas fa-times-circle me-1"></i> Rejected</div>
                             <% } else { %>
-                                <div class="text-center w-100 small text-muted py-1"><i class="fas fa-check-circle text-success me-1"></i> Completed</div>
+                                <div class="text-center w-100 small text-success py-1 fw-bold"><i class="fas fa-check-circle me-1"></i> Processed</div>
                             <% } %>
                         </div>
                     </form>

@@ -59,10 +59,10 @@
                 android:textSize="12sp" />
 
             <ImageView
-                android:id="@+id/btnHeaderScan"
+                android:id="@+id/btnSettings"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@android:drawable/ic_menu_camera"
+                android:src="@android:drawable/ic_menu_manage"
                 app:tint="@color/white"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
@@ -106,20 +106,22 @@
             android:textSize="11sp"
             android:layout_marginTop="2dp"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnProfile"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btnProfileHeader"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="#30FFFFFF"
+            app:cardElevation="0dp"
             android:layout_alignParentEnd="true"
-            android:text="My Profile"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            app:icon="@android:drawable/ic_menu_myplaces"
-            app:iconSize="16dp"
-            app:iconTint="@color/white"
-            android:backgroundTint="#20FFFFFF"
-            app:cornerRadius="8dp"/>
+            android:layout_centerVertical="true">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@android:drawable/ic_menu_myplaces"
+                android:padding="8dp"
+                app:tint="@color/white" />
+        </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 

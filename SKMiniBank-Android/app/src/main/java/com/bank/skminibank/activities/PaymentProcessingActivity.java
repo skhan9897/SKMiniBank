@@ -94,13 +94,17 @@ public class PaymentProcessingActivity extends AppCompatActivity {
         if (response.isSuccessful() && response.body() != null && "success".equalsIgnoreCase(response.body().getStatus())) {
             saveRecentRecipient(name, toIdentifier);
             PaymentVoiceUtil.speakPayment(this, amount, false);
-            Intent intent = new Intent(PaymentProcessingActivity.this, PaymentSuccessActivity.class);
-            intent.putExtra("amount", amountStr);
-            intent.putExtra("name", name);
-            intent.putExtra("acc", toIdentifier);
-            intent.putExtra("balance", String.valueOf(currentBalance - amount));
-            startActivity(intent);
-            finish();
+            
+            // Navigate to success screen after exactly 2 seconds total (approx)
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(PaymentProcessingActivity.this, PaymentSuccessActivity.class);
+                intent.putExtra("amount", amountStr);
+                intent.putExtra("name", name);
+                intent.putExtra("acc", toIdentifier);
+                intent.putExtra("balance", String.valueOf(currentBalance - amount));
+                startActivity(intent);
+                finish();
+            }, 500); // 500ms delay + 1s initial delay + API time ≈ 2 seconds
         } else {
             String msg = (response.body() != null) ? response.body().getMessage() : "Payment Failed";
 

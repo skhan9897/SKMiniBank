@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +42,16 @@ public class TransactionsActivity extends AppCompatActivity {
     private RecyclerView rvTransactions;
     private TransactionsAdapter adapter;
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<Transaction> fullTransactionList = new ArrayList<>();
     private SwipeRefreshLayout swipeRefresh;
     private SessionManager sessionManager;
     private MaterialButton btnDownloadPdf;
     private TextView tvTotalTransactions;
+    private EditText etSearch;
+    private com.google.android.material.chip.Chip chipToday;
     private AppDatabase db;
+    private boolean showOnlyToday = false;
+    private java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +71,8 @@ public class TransactionsActivity extends AppCompatActivity {
         swipeRefresh = findViewById(R.id.swipeRefresh);
         btnDownloadPdf = findViewById(R.id.btnDownloadPdf);
         tvTotalTransactions = findViewById(R.id.tvTotalTransactions);
+        etSearch = findViewById(R.id.etSearch);
+        chipToday = findViewById(R.id.chipToday);
 
         rvTransactions.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TransactionsAdapter(transactionList);
@@ -71,6 +81,32 @@ public class TransactionsActivity extends AppCompatActivity {
         swipeRefresh.setOnRefreshListener(this::fetchTransactions);
 
         btnDownloadPdf.setOnClickListener(v -> downloadStatement());
+
+        if (chipToday != null) {
+            chipToday.setOnClickListener(v -> {
+                showOnlyToday = !showOnlyToday;
+                if (showOnlyToday) {
+                    chipToday.setChipBackgroundColorResource(android.R.color.holo_green_dark);
+                    filterTransactions(etSearch.getText().toString());
+                } else {
+                    chipToday.setChipBackgroundColorResource(R.color.premium_gold);
+                    filterTransactions(etSearch.getText().toString());
+                }
+            });
+        }
+
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterTransactions(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
         loadTransactionsFromLocal();
         fetchTransactions();
@@ -85,16 +121,37 @@ public class TransactionsActivity extends AppCompatActivity {
         new Thread(() -> {
             List<TransactionEntity> entities = db.transactionDao().getAllTransactions(cleanAcc);
             runOnUiThread(() -> {
-                transactionList.clear();
+                fullTransactionList.clear();
                 for (TransactionEntity e : entities) {
-                    transactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
+                    fullTransactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
                 }
-                adapter.notifyDataSetChanged();
-                if (tvTotalTransactions != null) {
-                    tvTotalTransactions.setText("Total Transactions: " + transactionList.size());
-                }
+                filterTransactions(etSearch.getText().toString());
             });
         }).start();
+    }
+
+    private void filterTransactions(String query) {
+        transactionList.clear();
+        String today = sdf.format(new java.util.Date());
+        String lowerQuery = query.toLowerCase(Locale.getDefault());
+
+        for (Transaction t : fullTransactionList) {
+            boolean matchesSearch = query.isEmpty() ||
+                    (t.getDescription() != null && t.getDescription().toLowerCase().contains(lowerQuery)) ||
+                    (t.getTransactionId() != null && t.getTransactionId().toLowerCase().contains(lowerQuery)) ||
+                    (t.getType() != null && t.getType().toLowerCase().contains(lowerQuery));
+
+            boolean matchesToday = !showOnlyToday || (t.getDate() != null && t.getDate().contains(today));
+
+            if (matchesSearch && matchesToday) {
+                transactionList.add(t);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+        if (tvTotalTransactions != null) {
+            tvTotalTransactions.setText("Total Transactions: " + transactionList.size());
+        }
     }
 
     private void saveTransactionsToLocal(List<Transaction> txns) {
@@ -157,7 +214,6 @@ public class TransactionsActivity extends AppCompatActivity {
             return;
         }
 
-        // Clean account number (remove any spaces)
         String cleanAcc = accountNumber.replaceAll("\\s+", "");
         int customerId = sessionManager.getCustomerId();
 
@@ -168,9 +224,14 @@ public class TransactionsActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
                     if (txns != null && !txns.isEmpty()) {
+                        // Immediately show live data
+                        fullTransactionList.clear();
+                        fullTransactionList.addAll(txns);
+                        filterTransactions(etSearch.getText().toString());
+                        
+                        // Save to local in background
                         saveTransactionsToLocal(txns);
                     } else {
-                        // If API returns empty, but local has data, just keep local
                         loadTransactionsFromLocal();
                     }
                 } else {
