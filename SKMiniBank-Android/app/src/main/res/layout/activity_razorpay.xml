@@ -4,7 +4,7 @@
     android:id="@+id/razorpayRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rgb_wave_anim"
+    android:background="@drawable/bg_premium_gradient"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp">

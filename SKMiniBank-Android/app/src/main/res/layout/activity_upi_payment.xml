@@ -4,15 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/fino_background">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/fino_primary"
+        android:background="#40000000"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:navigationIcon="?attr/homeAsUpIndicator" />
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,11 +25,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Blue Header Section -->
+            <!-- Header Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/fino_primary"
+                android:background="#40000000"
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
                 android:paddingBottom="60dp"
@@ -58,8 +59,8 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="-40dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="8dp"
-                app:cardBackgroundColor="@color/fino_card_bg">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -72,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A/C: ---"
-                        android:textColor="@color/fino_text_primary"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
                         android:textSize="15sp"/>
 
@@ -82,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Available: ₹ 0.00"
-                        android:textColor="@color/fino_text_secondary"
+                        android:textColor="#B3FFFFFF"
                         android:textSize="12sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -94,8 +95,8 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/fino_card_bg">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,17 +110,17 @@
                         android:layout_height="wrap_content"
                         android:hint="Receiver UPI ID"
                         app:startIconDrawable="@android:drawable/ic_menu_compass"
-                        app:startIconTint="@color/fino_primary"
-                        app:boxStrokeColor="@color/fino_primary"
-                        app:hintTextColor="@color/fino_primary"
-                        android:textColorHint="@color/fino_text_secondary">
+                        app:startIconTint="@color/web_accent_blue"
+                        app:boxStrokeColor="@color/white"
+                        app:hintTextColor="@color/web_accent_blue"
+                        android:textColorHint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etToUpiId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:textColor="@color/fino_text_primary"
+                            android:textColor="@color/white"
                             android:textSize="15sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,12 +131,12 @@
                         android:layout_marginTop="20dp"
                         android:hint="Amount"
                         app:startIconDrawable="@android:drawable/ic_menu_save"
-                        app:startIconTint="@color/fino_primary"
-                        app:boxStrokeColor="@color/fino_primary"
-                        app:hintTextColor="@color/fino_primary"
-                        android:textColorHint="@color/fino_text_secondary"
+                        app:startIconTint="@color/web_accent_blue"
+                        app:boxStrokeColor="@color/white"
+                        app:hintTextColor="@color/web_accent_blue"
+                        android:textColorHint="#80FFFFFF"
                         app:prefixText="₹ "
-                        app:prefixTextColor="@color/fino_text_primary">
+                        app:prefixTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAmount"
@@ -144,7 +145,7 @@
                             android:inputType="numberDecimal"
                             android:textSize="22sp"
                             android:textStyle="bold"
-                            android:textColor="@color/fino_text_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -154,17 +155,17 @@
                         android:layout_marginTop="20dp"
                         android:hint="Remarks (Optional)"
                         app:startIconDrawable="@android:drawable/ic_menu_edit"
-                        app:startIconTint="@color/fino_primary"
-                        app:boxStrokeColor="@color/fino_primary"
-                        app:hintTextColor="@color/fino_primary"
-                        android:textColorHint="@color/fino_text_secondary">
+                        app:startIconTint="@color/web_accent_blue"
+                        app:boxStrokeColor="@color/white"
+                        app:hintTextColor="@color/web_accent_blue"
+                        android:textColorHint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etRemarks"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:textColor="@color/fino_text_primary"
+                            android:textColor="@color/white"
                             android:textSize="15sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,12 +176,12 @@
                         android:layout_marginTop="20dp"
                         android:hint="4-Digit UPI PIN"
                         app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                        app:startIconTint="@color/fino_primary"
+                        app:startIconTint="@color/web_accent_blue"
                         app:passwordToggleEnabled="true"
-                        app:passwordToggleTint="@color/fino_primary"
-                        app:boxStrokeColor="@color/fino_primary"
-                        app:hintTextColor="@color/fino_primary"
-                        android:textColorHint="@color/fino_text_secondary">
+                        app:passwordToggleTint="@color/white"
+                        app:boxStrokeColor="@color/white"
+                        app:hintTextColor="@color/web_accent_blue"
+                        android:textColorHint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUpiPin"
@@ -192,7 +193,7 @@
                             android:gravity="center"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="@color/fino_text_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
@@ -201,12 +202,12 @@
                         android:layout_height="60dp"
                         android:layout_marginTop="32dp"
                         android:text="SECURE PAY"
-                        android:backgroundTint="@color/fino_accent_green"
-                        android:textColor="@color/white"
+                        android:backgroundTint="@color/premium_gold"
+                        android:textColor="@color/primary_blue"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        app:cornerRadius="12dp"
-                        android:elevation="4dp"/>
+                        app:cornerRadius="15dp"
+                        android:elevation="8dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -224,14 +225,14 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@android:drawable/ic_lock_idle_lock"
-                    app:tint="@color/fino_text_secondary"/>
+                    app:tint="#80FFFFFF"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Secure UPI Gateway"
-                    android:textColor="@color/fino_text_secondary"
+                    android:textColor="#80FFFFFF"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:textAllCaps="true"

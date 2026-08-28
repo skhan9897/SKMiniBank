@@ -3,7 +3,7 @@
     android:id="@+id/allServicesRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rgb_wave_anim">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -35,34 +35,34 @@
                 android:text="Banking Services"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
                 android:layout_marginBottom="12dp"
-                android:shadowColor="#40000000"
-                android:shadowRadius="2"/>
+                android:alpha="0.8"/>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#20FFFFFF"
+                app:cardBackgroundColor="@color/glass_white"
                 android:layout_marginBottom="24dp">
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="4"
-                    android:paddingVertical="12dp"
-                    android:paddingHorizontal="4dp">
+                    android:paddingVertical="8dp">
 
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcLoan" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcAtm" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcCheque" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcNetBanking" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcMobileBanking" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcKyc" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcStatement" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcFd" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcLoan" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcAtm" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcCheque" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcNetBanking" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcMobileBanking" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcKyc" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcStatement" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFd" android:layout_width="0dp" android:layout_columnWeight="1"/>
 
                 </GridLayout>
             </androidx.cardview.widget.CardView>
@@ -74,34 +74,34 @@
                 android:text="Recharge &amp; Bill Payments"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
                 android:layout_marginBottom="12dp"
-                android:shadowColor="#40000000"
-                android:shadowRadius="2"/>
+                android:alpha="0.8"/>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#20FFFFFF"
+                app:cardBackgroundColor="@color/glass_white"
                 android:layout_marginBottom="24dp">
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="4"
-                    android:paddingVertical="12dp"
-                    android:paddingHorizontal="4dp">
+                    android:paddingVertical="8dp">
 
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcRecharge" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcDth" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcElectricity" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcCreditCard" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcGas" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcWater" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcInsurance" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcFastag" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcRecharge" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcDth" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcElectricity" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcCreditCard" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcGas" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcWater" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcInsurance" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFastag" android:layout_width="0dp" android:layout_columnWeight="1"/>
 
                 </GridLayout>
             </androidx.cardview.widget.CardView>
@@ -113,30 +113,30 @@
                 android:text="Travel &amp; Others"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="14sp"
+                android:textAllCaps="true"
+                android:letterSpacing="0.1"
                 android:layout_marginBottom="12dp"
-                android:shadowColor="#40000000"
-                android:shadowRadius="2"/>
+                android:alpha="0.8"/>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="#20FFFFFF"
+                app:cardBackgroundColor="@color/glass_white"
                 android:layout_marginBottom="40dp">
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:columnCount="4"
-                    android:paddingVertical="12dp"
-                    android:paddingHorizontal="4dp">
+                    android:paddingVertical="8dp">
 
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcFlights" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcBus" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcTrains" />
-                    <include layout="@layout/item_pp_service" android:id="@+id/svcHotels" />
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcFlights" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcBus" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcTrains" android:layout_width="0dp" android:layout_columnWeight="1"/>
+                    <include layout="@layout/item_pp_service" android:id="@+id/svcHotels" android:layout_width="0dp" android:layout_columnWeight="1"/>
 
                 </GridLayout>
             </androidx.cardview.widget.CardView>

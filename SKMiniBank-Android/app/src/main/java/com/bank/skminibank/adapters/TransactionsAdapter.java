@@ -68,7 +68,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
             holder.ivIcon.setColorFilter(Color.parseColor("#004C8F"));
         }
 
-        if (item.getBalanceAfter() > 0) {
+        if (item.getBalanceAfter() >= 0) {
             holder.tvBalanceAfter.setVisibility(View.VISIBLE);
             holder.tvBalanceAfter.setText(String.format(Locale.getDefault(), "Bal: ₹ %.2f", item.getBalanceAfter()));
         } else {

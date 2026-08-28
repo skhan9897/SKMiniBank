@@ -205,8 +205,63 @@ public class ServiceRequestDAO {
         return null;
     }
 
-    public ServiceRequest getLatestATMRequest(int customerId) {
-        return getLatestRequestByType(customerId, "ATM_CARD");
+    public boolean updateRequestStatus(int requestId, String status, String remarks, String approvedBy) {
+        String sql = "UPDATE service_request SET status=?, remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, remarks);
+            ps.setString(3, approvedBy);
+            ps.setInt(4, requestId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean disburseLoan(int requestId, String accountNumber, double amount, String remarks, String adminName) {
+        Connection con = null;
+        try {
+            con = DBConnection.getConnection();
+            con.setAutoCommit(false);
+
+            // 1. Update Request Status
+            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=?, delivered_date=NOW() WHERE request_id=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
+                ps.setString(1, remarks);
+                ps.setString(2, adminName);
+                ps.setInt(3, requestId);
+                ps.executeUpdate();
+            }
+
+            // 2. Update Customer Balance
+            String sqlBal = "UPDATE customer SET balance = balance + ? WHERE account_number=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlBal)) {
+                ps.setDouble(1, amount);
+                ps.setString(2, accountNumber);
+                ps.executeUpdate();
+            }
+
+            // 3. Log Transaction
+            String sqlTxn = "INSERT INTO transactions(account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status) " +
+                            "SELECT account_number, full_name, 'LOAN_DISBURSED', ?, balance, ?, NOW(), 'SUCCESS' FROM customer WHERE account_number=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlTxn)) {
+                ps.setDouble(1, amount);
+                ps.setString(2, "Loan Amount Disbursed from SK Mini Bank - Ref: #" + requestId);
+                ps.setString(3, accountNumber);
+                ps.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+        } catch (Exception e) {
+            if (con != null) try { con.rollback(); } catch (Exception ignored) {}
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (con != null) try { con.close(); } catch (Exception ignored) {}
+        }
     }
 
     private ServiceRequest mapRow(ResultSet rs) {

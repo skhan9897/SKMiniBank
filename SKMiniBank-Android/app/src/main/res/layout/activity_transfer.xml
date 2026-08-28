@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/rgb_wave_anim">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#40000000"
+        android:background="@android:color/transparent"
         app:title="Fund Transfer"
         app:titleTextColor="@color/white"
         app:navigationIcon="?attr/homeAsUpIndicator"
@@ -45,7 +45,7 @@
                 android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:cardBackgroundColor="#20FFFFFF">
+                app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="A/C: ---"
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
                         android:textSize="16sp"/>
 
@@ -68,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Available: ₹ 0.00"
-                        android:textColor="@color/text_dark_secondary"
+                        android:textColor="#B3FFFFFF"
                         android:textSize="13sp"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -89,7 +89,7 @@
                 android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
-                app:cardBackgroundColor="#20FFFFFF">
+                app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,22 +98,19 @@
                     android:padding="20dp">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/formInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Payee Account Number"
                         app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-                        app:startIconTint="@color/primary_blue"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue"
-                        android:textColorHint="@color/text_dark_secondary">
+                        app:startIconTint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etToAccount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:textColor="@color/text_dark_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
@@ -123,7 +120,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:text="Verify Payee"
-                        android:textColor="@color/primary_blue"
+                        android:textColor="@color/premium_gold"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -133,25 +130,22 @@
                         android:layout_marginTop="-8dp"
                         android:layout_marginBottom="16dp"
                         android:padding="12dp"
-                        android:background="#1000B0FF"
-                        android:textColor="@color/primary_blue"
+                        android:background="#22FFFFFF"
+                        android:textColor="@color/premium_gold"
                         android:textStyle="bold"
                         android:textSize="14sp"
                         android:gravity="center"
                         android:visibility="gone"/>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/formInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Amount"
                         app:startIconDrawable="@android:drawable/ic_menu_save"
-                        app:startIconTint="@color/primary_blue"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue"
-                        android:textColorHint="@color/text_dark_secondary"
+                        app:startIconTint="#80FFFFFF"
                         app:prefixText="₹ "
-                        app:prefixTextColor="@color/text_dark_primary">
+                        app:prefixTextColor="@color/white">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAmount"
@@ -160,42 +154,36 @@
                             android:inputType="numberDecimal"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="@color/text_dark_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/formInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:hint="Description / Remarks"
                         app:startIconDrawable="@android:drawable/ic_menu_edit"
-                        app:startIconTint="@color/primary_blue"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue"
-                        android:textColorHint="@color/text_dark_secondary">
+                        app:startIconTint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="text"
-                            android:textColor="@color/text_dark_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        style="@style/formInput"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:hint="4-Digit Transaction PIN"
                         app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                        app:startIconTint="@color/primary_blue"
+                        app:startIconTint="#80FFFFFF"
                         app:passwordToggleEnabled="true"
-                        app:passwordToggleTint="@color/primary_blue"
-                        app:boxStrokeColor="@color/primary_blue"
-                        app:hintTextColor="@color/primary_blue"
-                        android:textColorHint="@color/text_dark_secondary">
+                        app:passwordToggleTint="#80FFFFFF">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPin"
@@ -207,7 +195,7 @@
                             android:gravity="center"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:textColor="@color/text_dark_primary"/>
+                            android:textColor="@color/white"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
@@ -216,11 +204,11 @@
                         android:layout_height="60dp"
                         android:layout_marginTop="32dp"
                         android:text="PROCEED TO TRANSFER"
-                        android:backgroundTint="@color/primary_blue"
-                        android:textColor="@color/white"
+                        android:backgroundTint="@color/premium_gold"
+                        android:textColor="@color/primary_blue"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        app:cornerRadius="12dp"
+                        app:cornerRadius="15dp"
                         android:elevation="4dp"/>
 
                 </LinearLayout>

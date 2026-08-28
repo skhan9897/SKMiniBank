@@ -105,15 +105,25 @@ public class LoanActivity extends AppCompatActivity {
 
         tvStatusType.setText(res.getLoanType());
         tvStatusAmount.setText(String.format(Locale.getDefault(), "₹ %.2f", res.getLoanAmount()));
-        tvStatusValue.setText(res.getStatus().toUpperCase());
+
+        String status = res.getStatus();
+        tvStatusValue.setText(status.toUpperCase());
         tvStatusDate.setText("Applied on: " + res.getRequestDate());
-        tvStatusRemarks.setText("Remarks: " + (res.getRemarks() != null ? res.getRemarks() : "Under verification"));
+        tvStatusRemarks.setText("Remarks: " + (res.getRemarks() != null ? res.getRemarks() : "Processing..."));
 
         // Status Styling
-        if ("APPROVED".equalsIgnoreCase(res.getStatus())) {
+        if ("APPROVED".equalsIgnoreCase(status)) {
             tvStatusValue.setBackgroundResource(R.drawable.badge_approved);
             tvStatusValue.setTextColor(Color.parseColor("#2E7D32"));
-        } else if ("REJECTED".equalsIgnoreCase(res.getStatus())) {
+        } else if ("DISBURSED".equalsIgnoreCase(status)) {
+            tvStatusValue.setText("AMOUNT DISBURSED ✅");
+            tvStatusValue.setBackgroundResource(R.drawable.badge_approved);
+            tvStatusValue.setTextColor(Color.parseColor("#1565C0"));
+        } else if ("DOC_VERIFICATION".equalsIgnoreCase(status)) {
+            tvStatusValue.setText("DOC VERIFICATION IN PROCESS 📄");
+            tvStatusValue.setBackgroundResource(R.drawable.badge_pending);
+            tvStatusValue.setTextColor(Color.parseColor("#0288D1"));
+        } else if ("REJECTED".equalsIgnoreCase(status)) {
             tvStatusValue.setBackgroundResource(R.drawable.badge_rejected);
             tvStatusValue.setTextColor(Color.parseColor("#C62828"));
         } else {

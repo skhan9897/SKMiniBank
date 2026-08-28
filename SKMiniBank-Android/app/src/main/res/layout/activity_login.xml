@@ -4,16 +4,8 @@
     android:id="@+id/loginRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/premium_background">
+    android:background="@drawable/bg_premium_gradient">
 
-    <!-- Premium Waves Background -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/svg_waves"
-        android:alpha="0.4" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -42,24 +34,35 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/sk_logo"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:src="@drawable/ic_bank_logo"
+                        android:layout_marginBottom="20dp"
+                        android:contentDescription="SK Logo"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SK MINI BANK"
+                        android:text="SK MINI"
                         android:textColor="@color/white"
-                        android:textSize="26sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Secure Access Portal"
+                        android:text="PAYMENT BANK"
+                        android:textColor="@color/premium_gold"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.3"
+                        android:layout_marginBottom="24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SECURE ACCESS PORTAL"
                         android:textColor="#99FFFFFF"
                         android:textSize="12sp"
                         android:textAllCaps="true"

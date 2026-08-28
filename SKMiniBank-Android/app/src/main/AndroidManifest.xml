@@ -13,9 +13,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/sk_logo"
+        android:icon="@drawable/ic_bank_logo"
         android:label="SK Mini Bank"
-        android:roundIcon="@drawable/sk_logo"
+        android:roundIcon="@drawable/ic_bank_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SKMiniBank"
         android:usesCleartextTraffic="true"
@@ -97,7 +97,7 @@
             android:name=".activities.LoanSplashActivity"
             android:exported="true"
             android:label="SK Loan"
-            android:icon="@drawable/sk_logo">
+            android:icon="@drawable/ic_bank_logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -109,7 +109,7 @@
             android:name=".activities.AdminSplashActivity"
             android:exported="true"
             android:label="SK Admin"
-            android:icon="@drawable/sk_logo">
+            android:icon="@drawable/ic_bank_logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

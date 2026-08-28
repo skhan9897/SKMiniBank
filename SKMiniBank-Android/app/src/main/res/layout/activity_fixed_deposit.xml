@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/rgb_wave_anim">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

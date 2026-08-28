@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/rgb_wave_anim">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#40000000"
+        android:background="@android:color/transparent"
         app:title="My QR Code"
         app:titleTextColor="@color/white"
         app:navigationIcon="?attr/homeAsUpIndicator"
@@ -33,9 +33,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:cardCornerRadius="24dp"
+                app:cardCornerRadius="30dp"
                 app:cardElevation="12dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -50,22 +50,16 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:layout_marginBottom="24dp"
-                        android:background="#10000000"
                         android:paddingHorizontal="16dp"
-                        android:paddingVertical="8dp"
-                        android:backgroundTint="#0A000000">
-                        <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
-                            android:src="@drawable/sk_logo"/>
+                        android:paddingVertical="8dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:text="SK Mini Payment Bank"
-                            android:textColor="@color/primary_blue"
+                            android:text="SK MINI PAYMENT BANK"
+                            android:textColor="@color/premium_gold"
                             android:textStyle="bold"
-                            android:textSize="14sp"/>
+                            android:textSize="16sp"
+                            android:letterSpacing="0.1"/>
                     </LinearLayout>
 
                     <androidx.cardview.widget.CardView
@@ -89,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="UPI ID: loading..."
-                        android:textColor="@color/text_dark_primary"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
                         android:textSize="16sp"
                         android:letterSpacing="0.05"/>
@@ -100,13 +94,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="User Name"
-                        android:textColor="@color/text_dark_secondary"
+                        android:textColor="#B3FFFFFF"
                         android:textSize="14sp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/divider_light"
+                        android:background="#20FFFFFF"
                         android:layout_marginTop="32dp"
                         android:layout_marginBottom="24dp"/>
 
@@ -123,10 +117,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="SAVE IMAGE"
-                            android:textColor="@color/primary_blue"
+                            android:textColor="@color/premium_gold"
                             android:textStyle="bold"
                             app:icon="@android:drawable/ic_menu_save"
-                            app:iconTint="@color/primary_blue"/>
+                            app:iconTint="@color/premium_gold"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnShare"
@@ -135,10 +129,10 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="SHARE QR"
-                            android:textColor="@color/primary_blue"
+                            android:textColor="@color/premium_gold"
                             android:textStyle="bold"
                             app:icon="@android:drawable/ic_menu_share"
-                            app:iconTint="@color/primary_blue"/>
+                            app:iconTint="@color/premium_gold"/>
 
                     </LinearLayout>
 

@@ -147,34 +147,39 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     private void fetchTransactions() {
-        swipeRefresh.setRefreshing(true);
+        if (swipeRefresh != null) swipeRefresh.setRefreshing(true);
         String accountNumber = sessionManager.getAccountNumber();
 
         if (accountNumber == null) {
-            swipeRefresh.setRefreshing(false);
+            if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             return;
         }
 
-        ApiClient.getService().getTransactions(accountNumber).enqueue(new Callback<TransactionResponse>() {
+        // Clean account number (remove any spaces)
+        String cleanAcc = accountNumber.replaceAll("\\s+", "");
+
+        ApiClient.getService().getTransactions(cleanAcc).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
-                swipeRefresh.setRefreshing(false);
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
                     if (txns != null && !txns.isEmpty()) {
                         saveTransactionsToLocal(txns);
+                    } else {
+                        // If API returns empty, but local has data, just keep local
+                        loadTransactionsFromLocal();
                     }
                 } else {
-                    // Fallback to local if server fails
                     loadTransactionsFromLocal();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
-                swipeRefresh.setRefreshing(false);
+                if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 loadTransactionsFromLocal();
-                Toast.makeText(TransactionsActivity.this, "Network Error - Showing Saved History", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TransactionsActivity.this, "Server Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

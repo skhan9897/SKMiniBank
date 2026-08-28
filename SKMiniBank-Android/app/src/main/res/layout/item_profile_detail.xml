@@ -11,7 +11,7 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="Label"
-        android:textColor="@color/text_dark_secondary"
+        android:textColor="#B3FFFFFF"
         android:textSize="13sp" />
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Value"
-        android:textColor="@color/text_dark_primary"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         android:gravity="end" />

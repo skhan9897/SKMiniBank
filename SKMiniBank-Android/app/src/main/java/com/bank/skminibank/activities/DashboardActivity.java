@@ -1,7 +1,6 @@
 package com.bank.skminibank.activities;
 
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,7 +92,6 @@ public class DashboardActivity extends AppCompatActivity {
         tvAccNo = findViewById(R.id.tvAccNo);
         btnToggleBalance = findViewById(R.id.btnToggleBalance);
 
-        startWaveAnimation();
         setupTTS();
         setupServiceGrid();
         setupBottomNav();
@@ -126,15 +124,25 @@ public class DashboardActivity extends AppCompatActivity {
                 updateBalanceVisibility();
             });
         }
-    }
 
-    private void startWaveAnimation() {
-        View root = findViewById(R.id.mainDashboardRoot);
-        if (root != null && root.getBackground() instanceof AnimationDrawable) {
-            AnimationDrawable animationDrawable = (AnimationDrawable) root.getBackground();
-            animationDrawable.setEnterFadeDuration(2000);
-            animationDrawable.setExitFadeDuration(4000);
-            animationDrawable.start();
+        View fabScan = findViewById(R.id.fabScan);
+        if (fabScan != null) {
+            fabScan.setOnClickListener(v -> startScanner());
+        }
+
+        View btnHeaderScan = findViewById(R.id.btnHeaderScan);
+        if (btnHeaderScan != null) {
+            btnHeaderScan.setOnClickListener(v -> startScanner());
+        }
+
+        View searchContainer = findViewById(R.id.searchContainer);
+        if (searchContainer != null) {
+            searchContainer.setOnClickListener(v -> startActivity(new Intent(this, AllServicesActivity.class)));
+        }
+
+        View ivNotifications = findViewById(R.id.ivNotifications);
+        if (ivNotifications != null) {
+            ivNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationHistoryActivity.class)));
         }
     }
 
@@ -242,7 +250,10 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void fetchRecentTransactions(String accNo) {
-        ApiClient.getService().getTransactions(accNo).enqueue(new Callback<TransactionResponse>() {
+        if (accNo == null) return;
+        String cleanAcc = accNo.replaceAll("\\s+", "");
+
+        ApiClient.getService().getTransactions(cleanAcc).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -268,8 +279,8 @@ public class DashboardActivity extends AppCompatActivity {
             List<TransactionEntity> entities = db.transactionDao().getAllTransactions(acc);
             runOnUiThread(() -> {
                 transactionList.clear();
-                // Get only last 5 from local
-                for (int i = 0; i < Math.min(entities.size(), 5); i++) {
+                // Get last 10 from local to show "all recent"
+                for (int i = 0; i < Math.min(entities.size(), 10); i++) {
                     TransactionEntity e = entities.get(i);
                     transactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
                 }

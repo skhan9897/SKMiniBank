@@ -10,7 +10,9 @@
         android:title="Search" />
     <item
         android:id="@+id/nav_placeholder"
-        android:title="" />
+        android:icon="@null"
+        android:title=""
+        android:enabled="false" />
     <item
         android:id="@+id/nav_alerts"
         android:icon="@android:drawable/ic_popup_reminder"
