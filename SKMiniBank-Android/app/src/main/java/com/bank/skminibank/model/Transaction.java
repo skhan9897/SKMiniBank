@@ -3,13 +3,13 @@ package com.bank.skminibank.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Transaction {
-    @SerializedName(value = "transactionId", alternate = {"id", "txnId", "referenceId"})
+    @SerializedName(value = "transactionId", alternate = {"id", "txnId", "referenceId", "transaction_id", "txn_id", "ref_id"})
     private String transactionId;
 
-    @SerializedName(value = "type", alternate = {"transactionType", "txnType", "operation"})
+    @SerializedName(value = "type", alternate = {"transactionType", "txnType", "operation", "txn_type"})
     private String type; // CREDIT or DEBIT
 
-    @SerializedName(value = "amount", alternate = {"txnAmount", "val", "amt"})
+    @SerializedName(value = "amount", alternate = {"txnAmount", "val", "amt", "txn_amount"})
     private double amount;
 
     @SerializedName(value = "description", alternate = {"remarks", "desc", "name", "transaction_desc", "details", "note"})

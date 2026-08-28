@@ -46,7 +46,7 @@ public interface ApiService {
             @Field("customerId") int customerId
     );
 
-    @POST("api/myRequests")
+    @GET("api/myRequests")
     Call<MyRequestsResponse> getMyRequests(
             @Query("customerId") int customerId
     );
@@ -332,6 +332,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("api/fixed-deposit/create")
     Call<com.bank.skminibank.model.GenericResponse> createFixedDeposit(
+            @Field("customerId") int customerId,
             @Field("accountNumber") String accountNumber,
             @Field("amount") double amount,
             @Field("duration") int duration

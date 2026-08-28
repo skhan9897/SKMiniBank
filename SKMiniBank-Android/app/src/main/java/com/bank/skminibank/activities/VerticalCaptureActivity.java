@@ -29,6 +29,9 @@ import java.util.Map;
 
 public class VerticalCaptureActivity extends CaptureActivity {
 
+    private boolean isFlashOn = false;
+    private DecoratedBarcodeView barcodeView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,12 +42,25 @@ public class VerticalCaptureActivity extends CaptureActivity {
         });
 
         findViewById(R.id.btnBackScanner).setOnClickListener(v -> finish());
+
+        findViewById(R.id.btnFlashlight).setOnClickListener(v -> toggleFlash());
+    }
+
+    private void toggleFlash() {
+        if (isFlashOn) {
+            barcodeView.setTorchOff();
+            isFlashOn = false;
+        } else {
+            barcodeView.setTorchOn();
+            isFlashOn = true;
+        }
     }
 
     @Override
     protected DecoratedBarcodeView initializeContent() {
         setContentView(R.layout.activity_custom_scanner);
-        return findViewById(R.id.zxing_barcode_scanner);
+        barcodeView = findViewById(R.id.zxing_barcode_scanner);
+        return barcodeView;
     }
 
     @Override

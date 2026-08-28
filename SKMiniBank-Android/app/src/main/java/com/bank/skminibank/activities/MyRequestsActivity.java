@@ -85,11 +85,21 @@ public class MyRequestsActivity extends AppCompatActivity {
                 swipeRefresh.setRefreshing(false);
                 if (response.isSuccessful() && response.body() != null) {
                     MyRequestsResponse res = response.body();
-                    if ("success".equalsIgnoreCase(res.getStatus())) {
+                    if (res.isSuccess()) {
                         requestList.clear();
-                        requestList.addAll(res.getRequests());
+                        if (res.getRequests() != null) {
+                            requestList.addAll(res.getRequests());
+                        }
                         adapter.notifyDataSetChanged();
+                        
+                        if (requestList.isEmpty()) {
+                            Toast.makeText(MyRequestsActivity.this, "No requests found", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(MyRequestsActivity.this, "Failed to load requests", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(MyRequestsActivity.this, "Server error", Toast.LENGTH_SHORT).show();
                 }
             }
 

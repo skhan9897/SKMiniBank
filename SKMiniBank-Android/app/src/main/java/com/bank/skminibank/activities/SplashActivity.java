@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bank.skminibank.R;
+import com.bank.skminibank.utils.SessionManager;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -40,10 +41,17 @@ public class SplashActivity extends AppCompatActivity {
         progressAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
         progressAnimator.start();
 
-        // 3. Transition to Login
+        // 3. Transition to Login or Dashboard
         new Handler().postDelayed(() -> {
             if (!isFinishing()) {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                SessionManager sessionManager = new SessionManager(SplashActivity.this);
+                Intent intent;
+                if (sessionManager.isLoggedIn()) {
+                    intent = new Intent(SplashActivity.this, DashboardActivity.class);
+                } else {
+                    intent = new Intent(SplashActivity.this, LoginActivity.class);
+                }
+                startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
             }

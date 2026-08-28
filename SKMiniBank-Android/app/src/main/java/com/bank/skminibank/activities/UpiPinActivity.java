@@ -84,14 +84,26 @@ public class UpiPinActivity extends AppCompatActivity {
         if (sessionManager.isBiometricEnabled()) {
             showBiometricPrompt();
         } else {
-            Toast.makeText(this, "Please enter your PIN and click CONFIRM to enable Fingerprint Pay", Toast.LENGTH_LONG).show();
+            // Explicit Setup Flow
+            showBiometricSetupDialog();
         }
+    }
+
+    private void showBiometricSetupDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Enable Fingerprint")
+                .setMessage("Would you like to use your fingerprint for faster and secure payments? You will need to enter your PIN once to set this up.")
+                .setPositiveButton("Setup Now", (dialog, which) -> {
+                    Toast.makeText(this, "Enter your 4-digit PIN and click CONFIRM to link fingerprint", Toast.LENGTH_LONG).show();
+                })
+                .setNegativeButton("Maybe Later", null)
+                .show();
     }
 
     private void showBiometricPrompt() {
         BiometricManager biometricManager = BiometricManager.from(this);
         if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
-            Toast.makeText(this, "Fingerprint not available on this device", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fingerprint not available or not set up on this device", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -100,34 +112,82 @@ public class UpiPinActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                // After biometric success, we pass the stored PIN
                 String storedPin = sessionManager.getUpiPin();
                 if (storedPin != null && !storedPin.isEmpty()) {
                     handlePinSuccess(storedPin);
                 } else {
-                    // This case should ideally not happen if biometric is enabled
-                    Toast.makeText(UpiPinActivity.this, "No PIN found. Please set a PIN first.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpiPinActivity.this, "Security error. Please use PIN to reset Fingerprint.", Toast.LENGTH_SHORT).show();
+                    sessionManager.setBiometricEnabled(false);
+                    updateBiometricUI();
+                }
+            }
+            
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                if (errorCode != BiometricPrompt.ERROR_USER_CANCELED && errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                    Toast.makeText(UpiPinActivity.this, "Authentication error: " + errString, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Secure Payment")
-                .setSubtitle("Authenticate using fingerprint")
-                .setNegativeButtonText("Use PIN Instead")
+                .setTitle("Biometric Login")
+                .setSubtitle("Use your fingerprint to authenticate")
+                .setNegativeButtonText("Use PIN")
                 .build();
 
         biometricPrompt.authenticate(promptInfo);
     }
 
     private void handlePinSuccess(String pin) {
-        // If it was the first time enabling, save the PIN
+        // If it was the first time enabling, and the user just typed this PIN
         if (!sessionManager.isBiometricEnabled() && etPin.getText().toString().equals(pin)) {
-            sessionManager.setUpiPin(pin);
-            sessionManager.setBiometricEnabled(true);
-            Toast.makeText(this, "Fingerprint Pay Enabled Successfully!", Toast.LENGTH_SHORT).show();
+            // We should ask to confirm with fingerprint to finish setup
+            setupFingerprintWithPin(pin);
+            return;
         }
 
+        processFinalAction(pin);
+    }
+
+    private void setupFingerprintWithPin(String pin) {
+        BiometricManager biometricManager = BiometricManager.from(this);
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
+            // Cannot use biometric, just proceed
+            processFinalAction(pin);
+            return;
+        }
+
+        Executor executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                sessionManager.setUpiPin(pin);
+                sessionManager.setBiometricEnabled(true);
+                Toast.makeText(UpiPinActivity.this, "Fingerprint Pay Enabled Successfully!", Toast.LENGTH_SHORT).show();
+                processFinalAction(pin);
+            }
+
+            @Override
+            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                // Setup failed or cancelled, just proceed with PIN this time
+                processFinalAction(pin);
+            }
+        });
+
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Link Fingerprint")
+                .setSubtitle("Confirm fingerprint to enable biometric payments")
+                .setNegativeButtonText("Skip for now")
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
+    }
+
+    private void processFinalAction(String pin) {
         if ("view_balance".equals(purpose)) {
             Intent data = new Intent();
             data.putExtra("auth_success", true);
@@ -136,10 +196,9 @@ public class UpiPinActivity extends AppCompatActivity {
         } else if ("balance".equals(purpose)) {
             fetchAndShowBalance();
         } else {
-            // It's a payment action from UpiPaymentActivity or TransferActivity
             Intent data = new Intent();
             data.putExtra("verified", true);
-            data.putExtra("pin", pin); // Pass the verified PIN back
+            data.putExtra("pin", pin);
             setResult(RESULT_OK, data);
             finish();
         }

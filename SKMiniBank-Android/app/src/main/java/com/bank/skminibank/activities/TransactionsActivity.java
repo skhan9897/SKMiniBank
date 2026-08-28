@@ -80,9 +80,10 @@ public class TransactionsActivity extends AppCompatActivity {
     private void loadTransactionsFromLocal() {
         String acc = sessionManager.getAccountNumber();
         if (acc == null) return;
+        String cleanAcc = acc.replaceAll("\\s+", "");
         
         new Thread(() -> {
-            List<TransactionEntity> entities = db.transactionDao().getAllTransactions(acc);
+            List<TransactionEntity> entities = db.transactionDao().getAllTransactions(cleanAcc);
             runOnUiThread(() -> {
                 transactionList.clear();
                 for (TransactionEntity e : entities) {
@@ -99,6 +100,7 @@ public class TransactionsActivity extends AppCompatActivity {
     private void saveTransactionsToLocal(List<Transaction> txns) {
         String acc = sessionManager.getAccountNumber();
         if (acc == null) return;
+        String cleanAcc = acc.replaceAll("\\s+", "");
         
         new Thread(() -> {
             for (Transaction t : txns) {
@@ -107,9 +109,9 @@ public class TransactionsActivity extends AppCompatActivity {
                     tid = "TXN_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000);
                 }
                 
-                if (!db.transactionDao().isTransactionExists(acc, tid)) {
+                if (!db.transactionDao().isTransactionExists(cleanAcc, tid)) {
                     db.transactionDao().insertTransaction(new TransactionEntity(
-                            acc, tid, t.getType(), t.getAmount(), t.getDescription(), t.getDate(), t.getBalanceAfter()
+                            cleanAcc, tid, t.getType(), t.getAmount(), t.getDescription(), t.getDate(), t.getBalanceAfter()
                     ));
                 }
             }

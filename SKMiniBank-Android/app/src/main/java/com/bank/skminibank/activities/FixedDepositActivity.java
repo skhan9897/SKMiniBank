@@ -73,8 +73,9 @@ public class FixedDepositActivity extends AppCompatActivity {
 
         int duration = Integer.parseInt(durationStr);
         String accountNumber = sessionManager.getAccountNumber();
+        int customerId = sessionManager.getCustomerId();
 
-        if (accountNumber == null || accountNumber.isEmpty()) {
+        if (accountNumber == null || accountNumber.isEmpty() || customerId == -1) {
             Toast.makeText(this, "Session Expired. Please Login Again.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -82,7 +83,7 @@ public class FixedDepositActivity extends AppCompatActivity {
         progressDialog.show();
         btnSubmit.setEnabled(false);
 
-        ApiClient.getService().createFixedDeposit(accountNumber, amount, duration).enqueue(new Callback<GenericResponse>() {
+        ApiClient.getService().createFixedDeposit(customerId, accountNumber, amount, duration).enqueue(new Callback<GenericResponse>() {
             @Override
             public void onResponse(@NonNull Call<GenericResponse> call, @NonNull Response<GenericResponse> response) {
                 progressDialog.dismiss();

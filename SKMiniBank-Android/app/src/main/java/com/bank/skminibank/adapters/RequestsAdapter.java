@@ -34,27 +34,32 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ServiceRequest item = list.get(position);
         holder.tvType.setText(item.getRequestType());
-        holder.tvStatus.setText(item.getStatus().toUpperCase());
+        
+        String status = item.getStatus();
+        if (status == null) status = "PENDING";
+        
+        holder.tvStatus.setText(status.toUpperCase());
         holder.tvDate.setText(item.getRequestDate());
         holder.tvId.setText("ID: #" + item.getRequestId());
         
         // Modern Badge Styling
-        if ("PENDING".equalsIgnoreCase(item.getStatus())) {
+        if ("PENDING".equalsIgnoreCase(status)) {
             holder.tvStatus.setBackgroundResource(R.drawable.badge_pending);
-            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#E65100")); // Dark Orange
-        } else if ("APPROVED".equalsIgnoreCase(item.getStatus()) || "COMPLETED".equalsIgnoreCase(item.getStatus())) {
+            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#E65100")); 
+        } else if ("APPROVED".equalsIgnoreCase(status) || "COMPLETED".equalsIgnoreCase(status)) {
             holder.tvStatus.setBackgroundResource(R.drawable.badge_approved);
-            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#2E7D32")); // Dark Green
+            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#2E7D32"));
         } else {
             holder.tvStatus.setBackgroundResource(R.drawable.badge_rejected);
-            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#C62828")); // Dark Red
+            holder.tvStatus.setTextColor(android.graphics.Color.parseColor("#C62828"));
         }
 
         // Handle Click for Details
+        String finalStatus = status;
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), RequestDetailActivity.class);
             intent.putExtra("type", item.getRequestType());
-            intent.putExtra("status", item.getStatus());
+            intent.putExtra("status", finalStatus);
             intent.putExtra("id", item.getRequestId());
             intent.putExtra("date", item.getRequestDate());
             intent.putExtra("acc", item.getAccountNumber());

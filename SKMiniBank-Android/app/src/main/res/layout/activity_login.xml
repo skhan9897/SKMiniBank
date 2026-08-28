@@ -152,6 +152,33 @@
                             android:backgroundTint="@color/web_accent_blue"
                             android:elevation="8dp" />
 
+                        <LinearLayout
+                            android:id="@+id/btnBiometricLogin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            android:clickable="true"
+                            android:focusable="true">
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@android:drawable/ic_lock_idle_lock"
+                                android:contentDescription="Biometric Login"
+                                app:tint="@color/premium_gold" />
+                            <TextView
+                                android:id="@+id/tvBiometricLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Login with Fingerprint"
+                                android:textColor="@color/white"
+                                android:textSize="11sp"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+
                         <TextView
                             android:id="@+id/btnForgotPassword"
                             android:layout_width="wrap_content"

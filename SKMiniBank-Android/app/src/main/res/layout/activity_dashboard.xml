@@ -379,11 +379,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="12dp"
         app:fabSize="normal"
         android:src="@android:drawable/ic_menu_camera"
         app:backgroundTint="@color/premium_gold"
         app:tint="@color/primary_blue"
-        android:elevation="12dp"
+        app:elevation="8dp"
+        app:borderWidth="4dp"
+        app:maxImageSize="32dp"
         android:contentDescription="Scan and Pay" />
 </RelativeLayout>
