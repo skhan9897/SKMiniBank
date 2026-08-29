@@ -244,32 +244,34 @@ public class ServiceRequestDAO {
         try {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
+            String cleanAcc = accountNumber.trim().replaceAll("\\s+", "");
 
-            // 1. Update Request Status (Be very specific with table name and columns)
-            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=? WHERE request_id=?";
+            // 1. Update Request Status
+            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=?, delivered_date=NOW() WHERE request_id=?";
             try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
-                ps.setString(1, remarks);
+                ps.setString(1, "Loan Disbursed: " + remarks);
                 ps.setString(2, adminName);
                 ps.setInt(3, requestId);
                 ps.executeUpdate();
             }
 
-            // 2. Update Customer Balance (Check if balance column name is correct)
-            String sqlBal = "UPDATE customer SET balance = balance + ? WHERE account_number=?";
+            // 2. Update Customer Balance
+            String sqlBal = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
             try (PreparedStatement ps = con.prepareStatement(sqlBal)) {
                 ps.setDouble(1, amount);
-                ps.setString(2, accountNumber.trim());
+                ps.setString(2, cleanAcc);
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
-                    throw new Exception("Account " + accountNumber + " not found in customer table.");
+                    throw new Exception("Account not found: " + cleanAcc);
                 }
             }
 
-            // 3. Log Transaction
+            // 3. Get info for Transaction Log
             double newBalance = 0;
-            String customerName = "Loan Customer";
-            try (PreparedStatement ps = con.prepareStatement("SELECT full_name, balance FROM customer WHERE account_number=?")) {
-                ps.setString(1, accountNumber.trim());
+            String customerName = "Valued Customer";
+            String sqlInfo = "SELECT full_name, balance FROM customer WHERE REPLACE(account_number, ' ', '') = ?";
+            try (PreparedStatement ps = con.prepareStatement(sqlInfo)) {
+                ps.setString(1, cleanAcc);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         customerName = rs.getString("full_name");
@@ -278,22 +280,23 @@ public class ServiceRequestDAO {
                 }
             }
 
+            // 4. Log Transaction - SOURCE: SK MINI BANK
             String sqlTxn = "INSERT INTO transactions(account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status) " +
-                            "VALUES (?, ?, 'LOAN_DISBURSED', ?, ?, ?, NOW(), 'SUCCESS')";
+                            "VALUES (?, ?, 'LOAN_CREDIT', ?, ?, ?, NOW(), 'SUCCESS')";
             try (PreparedStatement ps = con.prepareStatement(sqlTxn)) {
-                ps.setString(1, accountNumber.trim());
+                ps.setString(1, accountNumber);
                 ps.setString(2, customerName);
                 ps.setDouble(3, amount);
                 ps.setDouble(4, newBalance);
-                ps.setString(5, "Loan Disbursed - Ref #" + requestId + " (" + remarks + ")");
+                ps.setString(5, "LOAN DISBURSED - SK MINI BANK | Ref: #" + requestId);
                 ps.executeUpdate();
             }
 
             con.commit();
             return true;
         } catch (Exception e) {
-            System.err.println("CRITICAL: Loan Disbursement Failed for ID " + requestId + ": " + e.getMessage());
-            if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            System.err.println("Loan Disburse Failed: " + e.getMessage());
+            if (con != null) try { con.rollback(); } catch (SQLException ex) {}
             return false;
         } finally {
             if (con != null) try { con.close(); } catch (SQLException ignored) {}

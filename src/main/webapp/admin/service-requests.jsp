@@ -139,11 +139,10 @@ if ("/".equals(ctx)) ctx = "";
                                 <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
                                 <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>
                             <% } else if(status.equals("DOC_VERIFICATION")) { %>
-                                <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
-                                <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>
+                                <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve After Verification</button>
                             <% } else if(status.equals("APPROVED")) { %>
                                 <% if(type.equalsIgnoreCase("LOAN")) { %>
-                                    <button type="submit" name="action" value="DISBURSE" class="btn btn-primary btn-sm w-100">Disburse Funds</button>
+                                    <button type="button" onclick="startLoanDisbursement(this.form)" class="btn btn-primary btn-sm w-100">Disburse Funds</button>
                                 <% } else if(type.toUpperCase().contains("BANKING")) { %>
                                     <button type="submit" name="action" value="ACTIVATE" class="btn btn-primary btn-sm w-100">Activate Now</button>
                                 <% } else if(type.equalsIgnoreCase("ATM_CARD") || type.equalsIgnoreCase("CHEQUE_BOOK")) { %>
@@ -170,6 +169,39 @@ if ("/".equals(ctx)) ctx = "";
     </div>
 </div>
 
+<!-- DISBURSEMENT OVERLAY -->
+<div id="disburseOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(16, 42, 67, 0.95); z-index:9999; color:white; flex-direction:column; align-items:center; justify-content:center;">
+    <div class="spinner-border text-primary mb-4" style="width: 4rem; height: 4rem;" role="status"></div>
+    <h3 class="fw-bold mb-2">Verifying Account & Documents...</h3>
+    <p class="opacity-75" id="disburseStatus">Connecting to secure banking network</p>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function startLoanDisbursement(form) {
+        const amt = form.querySelector('[name="approvedAmount"]').value;
+        if(!amt || amt <= 0) {
+            alert("Please enter a valid Approved Amount first.");
+            return;
+        }
+
+        const overlay = document.getElementById('disburseOverlay');
+        const statusTxt = document.getElementById('disburseStatus');
+        overlay.style.display = 'flex';
+
+        // 3-Second Banking Simulation
+        setTimeout(() => { statusTxt.innerText = "Validation Successful. Transferring Funds..."; }, 1000);
+        setTimeout(() => { statusTxt.innerText = "Updating Customer Passbook..."; }, 2000);
+
+        setTimeout(() => {
+            const actionInput = document.createElement('input');
+            actionInput.type = 'hidden';
+            actionInput.name = 'action';
+            actionInput.value = 'DISBURSE';
+            form.appendChild(actionInput);
+            form.submit();
+        }, 3000);
+    }
+</script>
 </body>
 </html>
