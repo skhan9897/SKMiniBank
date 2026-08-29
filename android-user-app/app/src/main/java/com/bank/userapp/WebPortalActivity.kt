@@ -6,6 +6,7 @@ import android.view.View
 import android.webkit.*
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import com.bank.userapp.R
 import com.google.android.material.appbar.MaterialToolbar
 
 class WebPortalActivity : AppCompatActivity() {

@@ -21,7 +21,7 @@ import retrofit2.Response;
 
 public class MobileBankingActivity extends AppCompatActivity {
 
-    private TextView tvStatus;
+    private TextView tvStatus, tvRemarks;
     private MaterialButton btnEnable;
     private SessionManager sessionManager;
 
@@ -39,6 +39,7 @@ public class MobileBankingActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
         tvStatus = findViewById(R.id.tvMobileStatus);
+        tvRemarks = findViewById(R.id.tvMobileRemarks);
         btnEnable = findViewById(R.id.btnEnableMobile);
 
         btnEnable.setOnClickListener(v -> submitRequest());
@@ -57,13 +58,15 @@ public class MobileBankingActivity extends AppCompatActivity {
                     
                     if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("error")) {
                         tvStatus.setText(status.toUpperCase());
-                        if ("APPROVED".equalsIgnoreCase(status)) {
+                        if (res.getMessage() != null) tvRemarks.setText(res.getMessage());
+
+                        if ("ACTIVATED".equalsIgnoreCase(status) || "APPROVED".equalsIgnoreCase(status)) {
                             tvStatus.setBackgroundResource(R.drawable.badge_approved);
                             btnEnable.setVisibility(View.GONE);
-                        } else if ("PENDING".equalsIgnoreCase(status)) {
+                        } else if ("PENDING".equalsIgnoreCase(status) || "DOC_VERIFICATION".equalsIgnoreCase(status)) {
                             tvStatus.setBackgroundResource(R.drawable.badge_pending);
                             btnEnable.setEnabled(false);
-                            btnEnable.setText("REQUEST PENDING");
+                            btnEnable.setText("REQUEST IN PROCESS");
                         }
                     }
                 }
@@ -71,7 +74,6 @@ public class MobileBankingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<GenericResponse> call, @NonNull Throwable t) {
-                // handle error
             }
         });
     }

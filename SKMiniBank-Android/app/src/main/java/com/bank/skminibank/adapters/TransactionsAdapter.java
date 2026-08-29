@@ -53,8 +53,9 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         holder.tvDate.setText(date);
         
         String amountText;
-        String type = item.getType();
-        if (type != null && type.toUpperCase().contains("CREDIT")) {
+        String type = item.getType() != null ? item.getType().toUpperCase() : "DEBIT";
+        
+        if (type.contains("CREDIT") || type.contains("DEPOSIT") || type.contains("LOAN")) {
             amountText = String.format(Locale.getDefault(), "+ ₹ %.2f", item.getAmount());
             holder.tvAmount.setText(amountText);
             holder.tvAmount.setTextColor(Color.parseColor("#2E7D32")); // Green

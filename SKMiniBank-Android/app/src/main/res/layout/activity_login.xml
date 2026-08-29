@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_premium_gradient">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,62 +18,62 @@
             android:gravity="center"
             android:padding="24dp">
 
+            <!-- Logo Section -->
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_bank_logo"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="SK Logo"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SK MINI BANK"
+                android:textColor="@color/white"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SECURE CUSTOMER LOGIN"
+                android:textColor="@color/premium_gold"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.3"
+                android:layout_marginBottom="32dp" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="40dp"
-                app:cardElevation="25dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="10dp"
                 app:cardBackgroundColor="@color/glass_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="32dp"
-                    android:gravity="center">
+                    android:padding="24dp">
 
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:src="@drawable/ic_bank_logo"
-                        android:layout_marginBottom="20dp"
-                        android:contentDescription="SK Logo"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SK MINI"
-                        android:textColor="@color/white"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="PAYMENT BANK"
-                        android:textColor="@color/premium_gold"
-                        android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.3"
-                        android:layout_marginBottom="24dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SECURE ACCESS PORTAL"
-                        android:textColor="#99FFFFFF"
-                        android:textSize="12sp"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.4"
-                        android:layout_marginBottom="32dp" />
-
-                    <!-- Functional Login Content -->
+                    <!-- Login Form -->
                     <LinearLayout
                         android:id="@+id/layoutLoginForm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="WELCOME BACK"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="24dp"
+                            android:layout_gravity="center"/>
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tilMobile"
@@ -86,13 +85,18 @@
                             app:boxStrokeColor="@color/white"
                             app:hintTextColor="@color/web_accent_blue"
                             app:startIconDrawable="@android:drawable/ic_menu_call"
-                            app:startIconTint="#80FFFFFF">
+                            app:startIconTint="#80FFFFFF"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etMobileNumber"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/white"
-                                android:inputType="phone" />
+                                android:inputType="phone"
+                                android:maxLength="10" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -107,7 +111,11 @@
                             app:boxStrokeColor="@color/white"
                             app:hintTextColor="@color/web_accent_blue"
                             app:startIconDrawable="@android:drawable/ic_dialog_info"
-                            app:startIconTint="#80FFFFFF">
+                            app:startIconTint="#80FFFFFF"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etOtp"
                                 android:layout_width="match_parent"
@@ -131,7 +139,11 @@
                             app:passwordToggleEnabled="true"
                             app:passwordToggleTint="#80FFFFFF"
                             app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                            app:startIconTint="#80FFFFFF">
+                            app:startIconTint="#80FFFFFF"
+                            app:boxCornerRadiusTopStart="12dp"
+                            app:boxCornerRadiusTopEnd="12dp"
+                            app:boxCornerRadiusBottomStart="12dp"
+                            app:boxCornerRadiusBottomEnd="12dp">
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/etPassword"
                                 android:layout_width="match_parent"
@@ -143,15 +155,16 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnLogin"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_marginTop="32dp"
-                            android:text="SEND OTP"
+                            android:layout_height="56dp"
+                            android:layout_marginTop="24dp"
+                            android:text="PROCEED"
                             android:textStyle="bold"
                             android:textSize="16sp"
-                            app:cornerRadius="15dp"
+                            app:cornerRadius="12dp"
                             android:backgroundTint="@color/web_accent_blue"
-                            android:elevation="8dp" />
+                            android:elevation="4dp" />
 
+                        <!-- Biometric Login -->
                         <LinearLayout
                             android:id="@+id/btnBiometricLogin"
                             android:layout_width="wrap_content"
@@ -164,10 +177,9 @@
                             android:clickable="true"
                             android:focusable="true">
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
+                                android:layout_width="44dp"
+                                android:layout_height="44dp"
                                 android:src="@android:drawable/ic_lock_idle_lock"
-                                android:contentDescription="Biometric Login"
                                 app:tint="@color/premium_gold" />
                             <TextView
                                 android:id="@+id/tvBiometricLabel"
@@ -175,7 +187,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Login with Fingerprint"
                                 android:textColor="@color/white"
-                                android:textSize="11sp"
+                                android:textSize="12sp"
                                 android:layout_marginTop="4dp" />
                         </LinearLayout>
 
@@ -187,13 +199,13 @@
                             android:layout_marginTop="20dp"
                             android:text="Forgot Password?"
                             android:textColor="#B3FFFFFF"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:clickable="true"
                             android:focusable="true" />
 
                     </LinearLayout>
 
-                    <!-- Landing Part -->
+                    <!-- Landing (New User) -->
                     <LinearLayout
                         android:id="@+id/layoutLanding"
                         android:layout_width="match_parent"
@@ -205,9 +217,9 @@
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnLandingOpenAccount"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
+                            android:layout_height="56dp"
                             android:text="OPEN NEW ACCOUNT"
-                            app:cornerRadius="15dp"
+                            app:cornerRadius="12dp"
                             android:backgroundTint="@color/premium_gold"
                             android:textColor="@color/primary_blue"
                             android:textStyle="bold" />
@@ -218,28 +230,34 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="ALREADY REGISTERED? LOGIN"
+                            android:text="ALREADY A CUSTOMER? LOGIN"
                             android:textColor="@color/white" />
                     </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/btnOpenAccount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:text="Don't have an account? JOIN NOW"
-                        android:textColor="#B3FFFFFF"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:clickable="true"
-                        android:focusable="true" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/btnOpenAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Don't have an account? JOIN NOW"
+                android:textColor="#B3FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="© 2026 SK MINI BANK | SECURE BANKING"
+                android:textColor="#4DFFFFFF"
+                android:textSize="10sp"
+                android:letterSpacing="0.1"/>
+
         </LinearLayout>
     </ScrollView>
-
-
-
 </RelativeLayout>

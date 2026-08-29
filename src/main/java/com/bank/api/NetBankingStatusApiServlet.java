@@ -28,58 +28,37 @@ public class NetBankingStatusApiServlet extends HttpServlet {
             String customerIdStr = request.getParameter("customerId");
 
             if (customerIdStr == null || customerIdStr.trim().isEmpty()) {
-
-                response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"Customer ID is required\"}");
+                response.getWriter().print("{\"success\":false,\"message\":\"Customer ID is required\"}");
                 return;
             }
 
             int customerId = Integer.parseInt(customerIdStr);
-
             ServiceRequestDAO dao = new ServiceRequestDAO();
-
-            ServiceRequest service =
-                    dao.getLatestRequestByType(customerId, "NET_BANKING");
+            ServiceRequest service = dao.getLatestRequestByType(customerId, "NET_BANKING");
 
             if (service == null) {
-
-                response.getWriter().print(
-                        "{\"success\":false,"
-                        + "\"message\":\"No Net Banking request found\"}");
+                response.getWriter().print("{\"success\":false,\"message\":\"No Net Banking request found\"}");
                 return;
             }
 
-            String requestDate = "";
-
-            if (service.getRequestDate() != null) {
-                requestDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                        .format(service.getRequestDate());
-            }
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String requestDate = (service.getRequestDate() != null) ? sdf.format(service.getRequestDate()) : "";
+            String approvalDate = (service.getApprovalDate() != null) ? sdf.format(service.getApprovalDate()) : "";
 
             String json =
                     "{"
                     + "\"success\":true,"
-                    + "\"message\":\"Net Banking Request Found\","
-                    + "\"requestId\":" + service.getRequestId() + ","
-                    + "\"accountNumber\":\"" + service.getAccountNumber() + "\","
                     + "\"status\":\"" + service.getStatus() + "\","
-                    + "\"requestDate\":\"" + requestDate + "\""
+                    + "\"remarks\":\"" + (service.getRemarks() != null ? service.getRemarks() : "") + "\","
+                    + "\"requestDate\":\"" + requestDate + "\","
+                    + "\"approvalDate\":\"" + approvalDate + "\""
                     + "}";
 
             response.getWriter().print(json);
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            response.getWriter().print(
-                    "{"
-                    + "\"success\":false,"
-                    + "\"message\":\""
-                    + e.getMessage().replace("\"", "\\\"")
-                    + "\""
-                    + "}");
+            response.getWriter().print("{\"success\":false,\"message\":\"" + e.getMessage() + "\"}");
         }
     }
 
@@ -87,7 +66,6 @@ public class NetBankingStatusApiServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
-
         doGet(request, response);
     }
 }

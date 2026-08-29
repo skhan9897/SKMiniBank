@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bank.userapp.R
 
 class LoginActivity : AppCompatActivity() {
 

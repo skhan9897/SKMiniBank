@@ -3,8 +3,10 @@ package com.bank.userapp
 import android.content.Context
 import android.content.SharedPreferences
 
-class UserSession(context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("BankPrefs", Context.MODE_PRIVATE)
+class UserSession(private val context: Context) {
+    private val prefs: SharedPreferences by lazy {
+        context.getSharedPreferences("BankPrefs", Context.MODE_PRIVATE)
+    }
 
     fun setLoggedIn(loggedIn: Boolean) {
         prefs.edit().putBoolean("is_logged_in", loggedIn).apply()
@@ -19,7 +21,7 @@ class UserSession(context: Context) {
     }
 
     fun getCustomerId(): Int {
-        return prefs.getInt("customer_id", 1) // Default to 1 for demo
+        return prefs.getInt("customer_id", 1)
     }
 
     fun setCustomerId(id: Int) {
@@ -36,6 +38,7 @@ class UserSession(context: Context) {
 
     fun updateBalance(amount: Double) {
         val current = getBalance()
-        prefs.edit().putFloat("balance", (current - amount).toFloat()).apply()
+        val newBalance = (current - amount).toFloat()
+        prefs.edit().putFloat("balance", newBalance).apply()
     }
 }

@@ -291,7 +291,7 @@ public class ServiceRequestDAO {
             e.printStackTrace();
             return false;
         } finally {
-            if (con != null) try { con.close(); } catch (Exception ignored) { e.printStackTrace(); }
+            if (con != null) try { con.close(); } catch (Exception ignored) {}
         }
     }
 

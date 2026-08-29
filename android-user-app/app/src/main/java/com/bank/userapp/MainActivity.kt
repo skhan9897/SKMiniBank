@@ -2,6 +2,7 @@ package com.bank.userapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -25,15 +26,15 @@ class MainActivity : AppCompatActivity() {
         
         drawerLayout = findViewById(R.id.drawerLayout)
         val toolbar = findViewById<View>(R.id.toolbar)
-        tvBalance = findViewById(R.id.tvBalance)
-        tvKycStatus = findViewById(R.id.tvKycStatus)
+        tvBalance = findViewById<TextView>(R.id.tvBalance)
+        tvKycStatus = findViewById<TextView>(R.id.tvKycStatus)
 
-        toolbar?.setOnClickListener {
+        toolbar.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
 
         val navView = findViewById<NavigationView>(R.id.navigationView)
-        navView.setNavigationItemSelectedListener { item ->
+        navView.setNavigationItemSelectedListener { item: MenuItem ->
             when (item.itemId) {
                 R.id.nav_logout -> {
                     logout()
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<View>(R.id.nav_link_logout)?.setOnClickListener { logout() }
         
         // KYC Portal Link from status bar
-        findViewById<View>(R.id.tvKycStatus)?.setOnClickListener { 
+        tvKycStatus.setOnClickListener {
             val intent = Intent(this, WebPortalActivity::class.java)
             intent.putExtra("url", "https://skminibank.onrender.com/admin/kyc.jsp")
             startActivity(intent)
@@ -179,13 +180,13 @@ class MainActivity : AppCompatActivity() {
         
         if (status.equals("VERIFIED", ignoreCase = true)) {
             tvKycStatus.setTextColor(android.graphics.Color.parseColor("#198754"))
-            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#1000FF00"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10198754"))
         } else if (status.equals("REJECTED", ignoreCase = true)) {
             tvKycStatus.setTextColor(android.graphics.Color.parseColor("#dc3545"))
-            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10FF0000"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10dc3545"))
         } else {
             tvKycStatus.setTextColor(android.graphics.Color.parseColor("#ffc107"))
-            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10FFFF00"))
+            tvKycStatus.setBackgroundColor(android.graphics.Color.parseColor("#10ffc107"))
         }
     }
 }
