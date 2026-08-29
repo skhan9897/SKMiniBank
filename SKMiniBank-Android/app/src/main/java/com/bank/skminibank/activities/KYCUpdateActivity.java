@@ -115,12 +115,15 @@ public class KYCUpdateActivity extends AppCompatActivity {
         btnSubmit.setEnabled(false);
         btnSubmit.setText("Submitting...");
 
+        // Format for API: aadhaar:123456789012|pan:ABCDE1234F
+        String details = "aadhaar:" + aadhaar + "|pan:" + pan;
+
         ApiClient.getService().submitKYC(
                 sessionManager.getCustomerId(),
                 sessionManager.getAccountNumber(),
                 aadhaar,
                 pan,
-                "", "", "", "", "" // Dummy images for now
+                "", "", "", "", "" // Images not used for this logic
         ).enqueue(new Callback<GenericResponse>() {
             @Override
             public void onResponse(@NonNull Call<GenericResponse> call, @NonNull Response<GenericResponse> response) {

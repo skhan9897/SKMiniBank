@@ -84,7 +84,8 @@ public class TransactionDAO {
 
     public List<Transaction> getTransactionsByAccount(String accountNumber) {
         List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT * FROM transactions WHERE account_number=? ORDER BY transaction_date DESC";
+        // Use REPLACE to ignore spaces in DB and parameter for matching
+        String sql = "SELECT * FROM transactions WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') ORDER BY transaction_date DESC";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, accountNumber);

@@ -69,7 +69,8 @@ public class ServiceRequestService {
         request.setCustomerId(customerId);
         request.setAccountNumber(accountNumber);
         request.setRequestType("KYC_UPDATE");
-        request.setRequestDetails("Aadhaar: " + aadhaar + ", PAN: " + pan);
+        // Format: aadhaar:123456789012|pan:ABCDE1234F
+        request.setRequestDetails("aadhaar:" + aadhaar + "|pan:" + pan);
         return dao.saveRequest(request);
     }
 }

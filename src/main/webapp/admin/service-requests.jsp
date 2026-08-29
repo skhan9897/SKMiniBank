@@ -73,16 +73,24 @@ if ("/".equals(ctx)) ctx = "";
                 <td><span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2"><%=type%></span></td>
                 <td>
                     <div class="small text-muted" style="max-width: 200px;">
-                        <% if("LOAN".equalsIgnoreCase(type) && r.getRequestDetails().contains("|")) {
-                            for(String p : r.getRequestDetails().split("\\|")) { out.print("<div>"+p+"</div>"); }
-                        } else { out.print(r.getRequestDetails()); } %>
+                        <%
+                        String details = r.getRequestDetails();
+                        if (details != null && details.contains("|")) {
+                            String[] parts = details.split("\\|");
+                            for(String p : parts) {
+                                out.print("<div>" + p + "</div>");
+                            }
+                        } else {
+                            out.print(details);
+                        }
+                        %>
                     </div>
                 </td>
                 <td class="small text-muted"><%=r.getRequestDate()%></td>
                 <td>
                     <%
                     String badge = "bg-warning text-dark";
-                    if(status.contains("APPROVED") || status.equals("ACTIVATED") || status.equals("DISBURSED") || status.equals("DELIVERED")) badge = "bg-success text-white";
+                    if(status.contains("APPROVED") || status.equals("ACTIVATED") || status.equals("DISBURSED") || status.equals("DELIVERED") || status.equals("VERIFIED")) badge = "bg-success text-white";
                     else if(status.contains("VERIFICATION") || status.equals("DISPATCHED")) badge = "bg-info text-white";
                     else if(status.equals("REJECTED")) badge = "bg-danger text-white";
                     %>
@@ -92,60 +100,40 @@ if ("/".equals(ctx)) ctx = "";
                     <form action="<%=ctx%>/AdminRequestServlet" method="post" class="bg-light p-3 rounded-4 border border-white">
                         <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
                         <input type="hidden" name="accountNumber" value="<%=r.getAccountNumber()%>">
+                        <input type="hidden" name="customerId" value="<%=r.getCustomerId()%>">
+
+                        <%
+                        String submittedAadhaar = "";
+                        String submittedPan = "";
+                        if ("KYC_UPDATE".equalsIgnoreCase(type) && details != null && details.contains("|")) {
+                            for(String p : details.split("\\|")) {
+                                if(p.startsWith("aadhaar:")) submittedAadhaar = p.substring(8);
+                                if(p.startsWith("pan:")) submittedPan = p.substring(4);
+                            }
+                        }
+                        %>
+                        <input type="hidden" name="submittedAadhaar" value="<%=submittedAadhaar%>">
+                        <input type="hidden" name="submittedPan" value="<%=submittedPan%>">
 
                         <div class="mb-2">
                             <select name="remarks" class="form-select form-select-sm border-0 shadow-sm">
-                                <% if("ATM_CARD".equalsIgnoreCase(type) || "CHEQUE_BOOK".equalsIgnoreCase(type)) { %>
-                                    <% if(status.equals("PENDING")) { %>
-                                        <option value="Request Approved - Under Processing">Approved - Processing</option>
-                                        <option value="Rejected - Invalid Address/Details">Rejected - Invalid Details</option>
-                                    <% } else if(status.equals("APPROVED")) { %>
-                                        <option value="Item Dispatched via Courier Service">Item Dispatched</option>
-                                    <% } else if(status.equals("DISPATCHED")) { %>
-                                        <option value="Delivered Successfully to Customer Address">Delivered Successfully</option>
-                                    <% } else { %>
-                                        <option value="Process Completed">Process Completed</option>
-                                    <% } %>
-                                <% } else if(type.toUpperCase().contains("BANKING")) { %>
-                                    <option value="Service Activated Successfully">Service Activated Successfully</option>
-                                    <option value="Credentials Sent to Registered Mobile">Credentials Sent</option>
-                                    <option value="Rejected - Security/Policy Reasons">Rejected - Security Reasons</option>
-                                <% } else if("LOAN".equalsIgnoreCase(type)) { %>
-                                    <% if(status.equals("PENDING")) { %>
-                                        <option value="Documents Under Verification">Documents Under Verification</option>
-                                        <option value="Verified and Sent for Approval">Verified - Sent for Approval</option>
-                                    <% } else if(status.equals("APPROVED")) { %>
-                                        <option value="Loan Amount Disbursed to Account">Loan Amount Disbursed</option>
-                                    <% } else { %>
-                                        <option value="Loan Application Processed">Loan Application Processed</option>
-                                    <% } %>
-                                    <option value="Rejected - Low Credit Score/Eligibility">Rejected - Low Credit Score</option>
-                                    <option value="Rejected - Income Documents Missing">Rejected - Documents Missing</option>
-                                <% } else { %>
-                                    <option value="Request Processed Successfully">Request Processed</option>
-                                    <option value="Application Rejected">Application Rejected</option>
-                                <% } %>
+                                <option value="Verified and Approved">Verified and Approved</option>
+                                <option value="Documents Under Verification">Documents Under Verification</option>
+                                <option value="Request Processed">Request Processed</option>
+                                <option value="Application Rejected - Policy">Application Rejected</option>
                             </select>
                         </div>
 
-                        <% if("LOAN".equalsIgnoreCase(type) && status.equals("APPROVED")) { %>
-                            <div class="input-group input-group-sm mb-2 shadow-sm">
-                                <span class="input-group-text border-0 bg-white">₹</span>
-                                <input type="number" name="approvedAmount" class="form-control border-0" placeholder="Approved Amount" required>
-                            </div>
-                        <% } %>
-
-                        <% if(("ATM_CARD".equalsIgnoreCase(type) || "CHEQUE_BOOK".equalsIgnoreCase(type)) && status.equals("PENDING")) { %>
-                            <div class="mb-2">
-                                <label class="x-small text-muted mb-1" style="font-size: 10px;">EXPECTED DELIVERY</label>
-                                <input type="date" name="expectedDelivery" class="form-control form-control-sm shadow-sm border-0">
-                            </div>
+                        <% if("LOAN".equalsIgnoreCase(type) && (status.equals("APPROVED") || status.equals("DOC_VERIFICATION"))) { %>
+                            <input type="number" name="approvedAmount" class="form-control form-control-sm mb-2 shadow-sm border-0" placeholder="Approved Amount">
                         <% } %>
 
                         <div class="d-flex gap-1">
                             <% if(status.equals("PENDING")) { %>
                                 <% if(type.equalsIgnoreCase("LOAN")) { %>
                                     <button type="submit" name="action" value="VERIFY" class="btn btn-info btn-sm text-white flex-fill">Verify</button>
+                                <% } else if(type.equalsIgnoreCase("KYC_UPDATE")) { %>
+                                    <button type="submit" name="action" value="VERIFY_KYC" class="btn btn-primary btn-sm flex-fill">Verify & Approve KYC</button>
                                 <% } %>
                                 <button type="submit" name="action" value="APPROVE" class="btn btn-success btn-sm flex-fill">Approve</button>
                                 <button type="submit" name="action" value="REJECT" class="btn btn-danger btn-sm flex-fill">Reject</button>

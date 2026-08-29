@@ -25,12 +25,18 @@ public class DashboardServlet extends HttpServlet {
         }
 
         DashboardDAO dao = new DashboardDAO();
+        com.bank.dao.TransactionDAO tdao = new com.bank.dao.TransactionDAO();
 
         request.setAttribute("totalCustomers", dao.getTotalCustomers());
         request.setAttribute("totalAccounts", dao.getTotalAccounts());
         request.setAttribute("totalBalance", dao.getTotalBalance());
         request.setAttribute("totalTransactions", dao.getTotalTransactions());
         request.setAttribute("totalPendingRequests", dao.getTotalPendingRequests());
+        
+        // Fetch last 10 transactions for the live feed
+        java.util.List<com.bank.model.Transaction> allTxns = tdao.getAllTransactions();
+        java.util.List<com.bank.model.Transaction> recent = (allTxns.size() > 10) ? allTxns.subList(0, 10) : allTxns;
+        request.setAttribute("recentTransactions", recent);
 
         request.getRequestDispatcher("/admin/SKMiniBank-System.jsp")
                .forward(request, response);

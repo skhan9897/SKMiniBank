@@ -108,7 +108,7 @@ public class AccountDAO {
     }
 
     public boolean withdraw(String accountNumber, double amount) {
-        String sql = "UPDATE customer SET balance = balance - ? WHERE account_number=? AND balance>=? AND status='ACTIVE'";
+        String sql = "UPDATE customer SET balance = balance - ? WHERE account_number=? AND balance>=? AND status='ACTIVE' AND kyc_status='VERIFIED'";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, amount);
@@ -133,9 +133,31 @@ public class AccountDAO {
             Account sender = getAccountByNumber(fromAccount);
             Account receiver = getAccountByNumber(toAccount);
 
-            if (sender == null || receiver == null || !"ACTIVE".equalsIgnoreCase(sender.getStatus()) || sender.getBalance() < amount) {
+            if (sender == null || receiver == null) {
                 con.rollback();
                 return false;
+            }
+
+            // KYC and Status Validations
+            if (!"ACTIVE".equalsIgnoreCase(sender.getStatus()) || sender.getBalance() < amount) {
+                con.rollback();
+                return false;
+            }
+
+            // Check KYC Status
+            String kycSql = "SELECT kyc_status FROM customer WHERE account_number=?";
+            try (PreparedStatement psKyc = con.prepareStatement(kycSql)) {
+                psKyc.setString(1, fromAccount);
+                try (ResultSet rsKyc = psKyc.executeQuery()) {
+                    if (rsKyc.next()) {
+                        String kyc = rsKyc.getString("kyc_status");
+                        if (!"VERIFIED".equalsIgnoreCase(kyc)) {
+                            System.err.println("Transfer blocked: KYC not verified for " + fromAccount);
+                            con.rollback();
+                            return false;
+                        }
+                    }
+                }
             }
 
             // Execute Transfer
@@ -154,11 +176,18 @@ public class AccountDAO {
             
             // SAVE TO TRANSACTIONS TABLE
             TransactionDAO tdao = new TransactionDAO();
-            String senderDesc = (description == null || description.isEmpty()) ? "Sent to " + toAccount : description;
-            tdao.saveUpiTransaction(fromAccount, sender.getCustomerName(), "DEBIT", amount, sender.getBalance() - amount, senderDesc);
             
-            String receiverDesc = "Received from " + fromAccount;
-            tdao.saveUpiTransaction(toAccount, receiver.getCustomerName(), "CREDIT", amount, receiver.getBalance() + amount, receiverDesc);
+            // Refresh balances to get exact values after transfer
+            Account finalSender = getAccountByNumber(fromAccount);
+            Account finalReceiver = getAccountByNumber(toAccount);
+
+            String senderDesc = (description == null || description.isEmpty() || description.equals("Transfer")) ? "₹" + amount + " sent to " + toAccount : description;
+            if (!senderDesc.contains("sent to")) senderDesc = "₹" + amount + " sent to " + toAccount + " (" + description + ")";
+            
+            tdao.saveUpiTransaction(fromAccount, finalSender.getCustomerName(), "DEBIT", amount, finalSender.getBalance(), senderDesc);
+            
+            String receiverDesc = "₹" + amount + " received from " + fromAccount;
+            tdao.saveUpiTransaction(toAccount, finalReceiver.getCustomerName(), "CREDIT", amount, finalReceiver.getBalance(), receiverDesc);
 
             return true;
         } catch (SQLException e) {

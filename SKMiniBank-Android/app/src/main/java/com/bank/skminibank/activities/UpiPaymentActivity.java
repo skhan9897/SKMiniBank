@@ -172,6 +172,12 @@ public class UpiPaymentActivity extends AppCompatActivity {
     }
 
     private void performPayment() {
+        if (!"VERIFIED".equalsIgnoreCase(sessionManager.getKycStatus())) {
+            Toast.makeText(this, "PLEASE UPDATE AND VERIFY YOUR KYC FIRST", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, KYCUpdateActivity.class));
+            return;
+        }
+
         String toUpi = etToUpiId.getText().toString().trim();
         String amountStr = etAmount.getText().toString().trim();
         String pin = etPin.getText().toString().trim();

@@ -36,9 +36,17 @@ public class RazorpayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_razorpay);
 
+        sessionManager = new SessionManager(this);
+
+        if (!"VERIFIED".equalsIgnoreCase(sessionManager.getKycStatus())) {
+            Toast.makeText(this, "PLEASE UPDATE AND VERIFY YOUR KYC FIRST", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, KYCUpdateActivity.class));
+            finish();
+            return;
+        }
+
         startWaveAnimation();
 
-        sessionManager = new SessionManager(this);
         db = AppDatabase.getInstance(this);
         etAmount = findViewById(R.id.etWalletAmount);
         btnProceed = findViewById(R.id.btnProceedPayment);

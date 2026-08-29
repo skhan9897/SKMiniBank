@@ -373,6 +373,10 @@ public class DashboardActivity extends AppCompatActivity {
         if (data.getCustomerName() != null) {
             tvWelcomeUser.setText("Hello, " + data.getCustomerName());
         }
+
+        if (data.getKycStatus() != null) {
+            sessionManager.setKycStatus(data.getKycStatus());
+        }
     }
 
     private void startScanner() {

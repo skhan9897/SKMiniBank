@@ -104,33 +104,12 @@ public class UpiPaymentApiServlet extends HttpServlet {
                 return;
             }
 
-            TransactionDAO transactionDAO = new TransactionDAO();
-
-            // SENDER TRANSACTION - Save with 'sent to' description for contact list
-            String senderDesc = "₹" + amount + " sent to " + toUpiId;
-            transactionDAO.saveUpiTransaction(
-                    fromAccount,
-                    sender.getCustomerName(),
-                    "UPI DEBIT",
-                    amount,
-                    sender.getBalance() - amount,
-                    senderDesc
-            );
-
-            // RECEIVER TRANSACTION
-            String receiverDesc = "₹" + amount + " received from " + fromAccount;
-            transactionDAO.saveUpiTransaction(
-                    toAccount,
-                    receiver.getCustomerName(),
-                    "UPI CREDIT",
-                    amount,
-                    receiver.getBalance() + amount,
-                    receiverDesc
-            );
+            // Note: Transactions are already saved inside accountDAO.transferAmount()
+            // We only need to trigger notifications here.
 
             NotificationDAO notificationDAO = new NotificationDAO();
-            notificationDAO.saveNotification(sender.getCustomerId(), "UPI Payment", senderDesc);
-            notificationDAO.saveNotification(receiver.getCustomerId(), "UPI Payment", receiverDesc);
+            notificationDAO.saveNotification(sender.getCustomerId(), "UPI Payment", "₹" + amount + " sent to " + toUpiId);
+            notificationDAO.saveNotification(receiver.getCustomerId(), "UPI Payment", "₹" + amount + " received from " + fromAccount);
 
             out.print("{");
             out.print("\"status\":\"success\",");

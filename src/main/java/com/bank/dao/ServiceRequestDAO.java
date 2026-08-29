@@ -285,6 +285,52 @@ public class ServiceRequestDAO {
         }
     }
 
+    public boolean verifyKYC(int requestId, int customerId, String submittedAadhaar, String submittedPan, String adminName) {
+        String sqlCheck = "SELECT aadhaar, pan FROM customer WHERE customer_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
+            
+            psCheck.setInt(1, customerId);
+            try (ResultSet rs = psCheck.executeQuery()) {
+                if (rs.next()) {
+                    String dbAadhaar = rs.getString("aadhaar");
+                    String dbPan = rs.getString("pan");
+                    
+                    // Validation: Must match exactly
+                    if (dbAadhaar.equals(submittedAadhaar) && dbPan.equalsIgnoreCase(submittedPan)) {
+                        // Match found - Approve KYC
+                        con.setAutoCommit(false);
+                        try {
+                            // 1. Update Request Status
+                            String sqlReq = "UPDATE service_request SET status='APPROVED', remarks='KYC Details Verified Matches Records', approved_by=?, approval_date=NOW() WHERE request_id=?";
+                            try (PreparedStatement psReq = con.prepareStatement(sqlReq)) {
+                                psReq.setString(1, adminName);
+                                psReq.setInt(2, requestId);
+                                psReq.executeUpdate();
+                            }
+                            
+                            // 2. Update Customer KYC Status
+                            String sqlCust = "UPDATE customer SET kyc_status='VERIFIED' WHERE customer_id=?";
+                            try (PreparedStatement psCust = con.prepareStatement(sqlCust)) {
+                                psCust.setInt(1, customerId);
+                                psCust.executeUpdate();
+                            }
+                            
+                            con.commit();
+                            return true;
+                        } catch (Exception e) {
+                            con.rollback();
+                            throw e;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private ServiceRequest mapRow(ResultSet rs) {
         ServiceRequest request = new ServiceRequest();
         try { request.setRequestId(rs.getInt("request_id")); } catch (Exception e) {}

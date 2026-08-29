@@ -3,129 +3,113 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fino_background">
+    android:background="@drawable/bg_premium_gradient">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#40000000"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@color/white" />
 
     <LinearLayout
-        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="@color/fino_primary"
-        android:gravity="center_vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_bank_logo"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:id="@+id/tvBankNamePin"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="SK Mini Payment Bank"
             android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/sk_logo"
-            android:padding="6dp"
-            android:background="@drawable/white_circle_bg"
-            android:contentDescription="Bank Logo" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header"
-        android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center">
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ENTER 4-DIGIT UPI PIN"
-            android:textColor="@color/fino_text_primary"
+            android:text="ENTER UPI PIN"
+            android:textColor="@color/premium_gold"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginTop="48dp"/>
+            android:layout_marginTop="32dp"
+            android:letterSpacing="0.2"/>
 
         <EditText
             android:id="@+id/etPin"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:background="@null"
             android:gravity="center"
             android:inputType="numberPassword"
             android:maxLength="4"
             android:letterSpacing="1.5"
-            android:textColor="@color/fino_text_primary"
-            android:textSize="32sp"
+            android:textColor="@color/white"
+            android:textSize="36sp"
             android:textStyle="bold"
             android:hint="****"
-            android:textColorHint="#20000000"/>
+            android:textColorHint="#40FFFFFF"/>
 
         <View
-            android:layout_width="250dp"
+            android:layout_width="240dp"
             android:layout_height="2dp"
-            android:background="@color/fino_primary"
+            android:background="@color/premium_gold"
             android:layout_marginTop="8dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Securely processing your bank request"
-            android:textColor="@color/fino_text_secondary"
-            android:textSize="13sp"
-            android:layout_marginTop="40dp"
-            android:gravity="center"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="32dp"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <LinearLayout
-            android:id="@+id/btnFingerprintPay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"
-            android:clickable="true"
-            android:focusable="true">
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@android:drawable/ic_lock_idle_lock"
-                app:tint="@color/fino_primary"/>
-            <TextView
-                android:id="@+id/tvFingerprintLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pay with Fingerprint"
-                android:textColor="@color/fino_primary"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp"/>
-        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmitPin"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="CONFIRM PIN"
+            android:layout_marginTop="48dp"
+            android:text="CONFIRM"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/fino_primary"
+            android:textColor="@color/primary_blue"
+            app:backgroundTint="@color/premium_gold"
             app:cornerRadius="30dp"
             android:elevation="8dp"/>
+
+        <!-- Biometric Button -->
+        <LinearLayout
+            android:id="@+id/btnFingerprintPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_lock_idle_lock"
+                app:tint="@color/white"
+                android:alpha="0.8"/>
+
+            <TextView
+                android:id="@+id/tvFingerprintLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Authenticate with Fingerprint"
+                android:textColor="#B3FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

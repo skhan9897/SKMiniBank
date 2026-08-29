@@ -10,6 +10,7 @@ public class SessionManager {
     private static final String KEY_CUSTOMER_ID = "customerId";
     private static final String KEY_NAME = "customerName";
     private static final String KEY_ACC_NO = "accountNumber";
+    private static final String KEY_KYC_STATUS = "kycStatus";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_MOBILE = "mobile";
     private static final String KEY_EMAIL = "email";
@@ -99,6 +100,15 @@ public class SessionManager {
     public void setAccountNumber(String accNo) {
         editor.putString(KEY_ACC_NO, accNo);
         editor.apply();
+    }
+
+    public void setKycStatus(String status) {
+        editor.putString(KEY_KYC_STATUS, status);
+        editor.apply();
+    }
+
+    public String getKycStatus() {
+        return pref.getString(KEY_KYC_STATUS, "PENDING");
     }
 
     public void logoutUser() {

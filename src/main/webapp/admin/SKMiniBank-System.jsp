@@ -273,35 +273,66 @@
 
         <div class="row mt-2">
             <div class="col-md-8">
-                <div class="quick-actions-panel shadow-sm">
+                <div class="quick-actions-panel shadow-sm mb-4">
                     <h5 class="fw-bold mb-4" style="color: #102a43;">Quick Management Access</h5>
                     <div class="row">
                         <div class="col-md-6">
-                            <a href="<%=ctx%>/admin/open-account.jsp" class="action-pill">
+                            <a href="<%=sidebarCtx%>/admin/open-account.jsp" class="action-pill">
                                 <i class="fas fa-user-plus"></i> Open Digital Account
                             </a>
-                            <a href="<%=ctx%>/AdminLoanRequestServlet" class="action-pill">
+                            <a href="<%=sidebarCtx%>/AdminLoanRequestServlet" class="action-pill">
                                 <i class="fas fa-hand-holding-usd"></i> Review Loan Apps
                             </a>
                         </div>
                         <div class="col-md-6">
-                            <a href="<%=ctx%>/ReportServlet" class="action-pill">
+                            <a href="<%=sidebarCtx%>/ReportServlet" class="action-pill">
                                 <i class="fas fa-chart-bar"></i> Financial Reports
                             </a>
-                            <a href="<%=ctx%>/NotificationServlet" class="action-pill">
+                            <a href="<%=sidebarCtx%>/NotificationServlet" class="action-pill">
                                 <i class="fas fa-bell"></i> System Broadcast
                             </a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="mt-4 p-4 rounded-4" style="background: linear-gradient(90deg, #102a43, #243b53); color: white;">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold mb-1">Security Audit</h6>
-                                <p class="small mb-0 opacity-75">Your last successful login was today at <%= new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date()) %>. Stay secure.</p>
-                            </div>
-                            <i class="fas fa-shield-alt fa-2x opacity-25"></i>
-                        </div>
+                <!-- Live Transaction Monitor Feed -->
+                <div class="bg-white p-4 rounded-4 shadow-sm border border-white" style="background: rgba(255,255,255,0.7); backdrop-filter: blur(15px);">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0" style="color: #102a43;"><i class="fas fa-satellite-dish me-2 text-danger"></i> Live Transaction Monitor</h5>
+                        <a href="<%=sidebarCtx%>/TransactionServlet" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">View Full Audit</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" style="font-size: 13px;">
+                            <thead class="text-muted small uppercase">
+                                <tr>
+                                    <th>Origin / Identity</th>
+                                    <th>Activity</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%
+                                java.util.List<com.bank.model.Transaction> recent = (java.util.List<com.bank.model.Transaction>)request.getAttribute("recentTransactions");
+                                if(recent != null && !recent.isEmpty()){
+                                    for(com.bank.model.Transaction t : recent){
+                                        boolean isCredit = t.getTransactionType().contains("CREDIT") || t.getTransactionType().contains("DEPOSIT");
+                                %>
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold"><%=t.getCustomerName()%></div>
+                                        <div class="small opacity-50"><%=t.getAccountNumber()%></div>
+                                    </td>
+                                    <td><span class="badge <%=isCredit ? "bg-success" : "bg-danger"%> bg-opacity-10 <%=isCredit ? "text-success" : "text-danger"%> rounded-pill px-2 py-1" style="font-size: 9px;"><%=t.getTransactionType()%></span></td>
+                                    <td class="fw-bold <%=isCredit ? "text-success" : "text-danger"%>">₹<%=String.format("%,.0f", t.getAmount())%></td>
+                                    <td class="text-muted small text-truncate" style="max-width: 150px;" title="<%=t.getDescription()%>"><%=t.getDescription()%></td>
+                                </tr>
+                                <% } } else { %>
+                                    <tr><td colspan="4" class="text-center py-4 opacity-50 italic">No recent activity detected.</td></tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

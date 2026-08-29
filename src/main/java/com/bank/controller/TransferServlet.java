@@ -60,25 +60,19 @@ public class TransferServlet extends HttpServlet {
             return;
         }
 
+        // KYC Check
+        CustomerDAO cdao = new CustomerDAO();
+        com.bank.model.Customer cust = cdao.getCustomerById(sender.getCustomerId());
+        if (cust != null && !"VERIFIED".equalsIgnoreCase(cust.getKycStatus())) {
+            response.sendRedirect(request.getContextPath() + "/CustomerProfileServlet?customerId=" + sender.getCustomerId() + "&msg=kyc_pending");
+            return;
+        }
+
         // Transfer
         boolean status = dao.transferAmount(fromAccount, toAccount, amount, "Transfer");
 
         if (status) {
-
-            sender = dao.getAccountByNumber(fromAccount);
-
-            Transaction t = new Transaction();
-            t.setAccountNumber(fromAccount);
-            t.setCustomerName(sender.getCustomerName());
-            t.setBalance(sender.getBalance());
-            t.setTransactionType("Transfer");
-            t.setAmount(amount);
-            t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
-            t.setStatus("SUCCESS");
-
-            TransactionDAO td = new TransactionDAO();
-            td.addTransaction(t);
-
+            // Note: Transactions are already saved inside dao.transferAmount()
             CustomerDAO customerDAO = new CustomerDAO();
 
             Customer senderCustomer =

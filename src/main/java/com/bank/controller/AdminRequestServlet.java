@@ -89,6 +89,17 @@ public class AdminRequestServlet extends HttpServlet {
                 case "ACTIVATE":
                     status = dao.updateRequestStatus(requestId, "ACTIVATED", "Service Activated Successfully", adminName);
                     break;
+
+                case "VERIFY_KYC":
+                    String aadhaar = request.getParameter("submittedAadhaar");
+                    String pan = request.getParameter("submittedPan");
+                    int custId = Integer.parseInt(request.getParameter("customerId"));
+                    status = dao.verifyKYC(requestId, custId, aadhaar, pan, adminName);
+                    if (!status) {
+                        response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error&error=KYC Details Mismatch with Records");
+                        return;
+                    }
+                    break;
             }
 
             if (status) {

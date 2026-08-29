@@ -137,6 +137,12 @@ public class TransferActivity extends AppCompatActivity {
     }
 
     private void performTransfer() {
+        if (!"VERIFIED".equalsIgnoreCase(sessionManager.getKycStatus())) {
+            Toast.makeText(this, "PLEASE UPDATE AND VERIFY YOUR KYC FIRST", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, KYCUpdateActivity.class));
+            return;
+        }
+
         String fromAccount = sessionManager.getAccountNumber();
         String toAccount = etToAccount.getText().toString().trim();
         String amountStr = etAmount.getText().toString().trim();

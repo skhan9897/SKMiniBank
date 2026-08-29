@@ -58,32 +58,23 @@ public class DepositServlet extends HttpServlet {
             return;
         }
 
+        // KYC Check
+        CustomerDAO cdao = new CustomerDAO();
+        com.bank.model.Customer cust = cdao.getCustomerById(account.getCustomerId());
+        if (cust != null && !"VERIFIED".equalsIgnoreCase(cust.getKycStatus())) {
+            response.sendRedirect(request.getContextPath() + "/CustomerProfileServlet?customerId=" + account.getCustomerId() + "&msg=kyc_pending");
+            return;
+        }
+
         // Deposit
         boolean status = dao.deposit(accountNumber, amount);
 
         if (status) {
+            // Note: Transaction is already saved inside dao.deposit()
+            CustomerDAO customerDAO = new CustomerDAO();
+            Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
 
-            // Get Updated Account
-            account = dao.getAccountByNumber(accountNumber);
-
-            // Save Transaction
-            Transaction t = new Transaction();
-
-            t.setAccountNumber(accountNumber);
-            t.setCustomerName(account.getCustomerName());
-            t.setBalance(account.getBalance());
-            t.setTransactionType("Deposit");
-            t.setAmount(amount);
-            t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
-            t.setStatus("SUCCESS");
-
-           TransactionDAO td = new TransactionDAO();
-td.addTransaction(t);
-
-CustomerDAO customerDAO = new CustomerDAO();
-Customer customer = customerDAO.getCustomerByAccountNumber(accountNumber);
-
-if (customer != null) {
+            if (customer != null) {
 
     Notification notification = new Notification();
     notification.setCustomerId(customer.getCustomerId());

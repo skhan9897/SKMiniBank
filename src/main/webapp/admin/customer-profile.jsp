@@ -116,6 +116,19 @@ String role = (String) session.getAttribute("role");
         </div>
     </div>
 
+    <%
+    String msg = request.getParameter("msg");
+    if("kyc_pending".equalsIgnoreCase(msg)){
+    %>
+    <div class="alert alert-warning rounded-4 shadow-sm border-0 mb-4 p-3 d-flex align-items-center">
+        <i class="fas fa-id-card fa-2x me-3"></i>
+        <div>
+            <h6 class="mb-0 fw-bold">KYC Verification Required</h6>
+            <small>Transactions are blocked for this user until KYC is verified.</small>
+        </div>
+    </div>
+    <% } %>
+
     <div class="row">
         <!-- Financial Overview -->
         <div class="col-lg-8">

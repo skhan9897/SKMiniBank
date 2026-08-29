@@ -396,6 +396,12 @@ public class SendMoneyActivity extends AppCompatActivity {
     }
 
     private void openContact(Contact contact) {
+        if (!"VERIFIED".equalsIgnoreCase(sessionManager.getKycStatus())) {
+            Toast.makeText(this, "PLEASE UPDATE AND VERIFY YOUR KYC FIRST", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, KYCUpdateActivity.class));
+            return;
+        }
+
         if (contact.mobile == null || contact.mobile.isEmpty()) return;
         saveRecentRecipient(contact.name, contact.mobile);
         Intent intent = new Intent(SendMoneyActivity.this, ChatTransferActivity.class);
