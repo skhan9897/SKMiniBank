@@ -244,34 +244,40 @@ public class ServiceRequestDAO {
         try {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
-            String cleanAcc = accountNumber.trim().replaceAll("\\s+", "");
+            
+            // Normalize Account Number for matching
+            String searchAcc = (accountNumber != null) ? accountNumber.trim().replaceAll("\\s+", "") : "";
 
-            // 1. Update Request Status
-            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=?, delivered_date=NOW() WHERE request_id=?";
+            // 1. Update Request Status (Standard Columns First)
+            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=? WHERE request_id=?";
             try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
-                ps.setString(1, "Loan Disbursed: " + remarks);
+                ps.setString(1, "Loan Disbursed - " + (remarks != null ? remarks : "Approved"));
                 ps.setString(2, adminName);
                 ps.setInt(3, requestId);
                 ps.executeUpdate();
             }
 
+            // Try to update delivered_date separately in case column is missing or failed to add
+            try (Statement st = con.createStatement()) {
+                st.executeUpdate("UPDATE service_request SET delivered_date=NOW() WHERE request_id=" + requestId);
+            } catch (Exception ignored) {}
+
             // 2. Update Customer Balance
             String sqlBal = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
             try (PreparedStatement ps = con.prepareStatement(sqlBal)) {
                 ps.setDouble(1, amount);
-                ps.setString(2, cleanAcc);
+                ps.setString(2, searchAcc);
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
-                    throw new Exception("Account not found: " + cleanAcc);
+                    throw new Exception("Account not found: " + searchAcc);
                 }
             }
 
-            // 3. Get info for Transaction Log
+            // 3. Fetch latest info for Log
             double newBalance = 0;
             String customerName = "Valued Customer";
-            String sqlInfo = "SELECT full_name, balance FROM customer WHERE REPLACE(account_number, ' ', '') = ?";
-            try (PreparedStatement ps = con.prepareStatement(sqlInfo)) {
-                ps.setString(1, cleanAcc);
+            try (PreparedStatement ps = con.prepareStatement("SELECT full_name, balance FROM customer WHERE REPLACE(account_number, ' ', '') = ?")) {
+                ps.setString(1, searchAcc);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         customerName = rs.getString("full_name");
@@ -280,7 +286,7 @@ public class ServiceRequestDAO {
                 }
             }
 
-            // 4. Log Transaction - SOURCE: SK MINI BANK
+            // 4. Log Transaction (Standard History)
             String sqlTxn = "INSERT INTO transactions(account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status) " +
                             "VALUES (?, ?, 'LOAN_CREDIT', ?, ?, ?, NOW(), 'SUCCESS')";
             try (PreparedStatement ps = con.prepareStatement(sqlTxn)) {
@@ -295,7 +301,7 @@ public class ServiceRequestDAO {
             con.commit();
             return true;
         } catch (Exception e) {
-            System.err.println("Loan Disburse Failed: " + e.getMessage());
+            System.err.println("Loan Disburse CRITICAL Error: " + e.getMessage());
             if (con != null) try { con.rollback(); } catch (SQLException ex) {}
             return false;
         } finally {

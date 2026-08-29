@@ -181,7 +181,7 @@ public class DashboardActivity extends AppCompatActivity {
         
         setupServiceCard(R.id.cardBeneficiary, "View Beneficiary", android.R.drawable.ic_menu_mylocation, v -> startActivity(new Intent(this, AddBankActivity.class)));
         setupServiceCard(R.id.cardAtm, "ATM Card", android.R.drawable.ic_lock_lock, v -> startActivity(new Intent(this, AtmApplyActivity.class)));
-        setupServiceCard(R.id.cardMiniStatement, "Mini Statement", android.R.drawable.ic_menu_recent_history, v -> startActivity(new Intent(this, MiniStatementActivity.class)));
+        setupServiceCard(R.id.cardKyc, "Update KYC", android.R.drawable.ic_menu_save, v -> startActivity(new Intent(this, KYCUpdateActivity.class)));
 
         setupServiceCard(R.id.cardRequests, "Requests", android.R.drawable.ic_menu_edit, v -> startActivity(new Intent(this, MyRequestsActivity.class)));
         setupServiceCard(R.id.cardOffers, "Offers", android.R.drawable.ic_menu_gallery, v -> startActivity(new Intent(this, ReferEarnActivity.class)));

@@ -61,11 +61,20 @@ public class KYCUpdateActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     GenericResponse res = response.body();
                     String status = res.getStatus();
-                    if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("error")) {
+                    
+                    // If status is "FAILED" or "No KYC Request Found", we should show the form to let user try again
+                    if (status != null && !status.isEmpty() && 
+                        !status.equalsIgnoreCase("error") && 
+                        !status.equalsIgnoreCase("failed") &&
+                        !res.getMessage().toLowerCase().contains("no kyc request found")) {
+                        
+                        sessionManager.setKycStatus(status);
                         showStatus(status, res.getMessage());
                     } else {
                         showForm();
                     }
+                } else {
+                    showForm();
                 }
             }
 
@@ -97,18 +106,23 @@ public class KYCUpdateActivity extends AppCompatActivity {
     private void showForm() {
         cardForm.setVisibility(View.VISIBLE);
         cardStatus.setVisibility(View.GONE);
+        btnSubmit.setEnabled(true);
+        btnSubmit.setText("SUBMIT KYC");
     }
 
     private void submitKyc() {
         String aadhaar = etAadhaar.getText().toString().trim();
         String pan = etPan.getText().toString().trim();
 
+        etAadhaar.setError(null);
+        etPan.setError(null);
+
         if (aadhaar.length() != 12) {
-            etAadhaar.setError("Invalid Aadhaar");
+            etAadhaar.setError("Invalid Aadhaar (12 digits required)");
             return;
         }
         if (pan.length() != 10) {
-            etPan.setError("Invalid PAN");
+            etPan.setError("Invalid PAN (10 characters required)");
             return;
         }
 
@@ -132,6 +146,8 @@ public class KYCUpdateActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     Toast.makeText(KYCUpdateActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     checkStatus();
+                } else {
+                    Toast.makeText(KYCUpdateActivity.this, "Submission Failed: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 

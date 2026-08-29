@@ -281,7 +281,7 @@
 
                     <include android:id="@+id/cardBeneficiary" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
                     <include android:id="@+id/cardAtm" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
-                    <include android:id="@+id/cardMiniStatement" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
+                    <include android:id="@+id/cardKyc" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
 
                     <include android:id="@+id/cardRequests" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
                     <include android:id="@+id/cardOffers" layout="@layout/item_dashboard_card" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_columnWeight="1" />
