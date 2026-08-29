@@ -69,16 +69,20 @@ public class AdminRequestServlet extends HttpServlet {
 
                 case "DISBURSE":
                     String amtStr = request.getParameter("approvedAmount");
-                    if (amtStr != null && !amtStr.trim().isEmpty() && accNo != null) {
-                        try {
-                            double amount = Double.parseDouble(amtStr);
-                            status = dao.disburseLoan(requestId, accNo, amount, remarks, adminName);
-                        } catch (NumberFormatException e) {
-                            System.err.println("Invalid amount format: " + amtStr);
-                            status = false;
-                        }
-                    } else {
-                        System.err.println("Missing amount or account number for disburse");
+                    if (amtStr == null || amtStr.trim().isEmpty()) {
+                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Please enter approved amount");
+                        return;
+                    }
+                    if (accNo == null || accNo.trim().equalsIgnoreCase("N/A")) {
+                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Invalid Account Number (N/A)");
+                        return;
+                    }
+                    try {
+                        double amount = Double.parseDouble(amtStr);
+                        status = dao.disburseLoan(requestId, accNo, amount, remarks, adminName);
+                    } catch (NumberFormatException e) {
+                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Invalid amount format");
+                        return;
                     }
                     break;
 

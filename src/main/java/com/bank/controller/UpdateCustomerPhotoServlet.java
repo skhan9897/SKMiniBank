@@ -23,13 +23,23 @@ public class UpdateCustomerPhotoServlet extends HttpServlet {
 
         int customerId = 0;
         try {
-            customerId = Integer.parseInt(request.getParameter("customerId"));
+            // In Multipart, some servers need to access parts first
+            Part idPart = request.getPart("customerId");
+            if (idPart != null) {
+                // Reading string from part
+                java.util.Scanner s = new java.util.Scanner(idPart.getInputStream()).useDelimiter("\\A");
+                String idStr = s.hasNext() ? s.next() : "";
+                if (!idStr.isEmpty()) customerId = Integer.parseInt(idStr);
+            } else {
+                customerId = Integer.parseInt(request.getParameter("customerId"));
+            }
+
             Part filePart = request.getPart("photo");
 
             if (filePart != null && filePart.getSize() > 0) {
                 String fileName = "cust_" + customerId + "_" + System.currentTimeMillis() + ".jpg";
                 
-                String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads" + File.separator + "customer_photos";
+                String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator + "customer_photos";
                 File uploadDir = new File(uploadPath);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdirs();
@@ -41,20 +51,20 @@ public class UpdateCustomerPhotoServlet extends HttpServlet {
                 boolean success = dao.updatePhoto(customerId, fileName);
 
                 if (success) {
-                    response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_success");
+                    response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_success");
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_failed");
+                    response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=photo_failed");
                 }
             } else {
-                response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&msg=no_file");
+                response.sendRedirect("admin/customer-profile.jsp?customerId=" + customerId + "&msg=no_file");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            String redirectUrl = "admin/customer-list.jsp?error=upload_error";
             if (customerId != 0) {
-                response.sendRedirect(request.getContextPath() + "/admin/customer-profile.jsp?customerId=" + customerId + "&error=exception");
-            } else {
-                response.sendRedirect(request.getContextPath() + "/admin/customer-list.jsp?error=upload_error");
+                redirectUrl = "admin/customer-profile.jsp?customerId=" + customerId + "&error=" + java.net.URLEncoder.encode(e.getMessage(), "UTF-8");
             }
+            response.sendRedirect(redirectUrl);
         }
     }
 

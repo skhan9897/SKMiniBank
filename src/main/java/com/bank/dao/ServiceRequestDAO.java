@@ -230,7 +230,7 @@ public class ServiceRequestDAO {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
 
-            // 1. Update Request Status (Resilient)
+            // 1. Update Request Status (Be very specific with table name and columns)
             String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=? WHERE request_id=?";
             try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
                 ps.setString(1, remarks);
@@ -239,29 +239,20 @@ public class ServiceRequestDAO {
                 ps.executeUpdate();
             }
 
-            // Optional: Try to set delivery/disburse date if column exists
-            try (PreparedStatement ps = con.prepareStatement("UPDATE service_request SET delivered_date=NOW() WHERE request_id=?")) {
-                ps.setInt(1, requestId);
-                ps.executeUpdate();
-            } catch (Exception e) {
-                // Ignore if column missing
-            }
-
-            // 2. Update Customer Balance
+            // 2. Update Customer Balance (Check if balance column name is correct)
             String sqlBal = "UPDATE customer SET balance = balance + ? WHERE account_number=?";
             try (PreparedStatement ps = con.prepareStatement(sqlBal)) {
                 ps.setDouble(1, amount);
                 ps.setString(2, accountNumber.trim());
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
-                    throw new Exception("Customer account not found: " + accountNumber);
+                    throw new Exception("Account " + accountNumber + " not found in customer table.");
                 }
             }
 
             // 3. Log Transaction
-            // Using direct values for better compatibility and to ensure we get the latest balance
             double newBalance = 0;
-            String customerName = "Customer";
+            String customerName = "Loan Customer";
             try (PreparedStatement ps = con.prepareStatement("SELECT full_name, balance FROM customer WHERE account_number=?")) {
                 ps.setString(1, accountNumber.trim());
                 try (ResultSet rs = ps.executeQuery()) {
@@ -279,19 +270,18 @@ public class ServiceRequestDAO {
                 ps.setString(2, customerName);
                 ps.setDouble(3, amount);
                 ps.setDouble(4, newBalance);
-                ps.setString(5, "Loan Amount Disbursed - Ref: #" + requestId + " (" + remarks + ")");
+                ps.setString(5, "Loan Disbursed - Ref #" + requestId + " (" + remarks + ")");
                 ps.executeUpdate();
             }
 
             con.commit();
             return true;
         } catch (Exception e) {
-            System.err.println("Loan Disbursement Failed: " + e.getMessage());
-            if (con != null) try { con.rollback(); } catch (Exception ignored) {}
-            e.printStackTrace();
+            System.err.println("CRITICAL: Loan Disbursement Failed for ID " + requestId + ": " + e.getMessage());
+            if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             return false;
         } finally {
-            if (con != null) try { con.close(); } catch (Exception ignored) {}
+            if (con != null) try { con.close(); } catch (SQLException ignored) {}
         }
     }
 
