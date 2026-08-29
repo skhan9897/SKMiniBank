@@ -86,34 +86,33 @@ public class MiniStatementActivity extends AppCompatActivity {
         String accountNumber = sessionManager.getAccountNumber();
         int customerId = sessionManager.getCustomerId();
         
-        if (accountNumber != null) {
-            String cleanAcc = accountNumber.replaceAll("\\s+", "");
-            ApiClient.getService().getTransactions(cleanAcc, customerId).enqueue(new Callback<TransactionResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
-                    swipeRefresh.setRefreshing(false);
-                    if (response.isSuccessful() && response.body() != null) {
-                        List<Transaction> allTransactions = response.body().getTransactions();
-                        if (allTransactions != null && !allTransactions.isEmpty()) {
-                            transactionList.clear();
-                            // Showing all transactions, latest on top
-                            transactionList.addAll(allTransactions);
-                            adapter.notifyDataSetChanged();
-
-                        } else {
-                            Toast.makeText(MiniStatementActivity.this, "No transactions found", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
-                    swipeRefresh.setRefreshing(false);
-                    Toast.makeText(MiniStatementActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
+        if (accountNumber == null) {
             swipeRefresh.setRefreshing(false);
+            return;
         }
+
+        String apiAcc = accountNumber.replaceAll("\\s+", "");
+        ApiClient.getService().getTransactions(apiAcc, customerId).enqueue(new Callback<TransactionResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
+                swipeRefresh.setRefreshing(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Transaction> txns = response.body().getTransactions();
+                    transactionList.clear();
+                    if (txns != null && !txns.isEmpty()) {
+                        transactionList.addAll(txns);
+                    } else {
+                        Toast.makeText(MiniStatementActivity.this, "No transaction activity found.", Toast.LENGTH_SHORT).show();
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
+                swipeRefresh.setRefreshing(false);
+                Toast.makeText(MiniStatementActivity.this, "Connection Error", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

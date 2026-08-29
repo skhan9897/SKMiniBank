@@ -229,33 +229,35 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     private void executeFetch(String accNo, int customerId, boolean isRetry) {
-        ApiClient.getService().getTransactions(accNo, customerId).enqueue(new Callback<TransactionResponse>() {
+        // Robust cleaning: Always use no-space version for API if possible
+        String apiAcc = accNo.replaceAll("\\s+", "");
+        
+        ApiClient.getService().getTransactions(apiAcc, customerId).enqueue(new Callback<TransactionResponse>() {
             @Override
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
+                
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
+                    
+                    // Clear and update with whatever we got (even if empty)
+                    fullTransactionList.clear();
                     if (txns != null && !txns.isEmpty()) {
-                        fullTransactionList.clear();
                         fullTransactionList.addAll(txns);
-                        filterTransactions(etSearch.getText().toString());
                         saveTransactionsToLocal(txns);
-                    } else if (!isRetry) {
-                        // If nothing found, try with the RAW account number from session
+                    }
+                    filterTransactions(etSearch.getText().toString());
+                    
+                    if ((txns == null || txns.isEmpty()) && !isRetry) {
+                        // Retry once with RAW account number just in case
                         String rawAcc = sessionManager.getAccountNumber();
-                        if (rawAcc != null && !rawAcc.equals(accNo)) {
+                        if (rawAcc != null && !rawAcc.equals(apiAcc)) {
                             executeFetch(rawAcc, customerId, true);
-                        } else {
-                            loadTransactionsFromLocal();
-                        }
-                    } else {
-                        loadTransactionsFromLocal();
-                        if (response.body().getMessage() != null) {
-                            Toast.makeText(TransactionsActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
                     loadTransactionsFromLocal();
+                    Toast.makeText(TransactionsActivity.this, "Server Response Error", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -263,7 +265,7 @@ public class TransactionsActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 loadTransactionsFromLocal();
-                Toast.makeText(TransactionsActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TransactionsActivity.this, "Syncing from local...", Toast.LENGTH_SHORT).show();
             }
         });
     }

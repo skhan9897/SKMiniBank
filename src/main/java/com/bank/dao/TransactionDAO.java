@@ -61,22 +61,28 @@ public class TransactionDAO {
 
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT transaction_id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC";
+        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Transaction t = new Transaction();
-                t.setId(rs.getInt("transaction_id"));
-                t.setAccountNumber(rs.getString("account_number"));
-                t.setCustomerName(rs.getString("customer_name"));
-                t.setTransactionType(rs.getString("transaction_type"));
-                t.setAmount(rs.getDouble("amount"));
-                t.setBalance(rs.getDouble("balance"));
-                t.setDescription(rs.getString("description"));
-                t.setTransactionDate(rs.getTimestamp("transaction_date"));
-                t.setStatus(rs.getString("status"));
-                list.add(t);
+                list.add(mapResultSet(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<Transaction> getTodayTransactions() {
+        List<Transaction> list = new ArrayList<>();
+        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status " +
+                     "FROM transactions WHERE DATE(transaction_date) = CURDATE() ORDER BY transaction_date DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
