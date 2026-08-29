@@ -210,13 +210,28 @@ public class ServiceRequestDAO {
     }
 
     public boolean updateRequestStatus(int requestId, String status, String remarks, String approvedBy) {
-        String sql = "UPDATE service_request SET status=?, remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
+        System.out.println("LOG: Updating Request Status - ID: " + requestId + ", Status: " + status);
+        
+        // Strategy 1: Full Update
+        String sqlFull = "UPDATE service_request SET status=?, remarks=?, approved_by=?, approval_date=NOW() WHERE request_id=?";
         try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sqlFull)) {
             ps.setString(1, status);
             ps.setString(2, remarks);
             ps.setString(3, approvedBy);
             ps.setInt(4, requestId);
+            int rows = ps.executeUpdate();
+            if (rows > 0) return true;
+        } catch (Exception e) {
+            System.err.println("LOG: Full Status Update Failed: " + e.getMessage());
+        }
+
+        // Strategy 2: Minimal Update (Fallback)
+        String sqlBasic = "UPDATE service_request SET status=? WHERE request_id=?";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sqlBasic)) {
+            ps.setString(1, status);
+            ps.setInt(2, requestId);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

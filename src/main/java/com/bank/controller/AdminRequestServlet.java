@@ -93,11 +93,14 @@ public class AdminRequestServlet extends HttpServlet {
                     String activationRemarks = "USER ID: " + genUser + " | PASSWORD: " + genPass;
                     
                     status = dao.updateRequestStatus(requestId, "ACTIVATED", activationRemarks, adminName);
+                    
                     if (status) {
-                        response.sendRedirect(ctx + "/admin/activation-success.jsp?type=" + java.net.URLEncoder.encode(type, "UTF-8") 
+                        String redirectUrl = ctx + "/admin/activation-success.jsp?type=" 
+                                + java.net.URLEncoder.encode(type != null ? type : "Service", "UTF-8") 
                                 + "&creds=" + java.net.URLEncoder.encode(activationRemarks, "UTF-8") 
-                                + "&acc=" + accNo);
-                        return;
+                                + "&acc=" + java.net.URLEncoder.encode(accNo != null ? accNo : "N/A", "UTF-8");
+                        response.sendRedirect(redirectUrl);
+                        return; // Exit method
                     }
                     break;
 
