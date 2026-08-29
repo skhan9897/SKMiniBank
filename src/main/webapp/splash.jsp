@@ -162,9 +162,9 @@
 </style>
 
 <script>
-    // Redirect after 2 seconds to Customer Login
+    // Redirect after 2 seconds to Admin Login
     setTimeout(function() {
-        window.location.href = "<%=request.getContextPath()%>/login.jsp";
+        window.location.href = "<%=request.getContextPath()%>/SKMiniBankadmin-login.jsp";
     }, 2000);
 </script>
 

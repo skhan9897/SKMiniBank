@@ -62,49 +62,22 @@ Home
 </li>
 
 <li class="nav-item">
-
 <a class="nav-link"
 href="about.jsp">
 
 About
 
 </a>
-
 </li>
 
 <li class="nav-item">
-
 <a class="nav-link"
 href="contact.jsp">
 
 Contact
 
 </a>
-
 </li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-href="login.jsp">
-
-Login
-
-</a>
-
-</li>
-
-<li class="nav-item">
-
-<a class="nav-link"
-href="register.jsp">
-
-Register
-
-</a>
-
-</li>
-
 </ul>
 
 </div>
@@ -149,87 +122,41 @@ Admin Login
 <div class="col-md-3 mb-4">
 
 <div class="card shadow text-center">
-
 <div class="card-body">
-
 <h1>💰</h1>
-
 <h4>Savings Account</h4>
-
-<p>Open your savings account instantly.</p>
-
-<a href="register.jsp" class="btn btn-primary">
-Open Now
-</a>
-
+<p>Open your savings account instantly via App.</p>
 </div>
-
 </div>
-
 </div>
 
 <div class="col-md-3 mb-4">
-
 <div class="card shadow text-center">
-
 <div class="card-body">
-
 <h1>💳</h1>
-
 <h4>Credit Card</h4>
-
 <p>Apply for lifetime free credit card.</p>
-
-<a href="customer/dashboard.jsp" class="btn btn-success">
-Apply
-</a>
-
 </div>
-
 </div>
-
 </div>
 
 <div class="col-md-3 mb-4">
-
 <div class="card shadow text-center">
-
 <div class="card-body">
-
 <h1>🏦</h1>
-
 <h4>Personal Loan</h4>
-
 <p>Instant loan approval with low interest.</p>
-
-<a href="customer/dashboard.jsp" class="btn btn-warning">
-Apply
-</a>
-
 </div>
-
 </div>
-
 </div>
 
 <div class="col-md-3 mb-4">
-
 <div class="card shadow text-center">
-
 <div class="card-body">
-
 <h1>📈</h1>
-
 <h4>Fixed Deposit</h4>
-
 <p>Earn higher interest with FD.</p>
-
-<a href="customer/dashboard.jsp" class="btn btn-danger">
-Open FD
-</a>
-
 </div>
-
 </div>
 
 </div>

@@ -45,10 +45,6 @@
                     <a class="nav-link active" href="contact.jsp">Contact</a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="login.jsp">Login</a>
-                </li>
-
             </ul>
 
         </div>
