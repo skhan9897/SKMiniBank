@@ -32,33 +32,6 @@ public class TransactionDAO {
         return saveTransaction(t);
     }
 
-    public List<Transaction> getRecentTransactions(int limit) {
-        List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT * FROM transactions ORDER BY transaction_date DESC LIMIT ?";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, limit);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Transaction t = new Transaction();
-                    t.setId(rs.getInt("transaction_id"));
-                    t.setAccountNumber(rs.getString("account_number"));
-                    t.setCustomerName(rs.getString("customer_name"));
-                    t.setTransactionType(rs.getString("transaction_type"));
-                    t.setAmount(rs.getDouble("amount"));
-                    t.setBalance(rs.getDouble("balance"));
-                    t.setDescription(rs.getString("description"));
-                    t.setTransactionDate(rs.getTimestamp("transaction_date"));
-                    t.setStatus(rs.getString("status"));
-                    list.add(t);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
     public List<Transaction> getAllTransactions() {
         List<Transaction> list = new ArrayList<>();
         String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC";
@@ -139,8 +112,6 @@ public class TransactionDAO {
         return t;
     }
 
-    public List<Transaction> getTodayTransactions() {
-    
     public boolean saveUpiTransaction(String accountNumber, String customerName, String type, double amount, double balance, String description) {
         String sql = "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,description,transaction_date,status) VALUES(?,?,?,?,?,?,NOW(),?)";
         try (Connection con = DBConnection.getConnection();
