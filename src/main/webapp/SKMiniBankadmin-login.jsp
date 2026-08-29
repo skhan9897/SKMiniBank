@@ -250,7 +250,7 @@
         }
         %>
 
-        <form id="loginForm" action="<%=request.getContextPath()%>/AdminLoginServlet" method="post" <%= request.getAttribute("authId") != null ? "style='display:none;'" : "" %>>
+        <form id="loginForm" action="<%=request.getContextPath()%>/AdminLoginServlet" method="post">
             <div class="text-start mb-1">
                 <label class="form-label">Admin ID</label>
             </div>
@@ -267,11 +267,6 @@
                 <input type="password" name="password" class="form-control" placeholder="••••••••" required>
             </div>
 
-            <div class="form-check form-switch text-start mb-4 ps-5">
-                <input class="form-check-input" type="checkbox" name="biometricEnabled" value="true" id="flexSwitchCheckChecked" checked>
-                <label class="form-check-label text-white-50 small" for="flexSwitchCheckChecked">Enable Mobile Fingerprint Auth</label>
-            </div>
-
             <button type="submit" class="btn btn-primary w-100 btn-login shadow">
                 SECURE ADMIN LOGIN
             </button>
@@ -280,36 +275,6 @@
                 <i class="fa fa-house-chimney me-2"></i> BACK TO TERMINAL
             </a>
         </form>
-
-        <% if (request.getAttribute("authId") != null) { %>
-        <div id="biometricWait" class="py-4">
-            <div class="spinner-border text-info mb-3" role="status" style="width: 3rem; height: 3rem;">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <h5 class="text-info fw-bold">Waiting for Mobile Fingerprint...</h5>
-            <p class="small text-white-50">Please open your authorized mobile app and verify with your fingerprint.</p>
-            <div class="badge bg-dark p-2 border border-info border-opacity-25 mt-2">
-                Request ID: <%= request.getAttribute("authId") %>
-            </div>
-
-            <script>
-                let authId = '<%= request.getAttribute("authId") %>';
-                let adminId = '<%= request.getAttribute("adminId") %>';
-
-                let checkTimer = setInterval(() => {
-                    fetch('<%=request.getContextPath()%>/AdminBiometricAuthServlet?action=check&authId=' + authId)
-                        .then(res => res.text())
-                        .then(status => {
-                            if (status === 'APPROVED') {
-                                clearInterval(checkTimer);
-                                // Finalize login
-                                window.location.href = '<%=request.getContextPath()%>/DashboardServlet';
-                            }
-                        });
-                }, 2000);
-            </script>
-        </div>
-        <% } %>
     </div>
 
     <div class="footer-credit">

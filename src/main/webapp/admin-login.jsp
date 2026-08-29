@@ -265,12 +265,8 @@
                 SECURE ADMIN LOGIN
             </button>
 
-            <a href="login.jsp" class="btn btn-home w-100">
-                <i class="fa fa-user me-2"></i> SWITCH TO CUSTOMER LOGIN
-            </a>
-
-            <a href="SKMiniBank.jsp" class="btn btn-home w-100 border-0 text-white-50 small mt-2">
-                <i class="fa fa-house-chimney me-2"></i> BACK TO HOME
+            <a href="SKMiniBank.jsp" class="btn btn-home w-100 mt-4">
+                <i class="fa fa-house-chimney me-2"></i> BACK TO TERMINAL
             </a>
         </form>
     </div>

@@ -10,9 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.biometric.BiometricManager;
-import androidx.biometric.BiometricPrompt;
-import androidx.core.content.ContextCompat;
 
 import com.bank.skminibank.R;
 import com.bank.skminibank.api.ApiClient;
@@ -22,8 +19,6 @@ import com.bank.skminibank.model.LoginResponse;
 import com.bank.skminibank.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.concurrent.Executor;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,8 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout layoutLanding, layoutLoginForm;
     private SessionManager sessionManager;
     private MaterialButton btnAction, btnLandingOpenAccount, btnShowLogin;
-    private View btnBiometricLogin;
-    private TextView tvBiometricLabel;
     
     private int loginStep = 1; // 1: Send OTP, 2: Verify OTP, 3: Password & Login
 
@@ -53,8 +46,6 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLandingOpenAccount = findViewById(R.id.btnLandingOpenAccount);
         btnShowLogin = findViewById(R.id.btnShowLogin);
-        btnBiometricLogin = findViewById(R.id.btnBiometricLogin);
-        tvBiometricLabel = findViewById(R.id.tvBiometricLabel);
 
         etMobile = findViewById(R.id.etMobileNumber);
         etOtp = findViewById(R.id.etOtp);
@@ -67,32 +58,12 @@ public class LoginActivity extends AppCompatActivity {
         if (!sessionManager.isLoggedInOnce()) {
             layoutLanding.setVisibility(View.VISIBLE);
             layoutLoginForm.setVisibility(View.GONE);
-            if (btnBiometricLogin != null) btnBiometricLogin.setVisibility(View.GONE);
         } else {
             layoutLanding.setVisibility(View.GONE);
             layoutLoginForm.setVisibility(View.VISIBLE);
             loginStep = 3;
             tilPassword.setVisibility(View.VISIBLE);
             btnAction.setText("LOGIN");
-            
-            // Show Biometric Button for returning users
-            if (btnBiometricLogin != null) {
-                btnBiometricLogin.setVisibility(View.VISIBLE);
-                updateBiometricUI();
-                
-                btnBiometricLogin.setOnClickListener(v -> {
-                    if (sessionManager.isBiometricEnabled()) {
-                        showBiometricPrompt();
-                    } else {
-                        Toast.makeText(this, "Please login with password once to enable Fingerprint", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-
-            // Auto-prompt if enabled
-            if (sessionManager.isBiometricEnabled()) {
-                new android.os.Handler().postDelayed(this::showBiometricPrompt, 500);
-            }
         }
 
         if (sessionManager.getMobile() != null) {
@@ -118,103 +89,6 @@ public class LoginActivity extends AppCompatActivity {
             layoutLoginForm.setVisibility(View.GONE);
             layoutLanding.setVisibility(View.VISIBLE);
         });
-    }
-
-    private void showBiometricPrompt() {
-        BiometricManager biometricManager = BiometricManager.from(this);
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
-            return;
-        }
-
-        Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                String mobile = sessionManager.getMobile();
-                String pass = sessionManager.getPassword();
-                if (mobile != null && pass != null) {
-                    loginUser(mobile, pass, "9897"); // Default OTP for biometric
-                }
-            }
-
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                if (errorCode != BiometricPrompt.ERROR_USER_CANCELED && errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
-                    Toast.makeText(LoginActivity.this, "Biometric Error: " + errString, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric Login")
-                .setSubtitle("Use your fingerprint to login safely")
-                .setNegativeButtonText("Use Password")
-                .build();
-
-        biometricPrompt.authenticate(promptInfo);
-    }
-
-    private void showBiometricSetupDialog() {
-        BiometricManager biometricManager = BiometricManager.from(this);
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-            finish();
-            return;
-        }
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Enable Fingerprint Login")
-                .setMessage("Would you like to use your fingerprint for future logins? It's faster and more secure.")
-                .setPositiveButton("Yes, Enable", (dialog, which) -> {
-                    setupFingerprintForLogin();
-                })
-                .setNegativeButton("No Thanks", (dialog, which) -> {
-                    startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                    finish();
-                })
-                .setCancelable(false)
-                .show();
-    }
-
-    private void setupFingerprintForLogin() {
-        Executor executor = ContextCompat.getMainExecutor(this);
-        BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
-            @Override
-            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
-                super.onAuthenticationSucceeded(result);
-                sessionManager.setBiometricEnabled(true);
-                Toast.makeText(LoginActivity.this, "Fingerprint Login Enabled!", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                finish();
-            }
-
-            @Override
-            public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
-                super.onAuthenticationError(errorCode, errString);
-                // Even if setup fails, go to dashboard
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                finish();
-            }
-        });
-
-        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Confirm Fingerprint")
-                .setSubtitle("Confirm your identity to enable biometric login")
-                .setNegativeButtonText("Cancel")
-                .build();
-
-        biometricPrompt.authenticate(promptInfo);
-    }
-
-    private void updateBiometricUI() {
-        if (tvBiometricLabel == null) return;
-        if (sessionManager.isBiometricEnabled()) {
-            tvBiometricLabel.setText("Login with Fingerprint");
-        } else {
-            tvBiometricLabel.setText("Enable Fingerprint Login");
-        }
     }
 
     private void handleLoginFlow() {
@@ -304,12 +178,8 @@ public class LoginActivity extends AppCompatActivity {
                                 res.getKycStatus()
                         );
                         
-                        if (!sessionManager.isBiometricEnabled()) {
-                            showBiometricSetupDialog();
-                        } else {
-                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-                            finish();
-                        }
+                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, res.getMessage(), Toast.LENGTH_SHORT).show();
                     }
