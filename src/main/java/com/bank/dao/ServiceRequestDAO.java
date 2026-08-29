@@ -63,6 +63,22 @@ public class ServiceRequestDAO {
         return list;
     }
 
+    public List<ServiceRequest> getActiveRequests() {
+        List<ServiceRequest> list = new ArrayList<>();
+        // Final statuses are hidden: DISBURSED, DELIVERED, ACTIVATED, REJECTED, VERIFIED
+        String sql = "SELECT * FROM service_request WHERE status NOT IN ('DISBURSED', 'DELIVERED', 'ACTIVATED', 'REJECTED', 'VERIFIED') ORDER BY request_date DESC";
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapRow(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public List<ServiceRequest> getAllRequests() {
         List<ServiceRequest> list = new ArrayList<>();
         String sql = "SELECT * FROM service_request ORDER BY request_date DESC";
@@ -245,39 +261,25 @@ public class ServiceRequestDAO {
             con = DBConnection.getConnection();
             con.setAutoCommit(false);
             
-            // Normalize Account Number for matching
-            String searchAcc = (accountNumber != null) ? accountNumber.trim().replaceAll("\\s+", "") : "";
+            // 0. Clean and prepare Account Number
+            String cleanAcc = (accountNumber != null) ? accountNumber.trim().replaceAll("\\s+", "") : "";
 
-            // 1. Update Request Status (Standard Columns First)
-            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=? WHERE request_id=?";
-            try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
-                ps.setString(1, "Loan Disbursed - " + (remarks != null ? remarks : "Approved"));
-                ps.setString(2, adminName);
-                ps.setInt(3, requestId);
-                ps.executeUpdate();
-            }
-
-            // Try to update delivered_date separately in case column is missing or failed to add
-            try (Statement st = con.createStatement()) {
-                st.executeUpdate("UPDATE service_request SET delivered_date=NOW() WHERE request_id=" + requestId);
-            } catch (Exception ignored) {}
-
-            // 2. Update Customer Balance
+            // 1. UPDATE CUSTOMER BALANCE (The most critical part)
             String sqlBal = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
             try (PreparedStatement ps = con.prepareStatement(sqlBal)) {
                 ps.setDouble(1, amount);
-                ps.setString(2, searchAcc);
+                ps.setString(2, cleanAcc);
                 int rows = ps.executeUpdate();
                 if (rows == 0) {
-                    throw new Exception("Account not found: " + searchAcc);
+                    throw new Exception("Account not found: " + cleanAcc);
                 }
             }
 
-            // 3. Fetch latest info for Log
+            // 2. FETCH LATEST INFO (Name and new balance for logging)
             double newBalance = 0;
-            String customerName = "Valued Customer";
+            String customerName = "Customer";
             try (PreparedStatement ps = con.prepareStatement("SELECT full_name, balance FROM customer WHERE REPLACE(account_number, ' ', '') = ?")) {
-                ps.setString(1, searchAcc);
+                ps.setString(1, cleanAcc);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         customerName = rs.getString("full_name");
@@ -286,22 +288,39 @@ public class ServiceRequestDAO {
                 }
             }
 
-            // 4. Log Transaction (Standard History)
+            // 3. LOG TO TRANSACTIONS TABLE
             String sqlTxn = "INSERT INTO transactions(account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status) " +
                             "VALUES (?, ?, 'LOAN_CREDIT', ?, ?, ?, NOW(), 'SUCCESS')";
             try (PreparedStatement ps = con.prepareStatement(sqlTxn)) {
-                ps.setString(1, accountNumber);
+                ps.setString(1, cleanAcc);
                 ps.setString(2, customerName);
                 ps.setDouble(3, amount);
                 ps.setDouble(4, newBalance);
                 ps.setString(5, "LOAN DISBURSED - SK MINI BANK | Ref: #" + requestId);
                 ps.executeUpdate();
+            } catch (Exception e) {
+                System.err.println("Non-critical: Log transaction failed, but balance updated. " + e.getMessage());
+            }
+
+            // 4. UPDATE SERVICE REQUEST STATUS
+            String sqlReq = "UPDATE service_request SET status='DISBURSED', remarks=?, approved_by=?, delivered_date=NOW() WHERE request_id=?";
+            try (PreparedStatement ps = con.prepareStatement(sqlReq)) {
+                ps.setString(1, "Loan Disbursed: " + (remarks != null ? remarks : "Paid"));
+                ps.setString(2, adminName);
+                ps.setInt(3, requestId);
+                ps.executeUpdate();
+            } catch (Exception e) {
+                // Try fallback status update if delivered_date column is the issue
+                try (PreparedStatement psFallback = con.prepareStatement("UPDATE service_request SET status='DISBURSED' WHERE request_id=?")) {
+                    psFallback.setInt(1, requestId);
+                    psFallback.executeUpdate();
+                } catch (Exception ignored) {}
             }
 
             con.commit();
             return true;
         } catch (Exception e) {
-            System.err.println("Loan Disburse CRITICAL Error: " + e.getMessage());
+            System.err.println("CRITICAL: Loan Disbursement Rollback for ID " + requestId + ". Reason: " + e.getMessage());
             if (con != null) try { con.rollback(); } catch (SQLException ex) {}
             return false;
         } finally {

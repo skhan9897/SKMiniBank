@@ -70,19 +70,16 @@ public class AdminRequestServlet extends HttpServlet {
                 case "DISBURSE":
                     String amtStr = request.getParameter("approvedAmount");
                     if (amtStr == null || amtStr.trim().isEmpty()) {
-                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Please enter approved amount");
-                        return;
-                    }
-                    if (accNo == null || accNo.trim().equalsIgnoreCase("N/A")) {
-                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Invalid Account Number (N/A)");
+                        response.sendRedirect(ctx + "/AdminAllRequestServlet?msg=error&error=Please enter approved amount");
                         return;
                     }
                     try {
                         double amount = Double.parseDouble(amtStr);
+                        // Using a very robust disburse method
                         status = dao.disburseLoan(requestId, accNo, amount, remarks, adminName);
-                    } catch (NumberFormatException e) {
-                        response.sendRedirect("AdminAllRequestServlet?msg=error&error=Invalid amount format");
-                        return;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        status = false;
                     }
                     break;
 

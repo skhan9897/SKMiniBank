@@ -317,15 +317,16 @@
                                 java.util.List<com.bank.model.Transaction> recent = (java.util.List<com.bank.model.Transaction>)request.getAttribute("recentTransactions");
                                 if(recent != null && !recent.isEmpty()){
                                     for(com.bank.model.Transaction t : recent){
-                                        boolean isCredit = t.getTransactionType().contains("CREDIT") || t.getTransactionType().contains("DEPOSIT");
+                                        String type = t.getTransactionType() != null ? t.getTransactionType().toUpperCase() : "TXN";
+                                        boolean isCredit = type.contains("CREDIT") || type.contains("DEPOSIT") || type.contains("LOAN");
                                 %>
                                 <tr>
                                     <td>
                                         <div class="fw-bold"><%=t.getCustomerName()%></div>
                                         <div class="small opacity-50"><%=t.getAccountNumber()%></div>
                                     </td>
-                                    <td><span class="badge <%=isCredit ? "bg-success" : "bg-danger"%> bg-opacity-10 <%=isCredit ? "text-success" : "text-danger"%> rounded-pill px-2 py-1" style="font-size: 9px;"><%=t.getTransactionType()%></span></td>
-                                    <td class="fw-bold <%=isCredit ? "text-success" : "text-danger"%>">₹<%=String.format("%,.0f", t.getAmount())%></td>
+                                    <td><span class="badge <%=isCredit ? "bg-success" : "bg-danger"%> bg-opacity-10 <%=isCredit ? "text-success" : "text-danger"%> rounded-pill px-2 py-1" style="font-size: 9px;"><%=type%></span></td>
+                                    <td class="fw-bold <%=isCredit ? "text-success" : "text-danger"%>"><%=isCredit ? "+" : "-"%> ₹<%=String.format("%,.0f", t.getAmount())%></td>
                                     <td class="text-muted small text-truncate" style="max-width: 150px;" title="<%=t.getDescription()%>"><%=t.getDescription()%></td>
                                 </tr>
                                 <% } } else { %>
@@ -361,10 +362,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Auto-refresh dashboard every 60 seconds to keep stats updated
+    // Auto-refresh dashboard every 20 seconds to keep live feed updated
     setTimeout(function() {
         window.location.reload();
-    }, 60000);
+    }, 20000);
 </script>
 </body>
 </html>

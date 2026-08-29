@@ -300,7 +300,8 @@ public class LoginActivity extends AppCompatActivity {
                                 res.getAccountNumber(),
                                 password,
                                 mobile,
-                                res.getEmail()
+                                res.getEmail(),
+                                res.getKycStatus()
                         );
                         
                         if (!sessionManager.isBiometricEnabled()) {

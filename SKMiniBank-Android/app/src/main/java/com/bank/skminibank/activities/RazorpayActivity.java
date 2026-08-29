@@ -38,7 +38,8 @@ public class RazorpayActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        if (!"VERIFIED".equalsIgnoreCase(sessionManager.getKycStatus())) {
+        String kyc = sessionManager.getKycStatus();
+        if (!"VERIFIED".equalsIgnoreCase(kyc) && !"APPROVED".equalsIgnoreCase(kyc)) {
             Toast.makeText(this, "PLEASE UPDATE AND VERIFY YOUR KYC FIRST", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, KYCUpdateActivity.class));
             finish();

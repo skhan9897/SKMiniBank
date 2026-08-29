@@ -417,6 +417,8 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         refreshData();
+        // Force log for debugging (can be removed later)
+        android.util.Log.d("Dashboard", "Current KYC Status in Session: " + sessionManager.getKycStatus());
     }
 
     @Override

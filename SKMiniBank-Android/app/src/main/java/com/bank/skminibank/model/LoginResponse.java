@@ -14,8 +14,13 @@ public class LoginResponse {
     private String email;
 
     private double balance;
+    private String kycStatus;
 
     public LoginResponse() {
+    }
+
+    public String getKycStatus() {
+        return kycStatus;
     }
 
     public String getStatus() {

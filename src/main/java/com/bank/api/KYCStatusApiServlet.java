@@ -41,7 +41,7 @@ public class KYCStatusApiServlet extends HttpServlet {
 
             String json = "{"
                     + "\"success\":true,"
-                    + "\"status\":\"" + service.getStatus() + "\","
+                    + "\"status\":\"" + service.getStatus().toUpperCase() + "\","
                     + "\"remarks\":\"" + (service.getRemarks() == null ? "" : service.getRemarks()) + "\","
                     + "\"requestDate\":\"" + date + "\""
                     + "}";

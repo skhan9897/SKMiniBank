@@ -68,7 +68,13 @@ public class KYCUpdateActivity extends AppCompatActivity {
                         !status.equalsIgnoreCase("failed") &&
                         !res.getMessage().toLowerCase().contains("no kyc request found")) {
                         
-                        sessionManager.setKycStatus(status);
+                        // Standardize status: If request is approved, user is verified
+                        if ("APPROVED".equalsIgnoreCase(status) || "VERIFIED".equalsIgnoreCase(status)) {
+                            sessionManager.setKycStatus("VERIFIED");
+                        } else {
+                            sessionManager.setKycStatus(status);
+                        }
+
                         showStatus(status, res.getMessage());
                     } else {
                         showForm();

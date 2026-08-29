@@ -52,7 +52,8 @@ public class LoginApiServlet extends HttpServlet {
                 out.print("\"mobile\":\"" + customer.getMobile() + "\",");
                 out.print("\"email\":\"" + customer.getEmail() + "\",");
                 out.print("\"balance\":" + customer.getBalance() + ",");
-                out.print("\"accountStatus\":\"" + customer.getStatus() + "\"");
+                out.print("\"accountStatus\":\"" + customer.getStatus() + "\",");
+                out.print("\"kycStatus\":\"" + (customer.getKycStatus() != null ? customer.getKycStatus().toUpperCase() : "PENDING") + "\"");
                 out.print("}");
             } else {
                 out.print("{\"status\":\"failed\",\"message\":\"Incorrect Mobile Number or Password\"}");

@@ -31,7 +31,8 @@ public class AdminAllRequestServlet extends HttpServlet {
 
         ServiceRequestDAO dao = new ServiceRequestDAO();
 
-        List<ServiceRequest> list = dao.getAllRequests();
+        // Only fetch active (Pending/Approved/In-Process) requests
+        List<ServiceRequest> list = dao.getActiveRequests();
 
         request.setAttribute("requestList", list);
 

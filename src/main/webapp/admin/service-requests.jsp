@@ -67,7 +67,7 @@ if ("/".equals(ctx)) ctx = "";
             <tr style="border-bottom: 1px solid #f0f4f8;">
                 <td class="fw-bold text-muted">#<%=r.getRequestId()%></td>
                 <td>
-                    <div class="fw-bold" style="color: #102a43;"><%=r.getAccountNumber()%></div>
+                    <div class="fw-bold" style="color: #102a43;"><%= (r.getAccountNumber() != null && !r.getAccountNumber().equalsIgnoreCase("N/A")) ? r.getAccountNumber() : "MISSING ACC#" %></div>
                     <div class="small opacity-50">CID: <%=r.getCustomerId()%></div>
                 </td>
                 <td><span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2"><%=type%></span></td>

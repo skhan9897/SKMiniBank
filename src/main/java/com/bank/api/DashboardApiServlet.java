@@ -40,6 +40,8 @@ public class DashboardApiServlet extends HttpServlet {
             Customer c = dao.getCustomerById(customerId);
 
             if (c != null) {
+                String currentKyc = c.getKycStatus();
+                if (currentKyc == null) currentKyc = "PENDING";
 
                 out.print("{");
                 out.print("\"status\":\"success\",");
@@ -51,7 +53,7 @@ public class DashboardApiServlet extends HttpServlet {
                 out.print("\"branch\":\"" + safe(c.getBranch()) + "\",");
                 out.print("\"balance\":" + c.getBalance() + ",");
                 out.print("\"accountStatus\":\"" + safe(c.getStatus()) + "\",");
-                out.print("\"kycStatus\":\"" + safe(c.getKycStatus()) + "\",");
+                out.print("\"kycStatus\":\"" + currentKyc.toUpperCase() + "\",");
                 out.print("\"upiId\":\"" + safe(c.getUpiId()) + "\",");
                 out.print("\"upiStatus\":\"" + safe(c.getUpiStatus()) + "\"");
                 out.print("}");

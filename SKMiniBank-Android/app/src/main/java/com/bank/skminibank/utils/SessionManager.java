@@ -53,7 +53,7 @@ public class SessionManager {
         return pref.getFloat(KEY_LAST_BALANCE, -1);
     }
 
-    public void createLoginSession(int customerId, String name, String accNo, String password, String mobile, String email) {
+    public void createLoginSession(int customerId, String name, String accNo, String password, String mobile, String email, String kycStatus) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.putBoolean(KEY_HAS_LOGGED_IN_ONCE, true);
         editor.putInt(KEY_CUSTOMER_ID, customerId);
@@ -62,6 +62,7 @@ public class SessionManager {
         editor.putString(KEY_PASSWORD, password);
         editor.putString(KEY_MOBILE, mobile);
         editor.putString(KEY_EMAIL, email);
+        editor.putString(KEY_KYC_STATUS, kycStatus);
         editor.apply();
     }
 

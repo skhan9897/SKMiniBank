@@ -88,7 +88,7 @@ public class DashboardDAO {
     }
 
     public int getTotalPendingRequests() {
-        String sql = "SELECT COUNT(*) FROM service_request WHERE status='PENDING'";
+        String sql = "SELECT COUNT(*) FROM service_request WHERE status NOT IN ('DISBURSED', 'DELIVERED', 'ACTIVATED', 'REJECTED', 'VERIFIED')";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
