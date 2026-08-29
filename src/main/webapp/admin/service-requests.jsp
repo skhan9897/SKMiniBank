@@ -101,6 +101,7 @@ if ("/".equals(ctx)) ctx = "";
                         <input type="hidden" name="requestId" value="<%=r.getRequestId()%>">
                         <input type="hidden" name="accountNumber" value="<%=r.getAccountNumber()%>">
                         <input type="hidden" name="customerId" value="<%=r.getCustomerId()%>">
+                        <input type="hidden" name="requestType" value="<%=type%>">
 
                         <%
                         String submittedAadhaar = "";

@@ -21,8 +21,8 @@ public class ReferEarnActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SessionManager session = new SessionManager(this);
-        TextView tvCode = findViewById(R.id.tvReferralCode);
-        MaterialButton btnInvite = findViewById(R.id.btnInvite);
+        TextView tvCode = findViewById(R.id.tvReferCode);
+        MaterialButton btnInvite = findViewById(R.id.btnShare);
 
         // Generate Referral Code from account number
         String acc = session.getAccountNumber();

@@ -87,7 +87,18 @@ public class AdminRequestServlet extends HttpServlet {
                     break;
 
                 case "ACTIVATE":
-                    status = dao.updateRequestStatus(requestId, "ACTIVATED", "Service Activated Successfully", adminName);
+                    String type = request.getParameter("requestType");
+                    String genUser = "SKB" + (100000 + new java.util.Random().nextInt(900000));
+                    String genPass = "BANK@" + (1000 + new java.util.Random().nextInt(9000));
+                    String activationRemarks = "USER ID: " + genUser + " | PASSWORD: " + genPass;
+                    
+                    status = dao.updateRequestStatus(requestId, "ACTIVATED", activationRemarks, adminName);
+                    if (status) {
+                        response.sendRedirect(ctx + "/admin/activation-success.jsp?type=" + java.net.URLEncoder.encode(type, "UTF-8") 
+                                + "&creds=" + java.net.URLEncoder.encode(activationRemarks, "UTF-8") 
+                                + "&acc=" + accNo);
+                        return;
+                    }
                     break;
 
                 case "VERIFY_KYC":

@@ -58,8 +58,13 @@ public class NetBankingActivity extends AppCompatActivity {
                     
                     if (status != null && !status.isEmpty() && !status.equalsIgnoreCase("error")) {
                         tvStatus.setText(status.toUpperCase());
-                        if (res.getMessage() != null) tvRemarks.setText(res.getMessage());
                         
+                        String message = res.getMessage();
+                        if (message != null && !message.isEmpty()) {
+                            tvRemarks.setText(message);
+                            tvRemarks.setVisibility(View.VISIBLE);
+                        }
+
                         if ("ACTIVATED".equalsIgnoreCase(status) || "APPROVED".equalsIgnoreCase(status)) {
                             tvStatus.setBackgroundResource(R.drawable.badge_approved);
                             btnEnable.setVisibility(View.GONE);

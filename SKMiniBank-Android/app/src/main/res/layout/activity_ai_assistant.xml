@@ -20,10 +20,19 @@
         android:id="@+id/rvChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/inputContainer"
+        android:layout_above="@id/chatProgress"
         android:layout_below="@id/toolbar"
         android:padding="12dp"
         android:clipToPadding="false" />
+
+    <ProgressBar
+        android:id="@+id/chatProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/inputContainer"
+        android:indeterminate="true"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/inputContainer"
@@ -48,10 +57,21 @@
             android:textSize="14sp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnSend"
+            android:id="@+id/btnMic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            app:backgroundTint="@color/web_accent_blue"
+            app:tint="@color/white"
+            app:fabSize="mini"
+            android:contentDescription="Voice Input" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:src="@android:drawable/ic_menu_send"
             app:backgroundTint="@color/web_accent_blue"
             app:tint="@color/white"
