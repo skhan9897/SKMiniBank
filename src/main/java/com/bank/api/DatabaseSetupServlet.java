@@ -66,6 +66,19 @@ public class DatabaseSetupServlet extends HttpServlet {
                     logs.append("- Column '").append(col[0]).append("' added to customer.\n");
                 }
             }
+
+            // 4. Ensure transactions table is perfectly structured
+            stmt.execute("CREATE TABLE IF NOT EXISTS transactions (" +
+                         "transaction_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                         "account_number VARCHAR(50), " +
+                         "customer_name VARCHAR(100), " +
+                         "transaction_type VARCHAR(50), " +
+                         "amount DOUBLE, " +
+                         "balance DOUBLE, " +
+                         "description TEXT, " +
+                         "transaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, " +
+                         "status VARCHAR(20) DEFAULT 'SUCCESS')");
+            logs.append("- Transactions table verified/created.\n");
             
             logs.append("\nDATABASE SETUP COMPLETED SUCCESSFULLY!");
             response.getWriter().write(logs.toString());

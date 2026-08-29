@@ -58,19 +58,11 @@ public class DepositApiServlet extends HttpServlet {
             } else {
                 boolean success = accountDAO.deposit(accountNumber, amount);
                 if (success) {
-                    // Fetch updated data
+                    // Fetch updated data for response
                     account = accountDAO.getAccountByNumber(accountNumber);
-
-                    // Log transaction record
-                    Transaction t = new Transaction();
-                    t.setAccountNumber(accountNumber);
-                    t.setCustomerName(account.getCustomerName());
-                    t.setBalance(account.getBalance());
-                    t.setTransactionType("Deposit");
-                    t.setAmount(amount);
-                    t.setTransactionDate(new java.sql.Timestamp(System.currentTimeMillis()));
-                    t.setStatus("SUCCESS");
-                    new TransactionDAO().addTransaction(t);
+                    
+                    // NOTE: Transaction is already logged inside accountDAO.deposit()
+                    // to prevent double-entry.
 
                     apiResponse.setStatus("SUCCESS");
                     apiResponse.setMessage("Amount ₹" + amount + " deposited successfully.");

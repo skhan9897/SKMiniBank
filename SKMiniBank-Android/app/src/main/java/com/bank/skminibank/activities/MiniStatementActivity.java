@@ -96,10 +96,8 @@ public class MiniStatementActivity extends AppCompatActivity {
                         List<Transaction> allTransactions = response.body().getTransactions();
                         if (allTransactions != null && !allTransactions.isEmpty()) {
                             transactionList.clear();
-                            // Show all transactions till today as requested
-                            List<Transaction> reversedList = new ArrayList<>(allTransactions);
-                            Collections.reverse(reversedList);
-                            transactionList.addAll(reversedList);
+                            // Showing all transactions, latest on top
+                            transactionList.addAll(allTransactions);
                             adapter.notifyDataSetChanged();
 
                         } else {

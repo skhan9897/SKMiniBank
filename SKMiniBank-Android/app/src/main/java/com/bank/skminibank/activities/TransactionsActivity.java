@@ -132,7 +132,13 @@ public class TransactionsActivity extends AppCompatActivity {
 
     private void filterTransactions(String query) {
         transactionList.clear();
-        String today = sdf.format(new java.util.Date());
+        
+        // Sane date formats for comparison
+        java.text.SimpleDateFormat serverFormat = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        java.text.SimpleDateFormat localFormat = new java.text.SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+        String todayServer = serverFormat.format(new java.util.Date());
+        String todayLocal = localFormat.format(new java.util.Date());
+        
         String lowerQuery = query.toLowerCase(Locale.getDefault());
 
         for (Transaction t : fullTransactionList) {
@@ -141,7 +147,8 @@ public class TransactionsActivity extends AppCompatActivity {
                     (t.getTransactionId() != null && t.getTransactionId().toLowerCase().contains(lowerQuery)) ||
                     (t.getType() != null && t.getType().toLowerCase().contains(lowerQuery));
 
-            boolean matchesToday = !showOnlyToday || (t.getDate() != null && t.getDate().contains(today));
+            String tDate = t.getDate();
+            boolean matchesToday = !showOnlyToday || (tDate != null && (tDate.contains(todayServer) || tDate.contains(todayLocal)));
 
             if (matchesSearch && matchesToday) {
                 transactionList.add(t);
@@ -150,7 +157,7 @@ public class TransactionsActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
         if (tvTotalTransactions != null) {
-            tvTotalTransactions.setText("Total Transactions: " + transactionList.size());
+            tvTotalTransactions.setText("Records Found: " + transactionList.size());
         }
     }
 

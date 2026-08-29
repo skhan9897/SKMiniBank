@@ -54,7 +54,7 @@ public class AccountDAO {
     }
 
     public Account getAccountByNumber(String accountNumber) {
-        String sql = "SELECT customer_id, account_number, account_type, balance, status, full_name FROM customer WHERE account_number=?";
+        String sql = "SELECT customer_id, account_number, account_type, balance, status, full_name FROM customer WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '')";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
@@ -77,7 +77,7 @@ public class AccountDAO {
     }
 
     public boolean updateBalance(String accountNumber, double balance) {
-        String sql = "UPDATE account SET balance=? WHERE account_number=?";
+        String sql = "UPDATE customer SET balance=? WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '')";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, balance);
@@ -90,7 +90,8 @@ public class AccountDAO {
     }
   
     public boolean deposit(String accountNumber, double amount) {
-        String sql = "UPDATE customer SET balance = balance + ? WHERE account_number=? AND status<>'FREEZE'";
+        // Robust matching for deposit
+        String sql = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') AND status<>'FREEZE'";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, amount);
@@ -98,7 +99,9 @@ public class AccountDAO {
             boolean ok = ps.executeUpdate() > 0;
             if (ok) {
                 Account a = getAccountByNumber(accountNumber);
-                new TransactionDAO().saveUpiTransaction(accountNumber, a.getCustomerName(), "DEPOSIT", amount, a.getBalance(), "Cash Deposit");
+                if (a != null) {
+                    new TransactionDAO().saveUpiTransaction(a.getAccountNumber(), a.getCustomerName(), "DEPOSIT", amount, a.getBalance(), "Cash Deposit");
+                }
             }
             return ok;
         } catch (SQLException e) {
@@ -108,7 +111,8 @@ public class AccountDAO {
     }
 
     public boolean withdraw(String accountNumber, double amount) {
-        String sql = "UPDATE customer SET balance = balance - ? WHERE account_number=? AND balance>=? AND status='ACTIVE' AND kyc_status='VERIFIED'";
+        // Robust matching for withdrawal
+        String sql = "UPDATE customer SET balance = balance - ? WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') AND balance>=? AND status='ACTIVE' AND (kyc_status='VERIFIED' OR kyc_status='APPROVED')";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setDouble(1, amount);
@@ -117,7 +121,9 @@ public class AccountDAO {
             boolean ok = ps.executeUpdate() > 0;
             if (ok) {
                 Account a = getAccountByNumber(accountNumber);
-                new TransactionDAO().saveUpiTransaction(accountNumber, a.getCustomerName(), "WITHDRAWAL", amount, a.getBalance(), "Cash Withdrawal");
+                if (a != null) {
+                    new TransactionDAO().saveUpiTransaction(a.getAccountNumber(), a.getCustomerName(), "WITHDRAWAL", amount, a.getBalance(), "Cash Withdrawal");
+                }
             }
             return ok;
         } catch (SQLException e) {
