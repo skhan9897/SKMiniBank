@@ -231,11 +231,14 @@ public class TransactionsActivity extends AppCompatActivity {
 
     private void downloadStatement() {
         String accountNumber = sessionManager.getAccountNumber();
+        int customerId = sessionManager.getCustomerId();
         if (accountNumber == null) return;
 
-        String url = "https://skminibank-1.onrender.com/TransactionPDFServlet?accountNumber=" + accountNumber;
+        // Clean account number and add customer ID for the server to find records correctly
+        String cleanAcc = accountNumber.replaceAll("\\s+", "").toUpperCase(Locale.getDefault());
+        String url = "https://skminibank-1.onrender.com/TransactionPDFServlet?accountNumber=" + cleanAcc + "&customerId=" + customerId;
         
-        Toast.makeText(this, "Opening Statement PDF...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Generating Statement PDF...", Toast.LENGTH_SHORT).show();
         
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));

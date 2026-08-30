@@ -150,4 +150,27 @@ public class TransactionDAO {
         }
         return 0.0;
     }
+
+    public double getTotalDeposit() {
+        return getSum("SELECT SUM(amount) FROM transactions WHERE transaction_type='DEPOSIT' AND status='SUCCESS'");
+    }
+
+    public double getTotalWithdraw() {
+        return getSum("SELECT SUM(amount) FROM transactions WHERE transaction_type='WITHDRAWAL' AND status='SUCCESS'");
+    }
+
+    public double getTotalTransfer() {
+        return getSum("SELECT SUM(amount) FROM transactions WHERE transaction_type IN ('DEBIT','CREDIT','Transfer') AND status='SUCCESS'");
+    }
+
+    private double getSum(String sql) {
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getDouble(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
 }
