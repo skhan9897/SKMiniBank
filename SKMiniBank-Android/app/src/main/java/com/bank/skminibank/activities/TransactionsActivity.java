@@ -240,19 +240,32 @@ public class TransactionsActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
                     
-                    // Clear and update with whatever we got (even if empty)
-                    fullTransactionList.clear();
                     if (txns != null && !txns.isEmpty()) {
+                        // Only clear and update if we actually got new transactions
+                        fullTransactionList.clear();
                         fullTransactionList.addAll(txns);
                         saveTransactionsToLocal(txns);
-                    }
-                    filterTransactions(etSearch.getText().toString());
-                    
-                    if ((txns == null || txns.isEmpty()) && !isRetry) {
-                        // Retry once with RAW account number just in case
-                        String rawAcc = sessionManager.getAccountNumber();
-                        if (rawAcc != null && !rawAcc.equals(apiAcc)) {
-                            executeFetch(rawAcc, customerId, true);
+                        filterTransactions(etSearch.getText().toString());
+                    } else {
+                        // If no transactions found with clean account, try with raw if it's different and not a retry
+                        if (!isRetry) {
+                            String rawAcc = sessionManager.getAccountNumber();
+                            if (rawAcc != null && !rawAcc.equals(apiAcc)) {
+                                executeFetch(rawAcc, customerId, true);
+                                return;
+                            }
+                        }
+                        
+                        // If we reach here, it's either a retry or rawAcc == apiAcc
+                        // If the list is empty, show local data instead of an empty screen
+                        if (fullTransactionList.isEmpty()) {
+                            loadTransactionsFromLocal();
+                        } else {
+                            filterTransactions(etSearch.getText().toString());
+                        }
+                        
+                        if (txns == null) {
+                             Toast.makeText(TransactionsActivity.this, "Unable to fetch latest transactions", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
@@ -265,7 +278,7 @@ public class TransactionsActivity extends AppCompatActivity {
             public void onFailure(@NonNull Call<TransactionResponse> call, @NonNull Throwable t) {
                 if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
                 loadTransactionsFromLocal();
-                Toast.makeText(TransactionsActivity.this, "Syncing from local...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TransactionsActivity.this, "Network error. Loading offline data...", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -362,10 +362,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Auto-refresh dashboard every 20 seconds to keep live feed updated
-    setTimeout(function() {
-        window.location.reload();
-    }, 20000);
+    // Auto-refresh via DashboardServlet every 15 seconds to keep data live
+    function liveSync() {
+        window.location.href = "<%= sidebarCtx %>/DashboardServlet";
+    }
+    setTimeout(liveSync, 15000);
 </script>
 </body>
 </html>

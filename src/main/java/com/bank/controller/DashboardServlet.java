@@ -34,7 +34,8 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("totalPendingRequests", dao.getTotalPendingRequests());
         
         // Fetch last 15 transactions for the live feed - efficient way
-        request.setAttribute("recentTransactions", tdao.getRecentTransactions(15));
+        java.util.List<com.bank.model.Transaction> recent = tdao.getRecentTransactions(15);
+        request.setAttribute("recentTransactions", recent);
 
         request.getRequestDispatcher("/admin/SKMiniBank-System.jsp")
                .forward(request, response);

@@ -33,42 +33,25 @@ public class TransactionDAO {
     }
 
     public List<Transaction> getAllTransactions() {
-        List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(mapResultSet(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+        return fetchList("SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC", 0);
     }
 
     public List<Transaction> getTodayTransactions() {
-        List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status " +
-                     "FROM transactions WHERE DATE(transaction_date) = CURDATE() ORDER BY transaction_date DESC";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(mapResultSet(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
+        return fetchList("SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status " +
+                         "FROM transactions WHERE DATE(transaction_date) = CURDATE() ORDER BY transaction_date DESC", 0);
     }
 
     public List<Transaction> getRecentTransactions(int limit) {
+        return fetchList("SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC LIMIT ?", limit);
+    }
+
+    public List<Transaction> getTransactionsByAccount(String accountNumber) {
         List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status FROM transactions ORDER BY transaction_date DESC LIMIT ?";
+        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status " +
+                     "FROM transactions WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') ORDER BY transaction_date DESC";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, limit);
+            ps.setString(1, accountNumber != null ? accountNumber.trim() : "");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapResultSet(rs));
@@ -80,13 +63,11 @@ public class TransactionDAO {
         return list;
     }
 
-    public List<Transaction> getTransactionsByAccount(String accountNumber) {
+    private List<Transaction> fetchList(String sql, int limit) {
         List<Transaction> list = new ArrayList<>();
-        String sql = "SELECT transaction_id as id, account_number, customer_name, transaction_type, amount, balance, description, transaction_date, status " +
-                     "FROM transactions WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') ORDER BY transaction_date DESC";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, accountNumber != null ? accountNumber.trim() : "");
+            if (limit > 0) ps.setInt(1, limit);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapResultSet(rs));
@@ -113,7 +94,7 @@ public class TransactionDAO {
     }
 
     public boolean saveUpiTransaction(String accountNumber, String customerName, String type, double amount, double balance, String description) {
-        String sql = "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,description,transaction_date,status) VALUES(?,?,?,?,?,?,NOW(),?)";
+        String sql = "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,description,transaction_date,status) VALUES(?,?,?,?,?,?,NOW(),'SUCCESS')";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, accountNumber);
@@ -122,12 +103,29 @@ public class TransactionDAO {
             ps.setDouble(4, amount);
             ps.setDouble(5, balance);
             ps.setString(6, description);
-            ps.setString(7, "SUCCESS");
-            return ps.executeUpdate() > 0;
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                System.out.println("LOG: Transaction Saved Successfully for " + accountNumber);
+                return true;
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            System.err.println("LOG: Transaction Save Failed (Full Query): " + e.getMessage());
+            // Fallback for older table structures without 'status' column
+            String sqlFallback = "INSERT INTO transactions(account_number,customer_name,transaction_type,amount,balance,description,transaction_date) VALUES(?,?,?,?,?,?,NOW())";
+            try (Connection con = DBConnection.getConnection();
+                 PreparedStatement ps = con.prepareStatement(sqlFallback)) {
+                ps.setString(1, accountNumber);
+                ps.setString(2, customerName);
+                ps.setString(3, type);
+                ps.setDouble(4, amount);
+                ps.setDouble(5, balance);
+                ps.setString(6, description);
+                return ps.executeUpdate() > 0;
+            } catch (SQLException ex) {
+                System.err.println("LOG: Transaction Save Failed completely: " + ex.getMessage());
+            }
         }
+        return false;
     }
 
     public int getTotalTransactions() {

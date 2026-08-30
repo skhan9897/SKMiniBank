@@ -74,7 +74,8 @@ public class DashboardDAO {
     }
 
     public int getTotalTransactions() {
-        String sql = "SELECT COUNT(*) FROM transactions";
+        // Only count successful transactions for today
+        String sql = "SELECT COUNT(*) FROM transactions WHERE DATE(transaction_date) = CURDATE() AND status='SUCCESS'";
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

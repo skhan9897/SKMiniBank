@@ -283,22 +283,20 @@ public class DashboardActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<TransactionResponse> call, @NonNull Response<TransactionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Transaction> txns = response.body().getTransactions();
-                    if (txns != null) {
+                    if (txns != null && !txns.isEmpty()) {
                         // Update UI instantly
                         transactionList.clear();
-                        if (!txns.isEmpty()) {
-                            for (int i = 0; i < Math.min(txns.size(), 10); i++) {
-                                transactionList.add(txns.get(i));
-                            }
+                        for (int i = 0; i < Math.min(txns.size(), 10); i++) {
+                            transactionList.add(txns.get(i));
                         }
                         if (transactionAdapter != null) {
                             transactionAdapter.notifyDataSetChanged();
                         }
                         
                         // Sync with local database
-                        if (!txns.isEmpty()) {
-                            saveTransactionsToLocal(txns);
-                        }
+                        saveTransactionsToLocal(txns);
+                    } else if (transactionList.isEmpty()) {
+                        loadRecentTransactionsFromLocal();
                     }
                 }
             }
