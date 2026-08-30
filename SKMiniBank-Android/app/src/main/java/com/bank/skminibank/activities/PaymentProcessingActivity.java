@@ -93,6 +93,17 @@ public class PaymentProcessingActivity extends AppCompatActivity {
     private void handleResponse(Response<LoginResponse> response) {
         if (response.isSuccessful() && response.body() != null && "success".equalsIgnoreCase(response.body().getStatus())) {
             saveRecentRecipient(name, toIdentifier);
+            
+            // Save to Local Database for instant Passbook update
+            String tid = "TXN" + System.currentTimeMillis();
+            String date = new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault()).format(new java.util.Date());
+            com.bank.skminibank.database.AppDatabase db = com.bank.skminibank.database.AppDatabase.getInstance(this);
+            new Thread(() -> {
+                db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
+                        fromAcc, tid, "DEBIT", amount, remarks != null && !remarks.isEmpty() ? remarks : "Transfer to " + name, date, response.body().getBalance()
+                ));
+            }).start();
+
             PaymentVoiceUtil.speakPayment(this, amount, false);
             
             // Navigate to success screen after exactly 2 seconds total (approx)

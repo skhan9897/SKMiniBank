@@ -10,6 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
+import androidx.core.content.ContextCompat;
 
 import com.bank.skminibank.R;
 import com.bank.skminibank.api.ApiClient;
@@ -89,6 +92,38 @@ public class LoginActivity extends AppCompatActivity {
             layoutLoginForm.setVisibility(View.GONE);
             layoutLanding.setVisibility(View.VISIBLE);
         });
+
+        if (sessionManager.isBiometricEnabled()) {
+            new android.os.Handler().postDelayed(this::showBiometricLogin, 500);
+        }
+    }
+
+    private void showBiometricLogin() {
+        BiometricManager biometricManager = BiometricManager.from(this);
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) != BiometricManager.BIOMETRIC_SUCCESS) {
+            return;
+        }
+
+        java.util.concurrent.Executor executor = ContextCompat.getMainExecutor(this);
+        BiometricPrompt biometricPrompt = new BiometricPrompt(this, executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                String mobile = sessionManager.getMobile();
+                String password = sessionManager.getPassword();
+                if (mobile != null && password != null) {
+                    loginUser(mobile, password, "VERIFIED");
+                }
+            }
+        });
+
+        BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Quick Login")
+                .setSubtitle("Login using your fingerprint")
+                .setNegativeButtonText("Use Password")
+                .build();
+
+        biometricPrompt.authenticate(promptInfo);
     }
 
     private void handleLoginFlow() {

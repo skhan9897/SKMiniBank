@@ -335,6 +335,17 @@ public class ChatTransferActivity extends AppCompatActivity {
                     ownerAcc, localTxnId, contactMobile,
                     "Payment to " + contactName, msg.getAmount(), true,
                     TransactionChatMessage.TYPE_PAYMENT, msg.getTimestamp(), "SUCCESS"));
+            
+            // ALSO Save to Transactions table for Passbook visibility
+            final String finalOwnerAcc = ownerAcc;
+            new Thread(() -> {
+                db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
+                        finalOwnerAcc, localTxnId, "DEBIT", msg.getAmount(), 
+                        "Sent to " + contactName + " (" + contactMobile + ")", 
+                        msg.getTimestamp(), -1
+                ));
+            }).start();
+
             PaymentVoiceUtil.speakPayment(this, msg.getAmount(), false);
             Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
         } else {

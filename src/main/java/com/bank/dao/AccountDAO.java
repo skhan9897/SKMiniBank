@@ -90,20 +90,43 @@ public class AccountDAO {
     }
   
     public boolean deposit(String accountNumber, double amount) {
-        // Robust matching for deposit
-        String sql = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') AND status<>'FREEZE'";
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setDouble(1, amount);
-            ps.setString(2, accountNumber);
-            boolean ok = ps.executeUpdate() > 0;
-            if (ok) {
-                Account a = getAccountByNumber(accountNumber);
-                if (a != null) {
-                    new TransactionDAO().saveUpiTransaction(a.getAccountNumber(), a.getCustomerName(), "DEPOSIT", amount, a.getBalance(), "Cash Deposit");
-                }
+        // Normalize and check input
+        if (accountNumber == null || accountNumber.trim().equalsIgnoreCase("N/A")) return false;
+        String searchAcc = accountNumber.trim().replaceAll("\\s+", "");
+        
+        try (Connection con = DBConnection.getConnection()) {
+            con.setAutoCommit(false);
+            
+            // 1. Update Customer Table Balance
+            String sqlCust = "UPDATE customer SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
+            int rowsCust = 0;
+            try (PreparedStatement ps = con.prepareStatement(sqlCust)) {
+                ps.setDouble(1, amount);
+                ps.setString(2, searchAcc);
+                rowsCust = ps.executeUpdate();
             }
-            return ok;
+
+            // 2. Update Account Table Balance (Dual Sync for safety)
+            String sqlAcc = "UPDATE account SET balance = balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
+            try (PreparedStatement ps = con.prepareStatement(sqlAcc)) {
+                ps.setDouble(1, amount);
+                ps.setString(2, searchAcc);
+                ps.executeUpdate(); 
+            } catch (Exception ignored) {}
+
+            if (rowsCust > 0) {
+                con.commit();
+                
+                // 3. Log Transaction
+                Account a = getAccountByNumber(searchAcc);
+                if (a != null) {
+                    new TransactionDAO().saveUpiTransaction(a.getAccountNumber(), a.getCustomerName(), "DEPOSIT", amount, a.getBalance(), "Wallet Add Money");
+                }
+                return true;
+            } else {
+                con.rollback();
+                return false;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

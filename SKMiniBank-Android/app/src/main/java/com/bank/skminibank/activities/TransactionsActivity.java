@@ -23,6 +23,7 @@ import com.bank.skminibank.adapters.TransactionsAdapter;
 import com.bank.skminibank.api.ApiClient;
 import com.bank.skminibank.api.ApiService;
 import com.bank.skminibank.database.AppDatabase;
+import com.bank.skminibank.database.ChatMessageEntity;
 import com.bank.skminibank.database.TransactionEntity;
 import com.bank.skminibank.model.Transaction;
 import com.bank.skminibank.model.TransactionResponse;
@@ -30,8 +31,10 @@ import com.bank.skminibank.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -119,12 +122,39 @@ public class TransactionsActivity extends AppCompatActivity {
         String cleanAcc = acc.replaceAll("\\s+", "");
         
         new Thread(() -> {
+            // 1. Get from Transactions table
             List<TransactionEntity> entities = db.transactionDao().getAllTransactions(cleanAcc);
+            
+            // 2. ALSO Get from Chats table (important for instant display of recent transfers)
+            List<ChatMessageEntity> chatMessages = db.chatDao().getAllMessages(cleanAcc);
+            
             runOnUiThread(() -> {
                 fullTransactionList.clear();
+                
+                // Add from transactions table
                 for (TransactionEntity e : entities) {
                     fullTransactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
                 }
+                
+                // Add from chat messages if not already present (match by txnId)
+                Set<String> existingIds = new HashSet<>();
+                for (Transaction t : fullTransactionList) {
+                    if (t.getTransactionId() != null) existingIds.add(t.getTransactionId());
+                }
+                
+                for (ChatMessageEntity cm : chatMessages) {
+                    if (cm.getType() == 2 && cm.getTransactionId() != null && !existingIds.contains(cm.getTransactionId())) { // TYPE_PAYMENT
+                        String type = cm.isSentByMe() ? "DEBIT" : "CREDIT";
+                        fullTransactionList.add(new Transaction(cm.getTransactionId(), type, cm.getAmount(), cm.getContent(), cm.getTimestamp(), -1));
+                    }
+                }
+                
+                // Sort by date (descending)
+                java.util.Collections.sort(fullTransactionList, (t1, t2) -> {
+                    if (t1.getDate() == null || t2.getDate() == null) return 0;
+                    return t2.getDate().compareTo(t1.getDate());
+                });
+
                 filterTransactions(etSearch.getText().toString());
             });
         }).start();

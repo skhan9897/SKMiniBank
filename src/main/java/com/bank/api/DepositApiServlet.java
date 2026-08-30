@@ -47,11 +47,18 @@ public class DepositApiServlet extends HttpServlet {
             }
 
             AccountDAO accountDAO = new AccountDAO();
-            Account account = accountDAO.getAccountByNumber(accountNumber);
+            // Try matching with normalized account number
+            String normalizedAcc = accountNumber.trim().replaceAll("\\s+", "");
+            Account account = accountDAO.getAccountByNumber(normalizedAcc);
+
+            if (account == null) {
+                // Try one more time with original just in case
+                account = accountDAO.getAccountByNumber(accountNumber);
+            }
 
             if (account == null) {
                 apiResponse.setStatus("FAILED");
-                apiResponse.setMessage("Account not found: " + accountNumber);
+                apiResponse.setMessage("Account validation failed. Please refresh your app profile.");
             } else if ("FREEZE".equalsIgnoreCase(account.getStatus())) {
                 apiResponse.setStatus("FAILED");
                 apiResponse.setMessage("Transaction declined. Account is frozen.");
