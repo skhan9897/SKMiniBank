@@ -1,6 +1,7 @@
 package com.bank.api;
 
 import com.bank.dao.AccountDAO;
+import com.bank.dao.CustomerDAO;
 import com.bank.dao.TransactionDAO;
 import com.bank.model.Account;
 import com.bank.model.LoginResponse;
