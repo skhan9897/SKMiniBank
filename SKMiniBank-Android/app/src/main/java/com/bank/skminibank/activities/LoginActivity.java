@@ -57,16 +57,18 @@ public class LoginActivity extends AppCompatActivity {
         tilPassword = findViewById(R.id.tilPassword);
         btnAction = findViewById(R.id.btnLogin);
 
-        // 1. Logic for First Time Install / New User
-        if (!sessionManager.isLoggedInOnce()) {
-            layoutLanding.setVisibility(View.VISIBLE);
-            layoutLoginForm.setVisibility(View.GONE);
-        } else {
-            layoutLanding.setVisibility(View.GONE);
-            layoutLoginForm.setVisibility(View.VISIBLE);
+        // 1. Logic: Always show Login Form by default for Customer Login
+        layoutLanding.setVisibility(View.GONE);
+        layoutLoginForm.setVisibility(View.VISIBLE);
+
+        if (sessionManager.isLoggedInOnce()) {
             loginStep = 3;
             tilPassword.setVisibility(View.VISIBLE);
             btnAction.setText("LOGIN");
+        } else {
+            loginStep = 1;
+            tilPassword.setVisibility(View.GONE);
+            btnAction.setText("PROCEED");
         }
 
         if (sessionManager.getMobile() != null) {
@@ -94,6 +96,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         if (sessionManager.isBiometricEnabled()) {
+            View btnBio = findViewById(R.id.btnBiometricLogin);
+            if (btnBio != null) {
+                btnBio.setVisibility(View.VISIBLE);
+                btnBio.setOnClickListener(v -> showBiometricLogin());
+            }
             new android.os.Handler().postDelayed(this::showBiometricLogin, 500);
         }
     }
@@ -210,7 +217,8 @@ public class LoginActivity extends AppCompatActivity {
                                 password,
                                 mobile,
                                 res.getEmail(),
-                                res.getKycStatus()
+                                res.getKycStatus(),
+                                res.getPhoto()
                         );
                         
                         startActivity(new Intent(LoginActivity.this, DashboardActivity.class));

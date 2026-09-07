@@ -12,6 +12,7 @@ public class LoginResponse {
     private String accountNumber;
     private String mobile;
     private String email;
+    private String photo;
 
     private double balance;
     private String kycStatus;
@@ -57,6 +58,10 @@ public class LoginResponse {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPhoto() {
+        return photo;
     }
 
     public double getBalance() {

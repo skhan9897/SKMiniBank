@@ -49,11 +49,11 @@
                         app:cardElevation="0dp"
                         app:cardBackgroundColor="@color/light_background">
                         <ImageView
+                            android:id="@+id/ivProfileImg"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@android:drawable/ic_menu_myplaces"
-                            android:padding="16dp"
-                            app:tint="@color/primary_blue"
+                            android:scaleType="centerCrop"
                             android:contentDescription="Profile Icon"/>
                     </androidx.cardview.widget.CardView>
 

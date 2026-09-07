@@ -52,6 +52,7 @@ public class LoginApiServlet extends HttpServlet {
                 out.print("\"mobile\":\"" + customer.getMobile() + "\",");
                 out.print("\"email\":\"" + customer.getEmail() + "\",");
                 out.print("\"balance\":" + customer.getBalance() + ",");
+                out.print("\"photo\":\"" + customer.getPhoto() + "\",");
                 out.print("\"accountStatus\":\"" + customer.getStatus() + "\",");
                 out.print("\"kycStatus\":\"" + (customer.getKycStatus() != null ? customer.getKycStatus().toUpperCase() : "PENDING") + "\"");
                 out.print("}");

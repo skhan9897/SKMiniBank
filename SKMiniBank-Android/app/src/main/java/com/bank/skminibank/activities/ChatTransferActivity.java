@@ -337,10 +337,10 @@ public class ChatTransferActivity extends AppCompatActivity {
                     TransactionChatMessage.TYPE_PAYMENT, msg.getTimestamp(), "SUCCESS"));
             
             // ALSO Save to Transactions table for Passbook visibility
-            final String finalOwnerAcc = ownerAcc;
+            String cleanOwnerAcc = ownerAcc.replaceAll("\\s+", "");
             new Thread(() -> {
                 db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
-                        finalOwnerAcc, localTxnId, "DEBIT", msg.getAmount(), 
+                        cleanOwnerAcc, localTxnId, "DEBIT", msg.getAmount(),
                         "Sent to " + contactName + " (" + contactMobile + ")", 
                         msg.getTimestamp(), -1
                 ));

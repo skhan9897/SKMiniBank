@@ -41,16 +41,10 @@ public class SplashActivity extends AppCompatActivity {
         progressAnimator.setInterpolator(new android.view.animation.LinearInterpolator());
         progressAnimator.start();
 
-        // 3. Transition to Login or Dashboard
+        // 3. Transition to Login (Always show login for security)
         new Handler().postDelayed(() -> {
             if (!isFinishing()) {
-                SessionManager sessionManager = new SessionManager(SplashActivity.this);
-                Intent intent;
-                if (sessionManager.isLoggedIn()) {
-                    intent = new Intent(SplashActivity.this, DashboardActivity.class);
-                } else {
-                    intent = new Intent(SplashActivity.this, LoginActivity.class);
-                }
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();

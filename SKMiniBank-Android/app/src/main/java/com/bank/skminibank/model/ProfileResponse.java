@@ -15,6 +15,7 @@ public class ProfileResponse {
     private String accountType;
     private double balance;
     private String kycStatus;
+    private String photo;
 
     public String getStatus() { return status; }
     public int getCustomerId() { return customerId; }
@@ -30,4 +31,5 @@ public class ProfileResponse {
     public String getAccountType() { return accountType; }
     public double getBalance() { return balance; }
     public String getKycStatus() { return kycStatus; }
+    public String getPhoto() { return photo; }
 }

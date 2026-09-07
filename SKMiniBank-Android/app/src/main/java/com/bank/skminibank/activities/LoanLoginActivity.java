@@ -66,7 +66,8 @@ public class LoanLoginActivity extends AppCompatActivity {
                                 password,
                                 mobile,
                                 res.getEmail(),
-                                res.getKycStatus()
+                                res.getKycStatus(),
+                                res.getPhoto()
                         );
                         // Go to the Loan Dashboard
                         startActivity(new Intent(LoanLoginActivity.this, LoanDashboardActivity.class));

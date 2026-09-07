@@ -3,6 +3,7 @@ package com.bank.skminibank.activities;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.widget.EditText;
 import java.util.Locale;
 
+import com.bumptech.glide.Glide;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,6 +32,7 @@ import retrofit2.Response;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView tvName, tvCode, tvKycBadge;
+    private ImageView ivProfile;
     private View rowMobile, rowEmail, rowAccNo, rowAccType, rowBranch;
     private SessionManager sessionManager;
     private String currentMobile, currentEmail;
@@ -50,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvProfileName);
         tvCode = findViewById(R.id.tvProfileCode);
         tvKycBadge = findViewById(R.id.tvKycBadge);
+        ivProfile = findViewById(R.id.ivProfileImg);
         
         rowMobile = findViewById(R.id.rowMobile);
         rowEmail = findViewById(R.id.rowEmail);
@@ -151,6 +155,16 @@ public class ProfileActivity extends AppCompatActivity {
                     setRowValue(rowAccNo, p.getAccountNumber());
                     setRowValue(rowAccType, p.getAccountType());
                     setRowValue(rowBranch, p.getBranch());
+
+                    if (p.getPhoto() != null && ivProfile != null) {
+                        sessionManager.setPhoto(p.getPhoto());
+                        String photoUrl = "https://skminibank-1.onrender.com/uploads/customer_photos/" + p.getPhoto();
+                        Glide.with(ProfileActivity.this)
+                                .load(photoUrl)
+                                .placeholder(android.R.drawable.ic_menu_myplaces)
+                                .error(android.R.drawable.ic_menu_myplaces)
+                                .into(ivProfile);
+                    }
                 }
             }
 

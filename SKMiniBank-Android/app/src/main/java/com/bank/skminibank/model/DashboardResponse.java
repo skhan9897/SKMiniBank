@@ -9,6 +9,7 @@ public class DashboardResponse {
     private String branch;
     private double balance;
     private String kycStatus;
+    private String photo;
     private String upiId;
     private String upiStatus;
     private String accountStatus; // Added field
@@ -23,6 +24,7 @@ public class DashboardResponse {
     public String getBranch() { return branch; }
     public double getBalance() { return balance; }
     public String getKycStatus() { return kycStatus; }
+    public String getPhoto() { return photo; }
     public String getUpiId() { return upiId; }
     public String getUpiStatus() { return upiStatus; }
     public String getAccountStatus() { return accountStatus; }

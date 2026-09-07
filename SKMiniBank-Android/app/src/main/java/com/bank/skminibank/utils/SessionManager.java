@@ -12,6 +12,7 @@ public class SessionManager {
     private static final String KEY_ACC_NO = "accountNumber";
     private static final String KEY_KYC_STATUS = "kycStatus";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_PHOTO = "photo";
     private static final String KEY_MOBILE = "mobile";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_BIOMETRIC_ENABLED = "biometricEnabled";
@@ -53,7 +54,7 @@ public class SessionManager {
         return pref.getFloat(KEY_LAST_BALANCE, -1);
     }
 
-    public void createLoginSession(int customerId, String name, String accNo, String password, String mobile, String email, String kycStatus) {
+    public void createLoginSession(int customerId, String name, String accNo, String password, String mobile, String email, String kycStatus, String photo) {
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.putBoolean(KEY_HAS_LOGGED_IN_ONCE, true);
         editor.putInt(KEY_CUSTOMER_ID, customerId);
@@ -63,6 +64,7 @@ public class SessionManager {
         editor.putString(KEY_MOBILE, mobile);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_KYC_STATUS, kycStatus);
+        editor.putString(KEY_PHOTO, photo);
         editor.apply();
     }
 
@@ -110,6 +112,15 @@ public class SessionManager {
 
     public String getKycStatus() {
         return pref.getString(KEY_KYC_STATUS, "PENDING");
+    }
+
+    public void setPhoto(String photo) {
+        editor.putString(KEY_PHOTO, photo);
+        editor.apply();
+    }
+
+    public String getPhoto() {
+        return pref.getString(KEY_PHOTO, null);
     }
 
     public void logoutUser() {

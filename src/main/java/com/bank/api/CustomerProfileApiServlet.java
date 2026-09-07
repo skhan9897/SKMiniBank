@@ -50,6 +50,7 @@ public class CustomerProfileApiServlet extends HttpServlet {
                 out.print("\"branch\":\"" + c.getBranch() + "\",");
                 out.print("\"accountType\":\"" + c.getAccountType() + "\",");
                 out.print("\"balance\":" + c.getBalance() + ",");
+                out.print("\"photo\":\"" + (c.getPhoto() != null ? c.getPhoto() : "default_user.png") + "\",");
                 out.print("\"kycStatus\":\"" + c.getKycStatus() + "\"");
                 out.print("}");
 

@@ -6,15 +6,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bank.skminibank.R;
 import com.bank.skminibank.api.ApiClient;
 import com.bank.skminibank.database.AppDatabase;
-import com.bank.skminibank.database.TransactionEntity;
 import com.bank.skminibank.model.LoginResponse;
+import com.bank.skminibank.model.DashboardResponse;
 import com.bank.skminibank.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 
@@ -27,7 +29,8 @@ import retrofit2.Response;
 public class RazorpayActivity extends AppCompatActivity {
 
     private EditText etAmount;
-    private MaterialButton btnProceed;
+    private TextView tvWalletBalance;
+    private MaterialButton btnProceed, btn100, btn500, btn1000;
     private SessionManager sessionManager;
     private AppDatabase db;
 
@@ -36,7 +39,14 @@ public class RazorpayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_razorpay);
 
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         sessionManager = new SessionManager(this);
+        db = AppDatabase.getInstance(this);
 
         String kyc = sessionManager.getKycStatus();
         if (!"VERIFIED".equalsIgnoreCase(kyc) && !"APPROVED".equalsIgnoreCase(kyc)) {
@@ -46,11 +56,17 @@ public class RazorpayActivity extends AppCompatActivity {
             return;
         }
 
-        startWaveAnimation();
-
-        db = AppDatabase.getInstance(this);
+        tvWalletBalance = findViewById(R.id.tvWalletBalance);
         etAmount = findViewById(R.id.etWalletAmount);
         btnProceed = findViewById(R.id.btnProceedPayment);
+        
+        btn100 = findViewById(R.id.btn100);
+        btn500 = findViewById(R.id.btn500);
+        btn1000 = findViewById(R.id.btn1000);
+
+        if (btn100 != null) btn100.setOnClickListener(v -> etAmount.setText("100"));
+        if (btn500 != null) btn500.setOnClickListener(v -> etAmount.setText("500"));
+        if (btn1000 != null) btn1000.setOnClickListener(v -> etAmount.setText("1000"));
         
         btnProceed.setOnClickListener(v -> {
             String amountStr = etAmount.getText().toString().trim();
@@ -69,6 +85,32 @@ public class RazorpayActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please enter amount", Toast.LENGTH_SHORT).show();
             }
         });
+
+        startWaveAnimation();
+        fetchCurrentBalance();
+    }
+
+    private void fetchCurrentBalance() {
+        int customerId = sessionManager.getCustomerId();
+        ApiClient.getService().getDashboardData(customerId).enqueue(new Callback<DashboardResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<DashboardResponse> call, @NonNull Response<DashboardResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    double balance = response.body().getBalance();
+                    if (tvWalletBalance != null) {
+                        tvWalletBalance.setText(String.format(Locale.getDefault(), "₹ %.2f", balance));
+                    }
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<DashboardResponse> call, @NonNull Throwable t) {}
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void startWaveAnimation() {
@@ -105,9 +147,10 @@ public class RazorpayActivity extends AppCompatActivity {
                         // Save transaction locally for instant history update
                         String tid = "SKMB" + System.currentTimeMillis();
                         String date = new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault()).format(new java.util.Date());
+                        String cleanAcc = accNo.replaceAll("\\s+", "");
                         new Thread(() -> {
                             db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
-                                    accNo, tid, "CREDIT", amount, "Wallet Deposit", date, loginRes.getBalance()
+                                    cleanAcc, tid, "CREDIT", amount, "Wallet Deposit", date, loginRes.getBalance()
                             ));
                         }).start();
 

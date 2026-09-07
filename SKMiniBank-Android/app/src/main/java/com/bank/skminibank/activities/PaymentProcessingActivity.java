@@ -98,9 +98,10 @@ public class PaymentProcessingActivity extends AppCompatActivity {
             String tid = "TXN" + System.currentTimeMillis();
             String date = new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault()).format(new java.util.Date());
             com.bank.skminibank.database.AppDatabase db = com.bank.skminibank.database.AppDatabase.getInstance(this);
+            String cleanAcc = fromAcc.replaceAll("\\s+", "");
             new Thread(() -> {
                 db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
-                        fromAcc, tid, "DEBIT", amount, remarks != null && !remarks.isEmpty() ? remarks : "Transfer to " + name, date, response.body().getBalance()
+                        cleanAcc, tid, "DEBIT", amount, remarks != null && !remarks.isEmpty() ? remarks : "Transfer to " + name, date, response.body().getBalance()
                 ));
             }).start();
 

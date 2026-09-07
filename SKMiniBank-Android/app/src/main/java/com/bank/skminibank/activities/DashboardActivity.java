@@ -29,6 +29,7 @@ import com.bank.skminibank.model.TransactionResponse;
 import com.bank.skminibank.utils.SessionManager;
 import com.bank.skminibank.service.PaymentNotificationService;
 import com.bank.skminibank.utils.PaymentVoiceUtil;
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import retrofit2.Response;
 public class DashboardActivity extends AppCompatActivity {
 
     private TextView tvWelcomeUser, tvBalanceAmount, tvAccNo;
+    private ImageView ivProfileHeader;
     private SwipeRefreshLayout swipeRefreshLayout;
     private SessionManager sessionManager;
     private BottomNavigationView bottomNavigationView;
@@ -91,6 +93,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvBalanceAmount = findViewById(R.id.tvBalanceAmount);
         tvAccNo = findViewById(R.id.tvAccNo);
         btnToggleBalance = findViewById(R.id.btnToggleBalance);
+        ivProfileHeader = findViewById(R.id.ivProfileHeader);
 
         setupTTS();
         setupServiceGrid();
@@ -314,14 +317,39 @@ public class DashboardActivity extends AppCompatActivity {
         String cleanAcc = acc.replaceAll("\\s+", "");
         
         new Thread(() -> {
+            // 1. Get from Transactions table
             List<TransactionEntity> entities = db.transactionDao().getAllTransactions(cleanAcc);
+            
+            // 2. ALSO Get from Chats table (important for instant display of recent transfers)
+            List<com.bank.skminibank.database.ChatMessageEntity> chatMessages = db.chatDao().getAllMessages(cleanAcc);
+            
             runOnUiThread(() -> {
                 transactionList.clear();
-                // Get last 10 from local to show "all recent"
+                java.util.Set<String> ids = new java.util.HashSet<>();
+                
+                // Add from transactions table (up to 10)
                 for (int i = 0; i < Math.min(entities.size(), 10); i++) {
                     TransactionEntity e = entities.get(i);
                     transactionList.add(new Transaction(e.getTransactionId(), e.getType(), e.getAmount(), e.getDescription(), e.getDate(), e.getBalanceAfter()));
+                    if (e.getTransactionId() != null) ids.add(e.getTransactionId());
                 }
+                
+                // Add from chat messages if not already present (match by txnId)
+                for (com.bank.skminibank.database.ChatMessageEntity cm : chatMessages) {
+                    if (transactionList.size() >= 10) break;
+                    if (cm.getType() == 2 && cm.getTransactionId() != null && !ids.contains(cm.getTransactionId())) { // TYPE_PAYMENT
+                        String type = cm.isSentByMe() ? "DEBIT" : "CREDIT";
+                        transactionList.add(new Transaction(cm.getTransactionId(), type, cm.getAmount(), cm.getContent(), cm.getTimestamp(), -1));
+                        ids.add(cm.getTransactionId());
+                    }
+                }
+                
+                // Sort by date (descending)
+                java.util.Collections.sort(transactionList, (t1, t2) -> {
+                    if (t1.getDate() == null || t2.getDate() == null) return 0;
+                    return t2.getDate().compareTo(t1.getDate());
+                });
+
                 if (transactionAdapter != null) {
                     transactionAdapter.notifyDataSetChanged();
                 }
@@ -378,6 +406,16 @@ public class DashboardActivity extends AppCompatActivity {
 
         if (data.getKycStatus() != null) {
             sessionManager.setKycStatus(data.getKycStatus());
+        }
+
+        if (data.getPhoto() != null && ivProfileHeader != null) {
+            sessionManager.setPhoto(data.getPhoto());
+            String photoUrl = "https://skminibank-1.onrender.com/uploads/customer_photos/" + data.getPhoto();
+            Glide.with(this)
+                    .load(photoUrl)
+                    .placeholder(android.R.drawable.ic_menu_myplaces)
+                    .error(android.R.drawable.ic_menu_myplaces)
+                    .into(ivProfileHeader);
         }
     }
 

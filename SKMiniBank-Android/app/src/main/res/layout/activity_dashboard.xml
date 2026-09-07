@@ -128,10 +128,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true">
             <ImageView
+                android:id="@+id/ivProfileHeader"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@android:drawable/ic_menu_myplaces"
-                android:padding="8dp"
+                android:scaleType="centerCrop"
                 app:tint="@color/white" />
         </androidx.cardview.widget.CardView>
 
