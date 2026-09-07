@@ -52,6 +52,7 @@ public class DashboardApiServlet extends HttpServlet {
                 out.print("\"accountType\":\"" + safe(c.getAccountType()) + "\",");
                 out.print("\"branch\":\"" + safe(c.getBranch()) + "\",");
                 out.print("\"balance\":" + c.getBalance() + ",");
+                out.print("\"walletBalance\":" + c.getWalletBalance() + ",");
                 out.print("\"accountStatus\":\"" + safe(c.getStatus()) + "\",");
                 out.print("\"kycStatus\":\"" + currentKyc.toUpperCase() + "\",");
                 out.print("\"photo\":\"" + safe(c.getPhoto()) + "\",");

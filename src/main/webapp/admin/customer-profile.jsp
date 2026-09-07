@@ -153,6 +153,16 @@ String role = (String) session.getAttribute("role");
                         <p class="small text-muted mb-0"><%= fd != null ? "Maturing on " + fd.getMaturityDate() : "No active FDs found" %></p>
                     </div>
                 </div>
+                <div class="col-md-12 mt-4">
+                    <div class="card premium-card p-4" style="background: linear-gradient(135deg, #ffffff, #fff9e6);">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="card-label text-warning">Digital Wallet Balance</span>
+                            <i class="fa fa-coins text-warning fs-4"></i>
+                        </div>
+                        <h2 class="fw-bold text-dark">&#8377; <%= String.format("%,.2f", c.getWalletBalance()) %></h2>
+                        <p class="small text-muted mb-0">This balance is maintained separately for wallet transactions.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="card premium-card p-4 mb-4">

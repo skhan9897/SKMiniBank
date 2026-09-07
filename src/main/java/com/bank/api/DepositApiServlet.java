@@ -63,17 +63,16 @@ public class DepositApiServlet extends HttpServlet {
                 apiResponse.setStatus("FAILED");
                 apiResponse.setMessage("Transaction declined. Account is frozen.");
             } else {
-                boolean success = accountDAO.deposit(accountNumber, amount);
+                // Change from deposit to depositToWallet
+                boolean success = accountDAO.depositToWallet(accountNumber, amount);
                 if (success) {
-                    // Fetch updated data for response
-                    account = accountDAO.getAccountByNumber(accountNumber);
-                    
-                    // NOTE: Transaction is already logged inside accountDAO.deposit()
-                    // to prevent double-entry.
+                    // Fetch updated customer data to get new wallet balance
+                    CustomerDAO custDAO = new CustomerDAO();
+                    com.bank.model.Customer c = custDAO.getCustomerById(account.getCustomerId());
 
                     apiResponse.setStatus("SUCCESS");
-                    apiResponse.setMessage("Amount ₹" + amount + " deposited successfully.");
-                    apiResponse.setBalance(account.getBalance());
+                    apiResponse.setMessage("Amount ₹" + amount + " added to wallet successfully.");
+                    apiResponse.setBalance(c.getWalletBalance()); // Return wallet balance instead of account balance
                     apiResponse.setAccountNumber(accountNumber);
                 } else {
                     apiResponse.setStatus("FAILED");

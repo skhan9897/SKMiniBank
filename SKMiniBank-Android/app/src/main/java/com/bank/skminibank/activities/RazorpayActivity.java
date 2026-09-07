@@ -96,9 +96,9 @@ public class RazorpayActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<DashboardResponse> call, @NonNull Response<DashboardResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    double balance = response.body().getBalance();
+                    double walletBalance = response.body().getWalletBalance();
                     if (tvWalletBalance != null) {
-                        tvWalletBalance.setText(String.format(Locale.getDefault(), "₹ %.2f", balance));
+                        tvWalletBalance.setText(String.format(Locale.getDefault(), "₹ %.2f", walletBalance));
                     }
                 }
             }
@@ -159,7 +159,7 @@ public class RazorpayActivity extends AppCompatActivity {
                             intent.putExtra("amount", String.valueOf(amount));
                             intent.putExtra("name", sessionManager.getCustomerName() != null ? sessionManager.getCustomerName() : "Self Deposit");
                             intent.putExtra("acc", sessionManager.getAccountNumber() != null ? sessionManager.getAccountNumber() : "XXXX");
-                            intent.putExtra("balance", String.valueOf(loginRes.getBalance()));
+                            intent.putExtra("balance", String.valueOf(loginRes.getBalance())); // This is already the updated wallet balance from API
                             intent.putExtra("transactionId", "SKMB" + System.currentTimeMillis());
                             intent.putExtra("status", "SUCCESS");
                             startActivity(intent);

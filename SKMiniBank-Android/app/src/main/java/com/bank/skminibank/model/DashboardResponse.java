@@ -8,6 +8,7 @@ public class DashboardResponse {
     private String accountType;
     private String branch;
     private double balance;
+    private double walletBalance;
     private String kycStatus;
     private String photo;
     private String upiId;
@@ -23,6 +24,7 @@ public class DashboardResponse {
     public String getAccountType() { return accountType; }
     public String getBranch() { return branch; }
     public double getBalance() { return balance; }
+    public double getWalletBalance() { return walletBalance; }
     public String getKycStatus() { return kycStatus; }
     public String getPhoto() { return photo; }
     public String getUpiId() { return upiId; }

@@ -42,6 +42,7 @@ public class Customer {
     private String accountType;
     private String branch;
     private double balance;
+    private double walletBalance;
     private String status;
     private String kycStatus;
 
@@ -292,6 +293,14 @@ public void setUpiStatus(String upiStatus) {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public double getWalletBalance() {
+        return walletBalance;
+    }
+
+    public void setWalletBalance(double walletBalance) {
+        this.walletBalance = walletBalance;
     }
 
     public String getStatus() {

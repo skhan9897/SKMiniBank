@@ -57,7 +57,8 @@ public class DatabaseSetupServlet extends HttpServlet {
                 {"email_verified", "VARCHAR(10) DEFAULT 'NO'"},
                 {"upi_id", "VARCHAR(100)"},
                 {"upi_status", "VARCHAR(20) DEFAULT 'ACTIVE'"},
-                {"transaction_pin", "VARCHAR(10)"}
+                {"transaction_pin", "VARCHAR(10)"},
+                {"wallet_balance", "DOUBLE DEFAULT 0.0"}
             };
 
             for (String[] col : custColumns) {

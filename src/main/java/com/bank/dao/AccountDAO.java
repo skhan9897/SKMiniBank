@@ -133,6 +133,29 @@ public class AccountDAO {
         }
     }
 
+    public boolean depositToWallet(String accountNumber, double amount) {
+        if (accountNumber == null || accountNumber.trim().equalsIgnoreCase("N/A")) return false;
+        String searchAcc = accountNumber.trim().replaceAll("\\s+", "");
+        
+        try (Connection con = DBConnection.getConnection()) {
+            String sql = "UPDATE customer SET wallet_balance = wallet_balance + ? WHERE REPLACE(account_number, ' ', '') = ?";
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setDouble(1, amount);
+                ps.setString(2, searchAcc);
+                if (ps.executeUpdate() > 0) {
+                    Account a = getAccountByNumber(searchAcc);
+                    if (a != null) {
+                        new TransactionDAO().saveUpiTransaction(a.getAccountNumber(), a.getCustomerName(), "WALLET_DEPOSIT", amount, a.getBalance(), "Wallet Add Money");
+                    }
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean withdraw(String accountNumber, double amount) {
         // Robust matching for withdrawal
         String sql = "UPDATE customer SET balance = balance - ? WHERE REPLACE(account_number, ' ', '') = REPLACE(?, ' ', '') AND balance>=? AND status='ACTIVE' AND (kyc_status='VERIFIED' OR kyc_status='APPROVED')";

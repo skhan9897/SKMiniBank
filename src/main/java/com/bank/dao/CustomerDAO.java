@@ -240,6 +240,13 @@ public class CustomerDAO {
         c.setAccountType(rs.getString("account_type"));
         c.setBranch(rs.getString("branch"));
         c.setBalance(rs.getDouble("balance"));
+        
+        try {
+            c.setWalletBalance(rs.getDouble("wallet_balance"));
+        } catch (Exception e) {
+            c.setWalletBalance(0.0);
+        }
+
         c.setStatus(rs.getString("status"));
         c.setKycStatus(rs.getString("kyc_status"));
         c.setUpiId(rs.getString("upi_id"));
