@@ -101,21 +101,23 @@
         android:paddingBottom="24dp">
 
         <TextView
+            android:id="@+id/tvSpayBranding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SPAY"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"/>
+
+        <TextView
             android:id="@+id/tvWelcomeUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tvSpayBranding"
             android:text="Hello, Sajid Khan"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvWelcomeUser"
-            android:text="Welcome back to SK Mini Payment Bank"
             android:textColor="#B3FFFFFF"
-            android:textSize="11sp"
+            android:textSize="14sp"
             android:layout_marginTop="2dp"/>
 
         <androidx.cardview.widget.CardView
@@ -157,6 +159,22 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingBottom="24dp">
+
+                <!-- SPay Core Actions (Modern Payment App Style) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:background="#20000000">
+
+                    <include android:id="@+id/spayScan" layout="@layout/item_spay_action" />
+                    <include android:id="@+id/spayToContact" layout="@layout/item_spay_action" />
+                    <include android:id="@+id/spayToUpi" layout="@layout/item_spay_action" />
+                    <include android:id="@+id/spayToBank" layout="@layout/item_spay_action" />
+
+                </LinearLayout>
 
                 <!-- Balance Inquiry Card -->
                 <androidx.cardview.widget.CardView
@@ -320,13 +338,13 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Banking that is"
+                                android:text="SPay Digital"
                                 android:textColor="#B3FFFFFF"
                                 android:textSize="12sp"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Secure, Simple &amp; Reliable"
+                                android:text="Secure • Smart • SPay"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"
                                 android:textSize="16sp"/>

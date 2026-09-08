@@ -32,6 +32,7 @@ public class TransactionDAO {
             
             if (ps.executeUpdate() > 0) {
                 System.out.println("LOG: Transaction stored for " + cleanAcc);
+                // Also update account balance in cache/sync if needed
                 return true;
             }
         } catch (SQLException e) {
@@ -82,6 +83,20 @@ public class TransactionDAO {
         // Use standard query that matches account numbers regardless of internal spaces
         String sql = "SELECT * FROM transactions WHERE REPLACE(account_number, ' ', '') = ? ORDER BY transaction_date DESC";
         return fetchTransactions(sql, true, cleanAcc);
+    }
+
+    public List<Transaction> getTransactionsByRange(String accountNumber, String startDate, String endDate) {
+        if (accountNumber == null) return new ArrayList<>();
+        String cleanAcc = accountNumber.trim().replaceAll("\\s+", "");
+        String sql = "SELECT * FROM transactions WHERE REPLACE(account_number, ' ', '') = ? " +
+                     "AND DATE(transaction_date) BETWEEN ? AND ? ORDER BY transaction_date DESC";
+        return fetchTransactions(sql, true, cleanAcc, startDate, endDate);
+    }
+
+    public Transaction getTransactionById(int id) {
+        String sql = "SELECT * FROM transactions WHERE transaction_id = ?";
+        List<Transaction> list = fetchTransactions(sql, true, String.valueOf(id));
+        return list.isEmpty() ? null : list.get(0);
     }
 
     private List<Transaction> fetchTransactions(String sql, boolean hasParam, String... params) {

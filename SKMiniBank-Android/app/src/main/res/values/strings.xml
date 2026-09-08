@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">SK Mini Payment Bank</string>
+    <string name="app_name">SPay Payment Bank</string>
+    <string name="brand_name">SPay</string>
+    <string name="developed_by">Developed By Sajid Khan</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
 

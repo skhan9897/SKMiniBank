@@ -233,13 +233,16 @@ public class AccountDAO {
             Account finalSender = getAccountByNumber(fromAccount);
             Account finalReceiver = getAccountByNumber(toAccount);
 
-            String senderDesc = (description == null || description.isEmpty() || description.equals("Transfer")) ? "₹" + amount + " sent to " + toAccount : description;
-            if (!senderDesc.contains("sent to")) senderDesc = "₹" + amount + " sent to " + toAccount + " (" + description + ")";
+            if (finalSender != null) {
+                String senderDesc = (description == null || description.isEmpty() || description.equals("Transfer")) ? "₹" + amount + " sent to " + toAccount : description;
+                if (!senderDesc.contains("sent to")) senderDesc = "₹" + amount + " sent to " + toAccount + " (" + description + ")";
+                tdao.saveUpiTransaction(fromAccount, finalSender.getCustomerName(), "DEBIT", amount, finalSender.getBalance(), senderDesc);
+            }
             
-            tdao.saveUpiTransaction(fromAccount, finalSender.getCustomerName(), "DEBIT", amount, finalSender.getBalance(), senderDesc);
-            
-            String receiverDesc = "₹" + amount + " received from " + fromAccount;
-            tdao.saveUpiTransaction(toAccount, finalReceiver.getCustomerName(), "CREDIT", amount, finalReceiver.getBalance(), receiverDesc);
+            if (finalReceiver != null) {
+                String receiverDesc = "₹" + amount + " received from " + fromAccount;
+                tdao.saveUpiTransaction(toAccount, finalReceiver.getCustomerName(), "CREDIT", amount, finalReceiver.getBalance(), receiverDesc);
+            }
 
             return true;
         } catch (SQLException e) {

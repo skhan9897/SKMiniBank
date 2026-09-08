@@ -94,29 +94,38 @@ public class PaymentProcessingActivity extends AppCompatActivity {
         if (response.isSuccessful() && response.body() != null && "success".equalsIgnoreCase(response.body().getStatus())) {
             saveRecentRecipient(name, toIdentifier);
             
+            LoginResponse loginResponse = response.body();
+            
             // Save to Local Database for instant Passbook update
             String tid = "TXN" + System.currentTimeMillis();
             String date = new java.text.SimpleDateFormat("dd MMM yyyy, hh:mm a", java.util.Locale.getDefault()).format(new java.util.Date());
             com.bank.skminibank.database.AppDatabase db = com.bank.skminibank.database.AppDatabase.getInstance(this);
             String cleanAcc = fromAcc.replaceAll("\\s+", "");
+            
             new Thread(() -> {
                 db.transactionDao().insertTransaction(new com.bank.skminibank.database.TransactionEntity(
-                        cleanAcc, tid, "DEBIT", amount, remarks != null && !remarks.isEmpty() ? remarks : "Transfer to " + name, date, response.body().getBalance()
+                        cleanAcc, tid, "DEBIT", amount, remarks != null && !remarks.isEmpty() ? remarks : "Paid to " + name, date, loginResponse.getBalance()
                 ));
+                
+                // FORCE SYNC: Trigger dashboard refresh logic
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Payment Successful", Toast.LENGTH_SHORT).show();
+                });
             }).start();
 
             PaymentVoiceUtil.speakPayment(this, amount, false);
             
-            // Navigate to success screen after exactly 2 seconds total (approx)
+            // Navigate to success screen
             new Handler().postDelayed(() -> {
                 Intent intent = new Intent(PaymentProcessingActivity.this, PaymentSuccessActivity.class);
                 intent.putExtra("amount", amountStr);
                 intent.putExtra("name", name);
                 intent.putExtra("acc", toIdentifier);
-                intent.putExtra("balance", String.valueOf(currentBalance - amount));
+                intent.putExtra("balance", String.valueOf(loginResponse.getBalance()));
+                intent.putExtra("transactionId", tid);
                 startActivity(intent);
                 finish();
-            }, 500); // 500ms delay + 1s initial delay + API time ≈ 2 seconds
+            }, 500);
         } else {
             String msg = (response.body() != null) ? response.body().getMessage() : "Payment Failed";
 

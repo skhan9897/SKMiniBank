@@ -96,6 +96,7 @@ public class DashboardActivity extends AppCompatActivity {
         ivProfileHeader = findViewById(R.id.ivProfileHeader);
 
         setupTTS();
+        setupSpayActions();
         setupServiceGrid();
         setupBottomNav();
         
@@ -155,6 +156,32 @@ public class DashboardActivity extends AppCompatActivity {
         View btnLogout = findViewById(R.id.btnLogout);
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> handleLogout());
+        }
+    }
+
+    private void setupSpayActions() {
+        setupActionPill(R.id.spayScan, "Scan & Pay", android.R.drawable.ic_menu_camera, v -> startScanner());
+        setupActionPill(R.id.spayToContact, "To Mobile", android.R.drawable.ic_menu_call, v -> {
+            Intent intent = new Intent(this, UpiPaymentActivity.class);
+            intent.putExtra("mode", "mobile");
+            startActivity(intent);
+        });
+        setupActionPill(R.id.spayToUpi, "To UPI ID", android.R.drawable.ic_menu_send, v -> {
+            Intent intent = new Intent(this, UpiPaymentActivity.class);
+            intent.putExtra("mode", "upi");
+            startActivity(intent);
+        });
+        setupActionPill(R.id.spayToBank, "To Bank", android.R.drawable.ic_input_add, v -> startActivity(new Intent(this, TransferActivity.class)));
+    }
+
+    private void setupActionPill(int id, String title, int icon, View.OnClickListener listener) {
+        View v = findViewById(id);
+        if (v != null) {
+            TextView tv = v.findViewById(R.id.tvActionTitle);
+            ImageView iv = v.findViewById(R.id.ivActionIcon);
+            if (tv != null) tv.setText(title);
+            if (iv != null) iv.setImageResource(icon);
+            v.setOnClickListener(listener);
         }
     }
 

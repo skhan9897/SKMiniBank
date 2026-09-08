@@ -130,6 +130,11 @@ for(Customer c : list){
     <i class="fa-solid fa-eye"></i>
 </a>
 
+<a href="<%=ctx%>/TransactionServlet?accountNumber=<%=c.getAccountNumber()%>"
+   class="btn btn-primary btn-sm" title="View Statement">
+    <i class="fa-solid fa-file-invoice"></i>
+</a>
+
 <a href="<%=ctx%>/DeleteCustomerServlet?id=<%=c.getCustomerId()%>"
    class="btn btn-danger btn-sm"
    onclick="return confirm('Delete this customer?');">

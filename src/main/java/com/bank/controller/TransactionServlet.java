@@ -26,30 +26,31 @@ public class TransactionServlet extends HttpServlet {
 
             String accountNumber = request.getParameter("accountNumber");
             String view = request.getParameter("view");
+            String startDate = request.getParameter("startDate");
+            String endDate = request.getParameter("endDate");
 
             List<Transaction> transactionList;
 
-            if (accountNumber != null
-                    && !accountNumber.trim().isEmpty()) {
-
-                transactionList =
-                        dao.getTransactionsByAccount(accountNumber);
-
+            if (accountNumber != null && !accountNumber.trim().isEmpty()) {
+                if (startDate != null && !startDate.isEmpty() && endDate != null && !endDate.isEmpty()) {
+                    transactionList = dao.getTransactionsByRange(accountNumber, startDate, endDate);
+                } else {
+                    transactionList = dao.getTransactionsByAccount(accountNumber);
+                }
             } else if ("today".equalsIgnoreCase(view)) {
                 transactionList = dao.getTodayTransactions();
             } else {
-
-                transactionList =
-                        dao.getAllTransactions();
-
+                transactionList = dao.getAllTransactions();
             }
 
             request.setAttribute("transactionList", transactionList);
             request.setAttribute("accountNumber", accountNumber);
+            request.setAttribute("startDate", startDate);
+            request.setAttribute("endDate", endDate);
             request.setAttribute("view", view);
 
-request.getRequestDispatcher("/admin/transaction.jsp")
-       .forward(request, response);
+            request.getRequestDispatcher("/admin/transaction.jsp")
+                   .forward(request, response);
 
         } catch (Exception e) {
 

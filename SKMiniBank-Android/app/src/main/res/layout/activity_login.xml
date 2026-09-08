@@ -29,20 +29,20 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SK MINI BANK"
+                android:text="SPAY"
                 android:textColor="@color/white"
-                android:textSize="26sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.1" />
+                android:letterSpacing="0.2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SECURE CUSTOMER LOGIN"
+                android:text="PAYMENT BANK"
                 android:textColor="@color/premium_gold"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:letterSpacing="0.3"
+                android:letterSpacing="0.4"
                 android:layout_marginBottom="32dp" />
 
             <androidx.cardview.widget.CardView
@@ -253,7 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
-                android:text="© 2026 SK MINI BANK | SECURE BANKING"
+                android:text="© 2026 SPAY PAYMENT BANK | SECURE"
                 android:textColor="#4DFFFFFF"
                 android:textSize="10sp"
                 android:letterSpacing="0.1"/>
