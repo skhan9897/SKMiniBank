@@ -7,7 +7,7 @@
 <head>
 
 <meta charset="UTF-8">
-    <meta name="google-site-verification" content="A1B2C3D4....">
+
 <title>SK Mini Bank</title>
 
 <meta name="viewport"
