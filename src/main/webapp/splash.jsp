@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
+    <meta name="google-site-verification" content="aSWgh7LWWpI6X5bGx1Mjwv0Uq02L7F9ecjDsCwioizM" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SK Mini Bank | Initialize</title>
 
