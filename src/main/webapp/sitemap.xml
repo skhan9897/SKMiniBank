@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Note: Replace https://skminibank.com with your actual live domain or website URL -->
+    <url>
+        <loc>https://skminibank.com/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.00</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/splash.jsp</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.90</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/about.jsp</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/contact.jsp</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/login.jsp</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/register.jsp</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://skminibank.com/admin-login.jsp</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.50</priority>
+    </url>
+</urlset>
